@@ -1,14 +1,30 @@
-TARGET := liblinux_syscalls.a
+PREFIX   := /usr/local
 
-all: $(TARGET)
+NAME     := liblinux_syscalls
+TARGET   := $(NAME).a
+BUILDDIR := build
 
-$(TARGET): syscalls.o
-	@ar rcs $(TARGET) syscalls.o
+all: $(BUILDDIR)/$(TARGET)
 
-syscalls.o: syscalls.asm
-	@nasm -f elf64 syscalls.asm
+$(BUILDDIR)/$(TARGET): $(BUILDDIR)/syscalls.o
+	@ar rcs $(BUILDDIR)/$(TARGET) $(BUILDDIR)/syscalls.o
+
+$(BUILDDIR)/syscalls.o: src/syscalls.asm
+	@mkdir -p $(BUILDDIR)
+	@nasm -f elf64 src/syscalls.asm -o $(BUILDDIR)/syscalls.o
+
+install: all
+	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
+	@mkdir -p $(PREFIX)/include $(PREFIX)/lib
+	@cp -r include $(PREFIX)/include/$(NAME)
+	@cp $(BUILDDIR)/$(TARGET) $(PREFIX)/lib
+
+uninstall:
+	@echo Uninstalling library from $(PREFIX)/include and $(PREFIX)/lib
+	@rm -rf $(PREFIX)/include/$(NAME)
+	@rm -rf $(PREFIX)/lib/$(TARGET)
 
 clean:
-	@rm -rf $(TARGET) *.o
+	@rm -rf $(BUILDDIR)
 
-.PHONY: all clean
+.PHONY: all install uninstall clean
