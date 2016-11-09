@@ -17,7 +17,7 @@ uintptr_t linux_syscall6(uintptr_t num, uintptr_t arg1, uintptr_t arg2, uintptr_
 #define linux_detail_implement_syscall0_ret(name, ret_t) \
 static inline enum linux_error_t linux_ ## name(ret_t* const result) \
 { \
-	uintptr_t const ret = linux_syscall1(linux_syscall_name_ ## name); \
+	uintptr_t const ret = linux_syscall0(linux_syscall_name_ ## name); \
 	if (linux_syscall_returned_error(ret)) \
 		return (enum linux_error_t)-ret; \
 	if (result) \
@@ -87,7 +87,7 @@ static inline enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const 
 #define linux_detail_implement_syscall0_noret(name) \
 static inline enum linux_error_t linux_ ## name(void) \
 { \
-	uintptr_t const ret = linux_syscall1(linux_syscall_name_ ## name); \
+	uintptr_t const ret = linux_syscall0(linux_syscall_name_ ## name); \
 	if (linux_syscall_returned_error(ret)) \
 		return (enum linux_error_t)-ret; \
 	return linux_error_none; \
@@ -135,7 +135,7 @@ static inline enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const 
 #define linux_detail_implement_syscall6_noret(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6) \
 static inline enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, arg6_t const arg6) \
 { \
-	uintptr_t const ret = linux_syscall5(linux_syscall_name_ ## name, (uintptr_t)arg1, (uintptr_t)arg2, (uintptr_t)arg3, (uintptr_t)arg4, (uintptr_t)arg5, (uintptr_t)arg6); \
+	uintptr_t const ret = linux_syscall6(linux_syscall_name_ ## name, (uintptr_t)arg1, (uintptr_t)arg2, (uintptr_t)arg3, (uintptr_t)arg4, (uintptr_t)arg5, (uintptr_t)arg6); \
 	if (linux_syscall_returned_error(ret)) \
 		return (enum linux_error_t)-ret; \
 	return linux_error_none; \
