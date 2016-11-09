@@ -15,8 +15,8 @@ $(BUILDDIR)/syscalls.o: src/syscalls.asm
 
 install: all
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
-	@mkdir -p $(PREFIX)/include $(PREFIX)/lib
-	@cp -r include $(PREFIX)/include/$(NAME)
+	@mkdir -p $(PREFIX)/include/$(NAME) $(PREFIX)/lib
+	@cp -r include/* $(PREFIX)/include/$(NAME)
 	@cp $(BUILDDIR)/$(TARGET) $(PREFIX)/lib
 
 uninstall:
