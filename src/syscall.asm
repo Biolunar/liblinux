@@ -1,4 +1,5 @@
 BITS 64
+
 GLOBAL linux_syscall0
 GLOBAL linux_syscall1
 GLOBAL linux_syscall2
@@ -19,7 +20,7 @@ GLOBAL linux_syscall6
 ; return value: rax
 ; parameter: rdi, rsi, rdx, r10, r8, r9
 
-; ------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
 ; Generic functions
 
 linux_syscall0:
@@ -61,6 +62,17 @@ linux_syscall6:
 	ret
 
 ; Generic functions
-; ------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+
+;-------------------------------------------------------------------------------
+; Direct functions
 
 ; TODO: Add an own symbol for every syscall.
+
+GLOBAL linux_exit
+linux_exit:
+	mov rax, 60
+	syscall
+
+; Direct functions
+;-------------------------------------------------------------------------------

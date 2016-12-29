@@ -5,6 +5,7 @@
 #include "names.h"
 
 #include <stdint.h>
+#include <stdnoreturn.h>
 
 //------------------------------------------------------------------------------
 // Generic functions
@@ -18,6 +19,14 @@ uintptr_t linux_syscall5(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr
 uintptr_t linux_syscall6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t num);
 
 // Generic functions
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Direct functions
+
+noreturn linux_exit(uintptr_t status);
+
+// Direct functions
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
