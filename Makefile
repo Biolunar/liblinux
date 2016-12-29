@@ -1,7 +1,8 @@
 PREFIX   := /usr/local
 
-NAME     := liblinux_syscall
-TARGET   := $(NAME).a
+NAME     := linux_syscall
+LIBNAME  := lib$(NAME)
+TARGET   := $(LIBNAME).a
 BUILDDIR := build
 
 all: $(BUILDDIR)/$(TARGET)
