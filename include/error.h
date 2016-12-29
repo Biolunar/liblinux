@@ -1,5 +1,5 @@
-#ifndef HEADER_LIBLINUX_SYSCALLS_ERROR_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALLS_ERROR_H_INCLUDED
+#ifndef HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
+#define HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -151,4 +151,4 @@ static inline bool linux_syscall_returned_error(uintptr_t const ret)
 	return ret >= (uintptr_t)-linux_error_max ? true : false;
 }
 
-#endif // !HEADER_LIBLINUX_SYSCALLS_ERROR_H_INCLUDED
+#endif // !HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED

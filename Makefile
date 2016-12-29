@@ -1,17 +1,17 @@
 PREFIX   := /usr/local
 
-NAME     := liblinux_syscalls
+NAME     := liblinux_syscall
 TARGET   := $(NAME).a
 BUILDDIR := build
 
 all: $(BUILDDIR)/$(TARGET)
 
-$(BUILDDIR)/$(TARGET): $(BUILDDIR)/syscalls.o
-	@ar rcs $(BUILDDIR)/$(TARGET) $(BUILDDIR)/syscalls.o
+$(BUILDDIR)/$(TARGET): $(BUILDDIR)/syscall.o
+	@ar rcs $(BUILDDIR)/$(TARGET) $(BUILDDIR)/syscall.o
 
-$(BUILDDIR)/syscalls.o: src/syscalls.asm
+$(BUILDDIR)/syscall.o: src/syscall.asm
 	@mkdir -p $(BUILDDIR)
-	@nasm -f elf64 src/syscalls.asm -o $(BUILDDIR)/syscalls.o
+	@nasm -f elf64 src/syscall.asm -o $(BUILDDIR)/syscall.o
 
 install: all
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
