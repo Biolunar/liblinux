@@ -24,7 +24,8 @@ uintptr_t linux_syscall6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr
 //------------------------------------------------------------------------------
 // Direct functions
 
-noreturn linux_exit(uintptr_t status);
+noreturn void linux_exit(uintptr_t error_code);
+noreturn void linux_exit_group(uintptr_t error_code);
 
 // Direct functions
 //------------------------------------------------------------------------------

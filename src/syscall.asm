@@ -74,5 +74,10 @@ linux_exit:
 	mov rax, 60
 	syscall
 
+GLOBAL linux_exit_group
+linux_exit_group:
+	mov rax, 231
+	syscall
+
 ; Direct functions
 ;-------------------------------------------------------------------------------
