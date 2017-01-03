@@ -55,7 +55,7 @@ noreturn void linux_exit_group(uintptr_t error_code);
 // Declaration without return value
 
 #define LINUX_DECLARE_SYSCALL0_NORET(name) \
-	enum linux_error_t linux_ ## name()
+	enum linux_error_t linux_ ## name(void)
 #define LINUX_DECLARE_SYSCALL1_NORET(name, arg1_t, arg1) \
 	enum linux_error_t linux_ ## name(arg1_t arg1)
 #define LINUX_DECLARE_SYSCALL2_NORET(name, arg1_t, arg1, arg2_t, arg2) \
