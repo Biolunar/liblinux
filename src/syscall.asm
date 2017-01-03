@@ -1,13 +1,5 @@
 BITS 64
 
-GLOBAL linux_syscall0
-GLOBAL linux_syscall1
-GLOBAL linux_syscall2
-GLOBAL linux_syscall3
-GLOBAL linux_syscall4
-GLOBAL linux_syscall5
-GLOBAL linux_syscall6
-
 ; C:
 ; return value: rax
 ; parameter: rdi, rsi, rdx, rcx, r8, r9, rest on stack in reversed order
@@ -23,38 +15,45 @@ GLOBAL linux_syscall6
 ;-------------------------------------------------------------------------------
 ; Generic functions
 
+GLOBAL linux_syscall0
 linux_syscall0:
 	mov rax, rdi ; arg1 -> #
 	syscall
 	ret
 
+GLOBAL linux_syscall1
 linux_syscall1:
 	mov rax, rsi ; arg2 -> #
 	syscall
 	ret
 
+GLOBAL linux_syscall2
 linux_syscall2:
 	mov rax, rdx ; arg3 -> #
 	syscall
 	ret
 
+GLOBAL linux_syscall3
 linux_syscall3:
 	mov rax, rcx ; arg4 -> #
 	syscall
 	ret
 
+GLOBAL linux_syscall4
 linux_syscall4:
 	mov r10, rcx ; arg4 -> arg4
 	mov rax,  r8 ; arg5 -> #
 	syscall
 	ret
 
+GLOBAL linux_syscall5
 linux_syscall5:
 	mov r10, rcx ; arg4 -> arg4
 	mov rax,  r9 ; arg6 -> #
 	syscall
 	ret
 
+GLOBAL linux_syscall6
 linux_syscall6:
 	mov r10, rcx ; arg4 -> arg4
 	mov rax, [rsp+8] ; arg7 -> #
@@ -66,8 +65,6 @@ linux_syscall6:
 
 ;-------------------------------------------------------------------------------
 ; Direct functions
-
-; TODO: Add an own symbol for every syscall.
 
 GLOBAL linux_exit
 linux_exit:
