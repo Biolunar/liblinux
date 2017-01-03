@@ -1,0 +1,13 @@
+C:
+==
+return value: rax
+parameter: rdi, rsi, rdx, rcx, r8, r9, rest on stack in reversed order
+stack alignment: 16
+preserved: rbx, rsp, rbp, r12, r13, r14, r15
+scratch: rax, rdi, rsi, rdx, rcx, r8, r9, r10, r11
+
+Linux:
+======
+syscall number: rax
+return value: rax
+parameter: rdi, rsi, rdx, r10, r8, r9

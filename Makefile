@@ -4,15 +4,19 @@ NAME     := linux_syscall
 LIBNAME  := lib$(NAME)
 TARGET   := $(LIBNAME).a
 BUILDDIR := build
+SOURCES  := $(sort $(wildcard src/*.asm))
+OBJECTS  := $(patsubst src/%.asm, $(BUILDDIR)/%.o, $(SOURCES))
 
 all: $(BUILDDIR)/$(TARGET)
 
-$(BUILDDIR)/$(TARGET): $(BUILDDIR)/syscall.o
-	@ar rcs $(BUILDDIR)/$(TARGET) $(BUILDDIR)/syscall.o
+$(BUILDDIR)/$(TARGET): $(OBJECTS)
+	@ar rcs $@ $^
 
-$(BUILDDIR)/syscall.o: src/syscall.asm
-	@mkdir -p $(BUILDDIR)
-	@nasm -f elf64 src/syscall.asm -o $(BUILDDIR)/syscall.o
+$(OBJECTS): $(BUILDDIR)/%.o: src/%.asm | $(BUILDDIR)
+	@nasm -f elf64 $< -o $@
+
+$(BUILDDIR):
+	@mkdir $@
 
 install: all
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
