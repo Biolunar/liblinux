@@ -146,9 +146,9 @@ enum linux_error_t
 	linux_error_max       = 4095,
 };
 
-static inline bool linux_syscall_returned_error(uintptr_t const ret)
+static inline bool linux_syscall_returned_error(intptr_t const ret)
 {
-	return ret >= (uintptr_t)-linux_error_max ? true : false;
+	return ret >= (intptr_t)-linux_error_max ? true : false;
 }
 
 #endif // !HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
