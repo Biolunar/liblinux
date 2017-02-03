@@ -164,7 +164,7 @@ enum linux_error_t
 
 static inline bool linux_syscall_returned_error(intptr_t const ret)
 {
-	return ret >= (intptr_t)-linux_error_max ? true : false;
+	return ret < 0 && ret >= -linux_error_max;
 }
 
 #endif // !HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
