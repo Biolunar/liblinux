@@ -40,8 +40,8 @@ intptr_t linux_syscall6(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t ar
 //------------------------------------------------------------------------------
 // Direct functions
 
-noreturn void linux_exit(intptr_t error_code);
-noreturn void linux_exit_group(intptr_t error_code);
+noreturn void linux_exit(uint8_t status);
+noreturn void linux_exit_group(uint8_t status);
 
 noreturn void linux_restorer(void); // This is *not* a syscall!
 
