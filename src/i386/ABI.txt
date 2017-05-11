@@ -1,0 +1,13 @@
+C:
+==
+return value: eax
+parameter: on stack in reversed order
+stack alignment: 4
+preserved: ebp, ebx, edi, esi, esp
+scratch: eax, edx, ecx, 
+
+Linux:
+======
+syscall number: eax
+return value: eax
+parameter: ebx, ecx, edx, esi, edi, ebp

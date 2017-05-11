@@ -20,21 +20,18 @@ NAME     := linux_syscall
 LIBNAME  := lib$(NAME)
 TARGET   := $(LIBNAME).a
 BUILDDIR := build
-SOURCES  := $(sort $(wildcard src/*.asm))
-OBJECTS  := $(patsubst src/%.asm, $(BUILDDIR)/%.o, $(SOURCES))
+ARCH     := i386 x86_64
 
-all: $(BUILDDIR)/$(TARGET)
+all:
+	@echo "Choose an architecture as a build target:"
+	@echo "$$ make <arch>"
+	@echo "Following architectures are currently supported:"
+	@echo "    $(ARCH)"
 
-$(BUILDDIR)/$(TARGET): $(OBJECTS)
-	@ar rcs $@ $^
+$(ARCH):
+	@$(MAKE) --no-print-directory TARGET=$(TARGET) BUILDDIR=../../$(BUILDDIR) -C src/$@
 
-$(OBJECTS): $(BUILDDIR)/%.o: src/%.asm | $(BUILDDIR)
-	@nasm -f elf64 $< -o $@
-
-$(BUILDDIR):
-	@mkdir $@
-
-install: all
+install:
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
 	@mkdir -p $(PREFIX)/include/$(NAME) $(PREFIX)/lib
 	@cp -r include/* $(PREFIX)/include/$(NAME)
@@ -48,4 +45,4 @@ uninstall:
 clean:
 	@rm -rf $(BUILDDIR)
 
-.PHONY: all install uninstall clean
+.PHONY: all install uninstall clean $(ARCH)

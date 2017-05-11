@@ -43,7 +43,12 @@ intptr_t linux_syscall6(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t ar
 noreturn void linux_exit(uint8_t status);
 noreturn void linux_exit_group(uint8_t status);
 
-noreturn void linux_restorer(void); // This is *not* a syscall!
+// Following functions are intended to be used as the restorer callback in the
+// sigaction structure. They call sigreturn or rt_sigreturn internally.
+#ifdef __i386__
+noreturn void linux_restorer(void);
+#endif // __i386__
+noreturn void linux_rt_restorer(void);
 
 // Direct functions
 //------------------------------------------------------------------------------

@@ -14,9 +14,24 @@
 ; limitations under the License.
 ;
 
-BITS 64
+BITS 32
 
-GLOBAL linux_restorer
-linux_restorer:
-	mov rax, 15
-	syscall
+GLOBAL linux_syscall6
+linux_syscall6:
+	push ebp
+	push ebx
+	push edi
+	push esi
+	mov ebx, [esp+20] ; arg1 -> arg1
+	mov ecx, [esp+24] ; arg2 -> arg2
+	mov edx, [esp+28] ; arg3 -> arg3
+	mov esi, [esp+32] ; arg4 -> arg4
+	mov edi, [esp+36] ; arg5 -> arg5
+	mov ebp, [esp+40] ; arg6 -> arg6
+	mov eax, [esp+44] ; arg7 -> #
+	int 0x80
+	pop esi
+	pop edi
+	pop ebx
+	pop ebp
+	ret
