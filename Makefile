@@ -31,7 +31,7 @@ all:
 $(ARCH):
 	@$(MAKE) --no-print-directory TARGET=$(TARGET) BUILDDIR=../../$(BUILDDIR) -C src/$@
 
-install:
+install: $(BUILDDIR)
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
 	@mkdir -p $(PREFIX)/include/$(NAME) $(PREFIX)/lib
 	@cp -r include/* $(PREFIX)/include/$(NAME)
