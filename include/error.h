@@ -17,6 +17,10 @@
 #ifndef HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
 #define HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
 
+#if __STDC_VERSION__ < 199901L
+#error "This library needs at least a C99 compiler."
+#endif // __STDC_VERSION__ < 199901L
+
 #include <stdbool.h>
 #include <stdint.h>
 
