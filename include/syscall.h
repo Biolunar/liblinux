@@ -34,6 +34,17 @@
 //------------------------------------------------------------------------------
 // Generic functions
 
+#ifdef __i386__
+void* linux_vsyscall_ptr; // Set this to the __kernel_vsyscall symbol exported by the vDSO or the following functions will segfault.
+
+intptr_t linux_vsyscall0(intptr_t num);
+intptr_t linux_vsyscall1(intptr_t arg1, intptr_t num);
+intptr_t linux_vsyscall2(intptr_t arg1, intptr_t arg2, intptr_t num);
+intptr_t linux_vsyscall3(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t num);
+intptr_t linux_vsyscall4(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t num);
+intptr_t linux_vsyscall5(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t arg5, intptr_t num);
+intptr_t linux_vsyscall6(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t arg5, intptr_t arg6, intptr_t num);
+#endif // __i386__
 intptr_t linux_syscall0(intptr_t num);
 intptr_t linux_syscall1(intptr_t arg1, intptr_t num);
 intptr_t linux_syscall2(intptr_t arg1, intptr_t arg2, intptr_t num);
@@ -106,6 +117,78 @@ noreturn void linux_rt_restorer(void);
 //------------------------------------------------------------------------------
 // Definition with return value
 
+#ifdef __i386__
+#define LINUX_DEFINE_VSYSCALL0_RET(name, ret_t)                                    \
+	enum linux_error_t linux_ ## name(ret_t* const result)                     \
+	{                                                                          \
+		intptr_t const ret = linux_vsyscall0(linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                             \
+			return (enum linux_error_t)-ret;                           \
+		if (result)                                                        \
+			*result = (ret_t)ret;                                      \
+		return linux_error_none;                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL1_RET(name, arg1_t, arg1, ret_t)                                      \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, ret_t* const result)                  \
+	{                                                                                          \
+		intptr_t const ret = linux_vsyscall1((intptr_t)arg1, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                             \
+			return (enum linux_error_t)-ret;                                           \
+		if (result)                                                                        \
+			*result = (ret_t)ret;                                                      \
+		return linux_error_none;                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL2_RET(name, arg1_t, arg1, arg2_t, arg2, ret_t)                                        \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, ret_t* const result)               \
+	{                                                                                                          \
+		intptr_t const ret = linux_vsyscall2((intptr_t)arg1, (intptr_t)arg2, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                             \
+			return (enum linux_error_t)-ret;                                                           \
+		if (result)                                                                                        \
+			*result = (ret_t)ret;                                                                      \
+		return linux_error_none;                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL3_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, ret_t)                                          \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, ret_t* const result)            \
+	{                                                                                                                          \
+		intptr_t const ret = linux_vsyscall3((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                             \
+			return (enum linux_error_t)-ret;                                                                           \
+		if (result)                                                                                                        \
+			*result = (ret_t)ret;                                                                                      \
+		return linux_error_none;                                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL4_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, ret_t)                                            \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, ret_t* const result)         \
+	{                                                                                                                                          \
+		intptr_t const ret = linux_vsyscall4((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, (intptr_t)arg4, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                                             \
+			return (enum linux_error_t)-ret;                                                                                           \
+		if (result)                                                                                                                        \
+			*result = (ret_t)ret;                                                                                                      \
+		return linux_error_none;                                                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL5_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, ret_t)                                              \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, ret_t* const result)      \
+	{                                                                                                                                                          \
+		intptr_t const ret = linux_vsyscall5((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, (intptr_t)arg4, (intptr_t)arg5, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                                                             \
+			return (enum linux_error_t)-ret;                                                                                                           \
+		if (result)                                                                                                                                        \
+			*result = (ret_t)ret;                                                                                                                      \
+		return linux_error_none;                                                                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL6_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6, ret_t)                                                \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, arg6_t const arg6, ret_t* const result)   \
+	{                                                                                                                                                                          \
+		intptr_t const ret = linux_vsyscall6((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, (intptr_t)arg4, (intptr_t)arg5, (intptr_t)arg6, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                                                                             \
+			return (enum linux_error_t)-ret;                                                                                                                           \
+		if (result)                                                                                                                                                        \
+			*result = (ret_t)ret;                                                                                                                                      \
+		return linux_error_none;                                                                                                                                           \
+	}
+#endif // __i386__
 #define LINUX_DEFINE_SYSCALL0_RET(name, ret_t)                                    \
 	enum linux_error_t linux_ ## name(ret_t* const result)                    \
 	{                                                                         \
@@ -183,6 +266,64 @@ noreturn void linux_rt_restorer(void);
 //------------------------------------------------------------------------------
 // Definition without return value
 
+#ifdef __i386__
+#define LINUX_DEFINE_VSYSCALL0_NORET(name)                                         \
+	enum linux_error_t linux_ ## name(void)                                    \
+	{                                                                          \
+		intptr_t const ret = linux_vsyscall0(linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                             \
+			return (enum linux_error_t)-ret;                           \
+		return linux_error_none;                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL1_NORET(name, arg1_t, arg1)                                           \
+	enum linux_error_t linux_ ## name(arg1_t const arg1)                                       \
+	{                                                                                          \
+		intptr_t const ret = linux_vsyscall1((intptr_t)arg1, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                             \
+			return (enum linux_error_t)-ret;                                           \
+		return linux_error_none;                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL2_NORET(name, arg1_t, arg1, arg2_t, arg2)                                             \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2)                                    \
+	{                                                                                                          \
+		intptr_t const ret = linux_vsyscall2((intptr_t)arg1, (intptr_t)arg2, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                             \
+			return (enum linux_error_t)-ret;                                                           \
+		return linux_error_none;                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL3_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3)                                               \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3)                                 \
+	{                                                                                                                          \
+		intptr_t const ret = linux_vsyscall3((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                             \
+			return (enum linux_error_t)-ret;                                                                           \
+		return linux_error_none;                                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL4_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4)                                                 \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4)                              \
+	{                                                                                                                                          \
+		intptr_t const ret = linux_vsyscall4((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, (intptr_t)arg4, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                                             \
+			return (enum linux_error_t)-ret;                                                                                           \
+		return linux_error_none;                                                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL5_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5)                                                   \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5)                           \
+	{                                                                                                                                                          \
+		intptr_t const ret = linux_vsyscall5((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, (intptr_t)arg4, (intptr_t)arg5, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                                                             \
+			return (enum linux_error_t)-ret;                                                                                                           \
+		return linux_error_none;                                                                                                                           \
+	}
+#define LINUX_DEFINE_VSYSCALL6_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6)                                                     \
+	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, arg6_t const arg6)                        \
+	{                                                                                                                                                                          \
+		intptr_t const ret = linux_vsyscall6((intptr_t)arg1, (intptr_t)arg2, (intptr_t)arg3, (intptr_t)arg4, (intptr_t)arg5, (intptr_t)arg6, linux_syscall_name_ ## name); \
+		if (linux_syscall_returned_error(ret))                                                                                                                             \
+			return (enum linux_error_t)-ret;                                                                                                                           \
+		return linux_error_none;                                                                                                                                           \
+	}
+#endif // __i386__
 #define LINUX_DEFINE_SYSCALL0_NORET(name)                                         \
 	enum linux_error_t linux_ ## name(void)                                   \
 	{                                                                         \

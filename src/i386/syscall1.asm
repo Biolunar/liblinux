@@ -18,9 +18,8 @@ BITS 32
 
 GLOBAL linux_syscall1
 linux_syscall1:
-	push ebx
-	mov ebx, [esp+ 8] ; arg1 -> arg1
-	mov eax, [esp+12] ; arg2 -> #
+	xchg ebx, [esp+4] ; arg1 -> arg1
+	mov eax, [esp+8] ; arg2 -> #
 	int 0x80
-	pop ebx
+	mov ebx, [esp+4] ; arg1 -> arg1
 	ret

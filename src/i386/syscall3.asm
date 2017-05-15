@@ -18,11 +18,10 @@ BITS 32
 
 GLOBAL linux_syscall3
 linux_syscall3:
-	push ebx
-	mov ebx, [esp+ 8] ; arg1 -> arg1
-	mov ecx, [esp+12] ; arg2 -> arg2
-	mov edx, [esp+16] ; arg3 -> arg3
-	mov eax, [esp+20] ; arg4 -> #
+	xchg ebx, [esp+4] ; arg1 -> arg1
+	mov ecx, [esp+8] ; arg2 -> arg2
+	mov edx, [esp+12] ; arg3 -> arg3
+	mov eax, [esp+16] ; arg4 -> #
 	int 0x80
-	pop ebx
+	mov ebx, [esp+4]
 	ret

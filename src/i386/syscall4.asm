@@ -18,14 +18,12 @@ BITS 32
 
 GLOBAL linux_syscall4
 linux_syscall4:
-	push ebx
-	push esi
-	mov ebx, [esp+12] ; arg1 -> arg1
-	mov ecx, [esp+16] ; arg2 -> arg2
-	mov edx, [esp+20] ; arg3 -> arg3
-	mov esi, [esp+24] ; arg4 -> arg4
-	mov eax, [esp+28] ; arg5 -> #
+	xchg ebx, [esp+4] ; arg1 -> arg1
+	mov ecx, [esp+8] ; arg2 -> arg2
+	mov edx, [esp+12] ; arg3 -> arg3
+	xchg esi, [esp+16] ; arg4 -> arg4
+	mov eax, [esp+20] ; arg5 -> #
 	int 0x80
-	pop esi
-	pop ebx
+	mov esi, [esp+16]
+	mov ebx, [esp+4]
 	ret
