@@ -35,7 +35,7 @@
 // Generic functions
 
 #ifdef __i386__
-void* linux_vsyscall_ptr; // Set this to the __kernel_vsyscall symbol exported by the vDSO or the following functions will segfault.
+extern void* linux_vsyscall_ptr; // Set this to the __kernel_vsyscall symbol exported by the vDSO or the following functions will segfault.
 
 intptr_t linux_vsyscall0(intptr_t num);
 intptr_t linux_vsyscall1(intptr_t arg1, intptr_t num);
