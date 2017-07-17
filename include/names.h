@@ -738,6 +738,10 @@ enum linux_syscall_name
 	linux_syscall_name_copy_file_range        = 326,
 	linux_syscall_name_preadv2                = 327,
 	linux_syscall_name_pwritev2               = 328,
+	linux_pkey_mprotect                       = 329,
+	linux_pkey_alloc                          = 330,
+	linux_pkey_free                           = 331,
+	linux_statx                               = 332,
 };
 #endif // __i386__
 
