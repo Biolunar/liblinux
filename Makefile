@@ -16,8 +16,7 @@
 
 PREFIX   := /usr/local
 
-NAME     := linux_syscall
-LIBNAME  := lib$(NAME)
+LIBNAME  := liblinux_syscall
 TARGET   := $(LIBNAME).a
 BUILDDIR := build
 ARCH     := i386 x86_64
@@ -33,13 +32,13 @@ $(ARCH):
 
 install: $(BUILDDIR)
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
-	@mkdir -p $(PREFIX)/include/$(NAME) $(PREFIX)/lib
-	@cp -r include/* $(PREFIX)/include/$(NAME)
+	@mkdir -p $(PREFIX)/include/$(LIBNAME) $(PREFIX)/lib
+	@cp -r include/* $(PREFIX)/include/$(LIBNAME)
 	@cp $(BUILDDIR)/$(TARGET) $(PREFIX)/lib
 
 uninstall:
 	@echo Uninstalling library from $(PREFIX)/include and $(PREFIX)/lib
-	@rm -rf $(PREFIX)/include/$(NAME)
+	@rm -rf $(PREFIX)/include/$(LIBNAME)
 	@rm -rf $(PREFIX)/lib/$(TARGET)
 
 clean:
