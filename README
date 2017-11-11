@@ -3,17 +3,36 @@ liblinux_syscall
 
 liblinux_syscall is a static C library to abstract away all assembly needed to
 interface with the Linux kernel. To use the C headers at least a C99 compiler is
-required (C11 is recommended). To buid the library the Netwide Assembler (NASM)
-is required.
+required (C11 is recommended).
+
+SUPPORTED ARCHITECTURES
+-----------------------
+Supported architectures can be queried by running
+$ make
+
+Currently supported are:
+- i386
+- x86_64
+- arm64
+
+REQUIRED ASSEMBLERS
+-------------------
+i386 and x86_64: NASM (Netwide Assembler)
+arm64: gas (GNU Assembler)
 
 BUILDING
 --------
-Supported architectures can be determined by executing
-$ make
-Currently only i386 and x86_64 are supported.
-
-To build the library, execute
+To build the library, run
 $ make <arch>
-And to install the library, execute
+And to install the library, run
 # make [PREFIX=<path>] install
 The default prefix is /usr/local.
+
+TESTING
+-------
+First, build the library. Then run
+$ make test
+
+BUGS
+----
+None known.

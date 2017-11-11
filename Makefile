@@ -19,7 +19,7 @@ PREFIX   := /usr/local
 LIBNAME  := liblinux_syscall
 TARGET   := $(LIBNAME).a
 BUILDDIR := build
-ARCH     := i386 x86_64
+ARCH     := i386 x86_64 arm64
 
 all:
 	@echo "Choose an architecture as a build target:"
@@ -29,6 +29,9 @@ all:
 
 $(ARCH):
 	@$(MAKE) --no-print-directory TARGET=$(TARGET) BUILDDIR=../../$(BUILDDIR) -C src/$@
+
+test: $(BUILDDIR)/$(TARGET)
+	@$(MAKE) --no-print-directory TARGET=$@ BUILDDIR=../$(BUILDDIR) -C tests
 
 install: $(BUILDDIR)
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
@@ -44,4 +47,4 @@ uninstall:
 clean:
 	@rm -rf $(BUILDDIR)
 
-.PHONY: all install uninstall clean $(ARCH)
+.PHONY: all test install uninstall clean $(ARCH)
