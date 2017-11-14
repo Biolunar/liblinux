@@ -35,7 +35,18 @@
 // Generic functions
 
 #ifdef __i386__
-extern void* linux_vsyscall_ptr; // Set this to the __kernel_vsyscall symbol exported by the vDSO or the following functions will segfault.
+
+/*
+ * On i386 you use the assembly instruction "int 0x80" to invoke syscalls,
+ * which is not very fast. Therefore Linux exports a function called
+ * "__kernel_vsyscall" in the vDSO for applications to use, to speed up the
+ * the context switch.
+ * To make use of this function, just assign to the address of the
+ * __kernel_vsyscall symbol to the variable linux_vsyscall_ptr. Then you can
+ * invoke syscalls with the linux_vsyscallX functions.
+ */
+
+extern void const* linux_vsyscall_ptr; // Set this to the __kernel_vsyscall symbol exported by the vDSO or the following functions will segfault.
 
 intptr_t linux_vsyscall0(intptr_t num);
 intptr_t linux_vsyscall1(intptr_t arg1, intptr_t num);
@@ -44,7 +55,16 @@ intptr_t linux_vsyscall3(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t n
 intptr_t linux_vsyscall4(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t num);
 intptr_t linux_vsyscall5(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t arg5, intptr_t num);
 intptr_t linux_vsyscall6(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t arg5, intptr_t arg6, intptr_t num);
+
 #endif // __i386__
+
+/*
+ * These are the syscall wrappers.
+ * The number on each function specifies how many arguments the syscall takes.
+ * The argument called "num" is the actual syscall number, which can be found
+ * in the header names.h.
+ */
+
 intptr_t linux_syscall0(intptr_t num);
 intptr_t linux_syscall1(intptr_t arg1, intptr_t num);
 intptr_t linux_syscall2(intptr_t arg1, intptr_t arg2, intptr_t num);
@@ -59,11 +79,20 @@ intptr_t linux_syscall6(intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t ar
 //------------------------------------------------------------------------------
 // Direct functions
 
+/*
+ * The exit functions are implemented in assembly because it is the most
+ * efficient way to do so. Also we save a couple of bytes since they never
+ * return and don't need to follow C's calling convention.
+ */
 noreturn void linux_exit(uint8_t status);
 noreturn void linux_exit_group(uint8_t status);
 
-// Following functions are intended to be used as the restorer callback in the
-// sigaction structure. They call sigreturn or rt_sigreturn internally.
+/*
+ * The following functions are intended to be used as the restorer callback in
+ * the sigaction structure; they call sigreturn/rt_sigreturn internally. These
+ * functions must be implemented in assembly because they don't use the C
+ * calling convention.
+ */
 #ifdef __i386__
 noreturn void linux_restorer(void);
 #endif // __i386__
@@ -71,6 +100,38 @@ noreturn void linux_rt_restorer(void);
 
 // Direct functions
 //------------------------------------------------------------------------------
+
+/*
+ * Following macros are to convieniently declare and/or define the syscalls as
+ * C functions.
+ *
+ * There are four sets of macros:
+ * 1) functions with return value
+ *   a) declaration only
+ *   b) definition
+ * 2) functions without return value
+ *   a) declaration only
+ *   b) definition
+ *
+ * LINUX_DECLARE_SYSCALL2_RET(NAME, arg1_t, arg1, arg2_t, arg2)
+ * expands to
+ * enum linux_error_t linux_NAME(arg1_t arg1, arg2_t arg2);
+ *
+ * LINUX_DECLARE_SYSCALL2_NORET(NAME, arg1_t, arg1, arg2_t, arg2, ret_t)
+ * expands to
+ * enum linux_error_t linux_NAME(arg1_t arg1, arg2_t arg2, ret_t*);
+ * Notice that the last parameter is a pointer to the return type.
+ *
+ * Example:
+ * The open syscall can be declared as
+ * LINUX_DECLARE_SYSCALL3_RET(open, char const*, filename, int, flags, umode_t, mode, int);
+ * which expands to the declaration
+ * enum linux_error_t linux_open(char const* filename, int flags, umode_t mode, int* result);
+ *
+ * Functions which return a value created with these macros, accept a null
+ * pointer as the final argument if the caller is not interested in the return
+ * value.
+ */
 
 //------------------------------------------------------------------------------
 // Declaration with return value

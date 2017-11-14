@@ -18,6 +18,7 @@
 #define HEADER_LIBLINUX_SYSCALL_NAMES_H_INCLUDED
 
 #ifdef __i386__
+
 enum
 {
 	linux_syscall_name_restart_syscall        =   0,
@@ -406,7 +407,9 @@ enum
 	linux_syscall_name_statx                  = 383,
 	linux_syscall_name_arch_prctl             = 384,
 };
+
 #elif __x86_64__ // This includes x32.
+
 enum
 {
 	linux_syscall_name_read                   =   0,
@@ -743,7 +746,9 @@ enum
 	linux_syscall_name_pkey_free              = 331,
 	linux_syscall_name_statx                  = 332,
 };
+
 #elif __aarch64__
+
 enum
 {
 	linux_syscall_name_io_setup               =   0,
@@ -990,7 +995,7 @@ enum
 	linux_syscall_name_perf_event_open        = 241,
 	linux_syscall_name_accept4                = 242,
 	linux_syscall_name_recvmmsg               = 243,
-	// 244 to 259 are unimplemented
+	// 244 to 259 are unimplemented.
 	linux_syscall_name_wait4                  = 260,
 	linux_syscall_name_prlimit64              = 261,
 	linux_syscall_name_fanotify_init          = 262,
@@ -1024,6 +1029,7 @@ enum
 	linux_syscall_name_pkey_free              = 290,
 	linux_syscall_name_statx                  = 291,
 };
+
 #endif // CPU architecture
 
 #endif // !HEADER_LIBLINUX_SYSCALL_NAMES_H_INCLUDED
