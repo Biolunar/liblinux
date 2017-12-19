@@ -18,4 +18,3 @@
 linux_exit_group:
 	mov x8, #94
 	svc #0
-	ret
