@@ -2,7 +2,7 @@ C on Linux:
 ===========
 return value: rax
 parameter: rdi, rsi, rdx, rcx, r8, r9, rest on stack in reversed order
-stack alignment: 16
+stack alignment: 16 bit
 preserved: rbx, rsp, rbp, r12, r13, r14, r15
 scratch: rax, rdi, rsi, rdx, rcx, r8, r9, r10, r11
 

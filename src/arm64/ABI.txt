@@ -15,7 +15,7 @@ C on Linux:
 ===========
 return value: x0
 parameter: x0 – x7, rest on stack in normal order
-stack alignment: 16
+stack alignment: 16 bit
 preserved: x19 – x28
 scratch: x0 – x18
 

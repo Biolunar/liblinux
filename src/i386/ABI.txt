@@ -2,7 +2,7 @@ C on Linux:
 ===========
 return value: eax
 parameter: on stack in reversed order
-stack alignment: 4
+stack alignment: 16 bit
 preserved: ebp, ebx, edi, esi, esp
 scratch: eax, edx, ecx, 
 
