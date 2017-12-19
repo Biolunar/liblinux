@@ -1,13 +1,24 @@
-C:
-==
+C on Linux:
+===========
 return value: eax
 parameter: on stack in reversed order
 stack alignment: 4
 preserved: ebp, ebx, edi, esi, esp
 scratch: eax, edx, ecx, 
 
-Linux:
-======
+Linux syscalls:
+===============
 syscall number: eax
 return value: eax
 parameter: ebx, ecx, edx, esi, edi, ebp
+
+Sizes/Alignment:
+================
+_Bool: 1/1
+char: 1/1
+short: 2/2
+int: 4/4
+long: 4/4
+long long: 8/4
+T*: 4/4
+T (*)(): 4/4
