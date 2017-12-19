@@ -36,3 +36,8 @@ $ make test
 BUGS
 ----
 None known.
+
+ROADMAP
+-------
+- For every architecture added, increase the minor version number, until all architectures are supported which marks the 1.0.0 release.
+- Support different assemblers for maximum portability.
