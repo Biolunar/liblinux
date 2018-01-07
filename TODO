@@ -1,3 +1,2 @@
 - use gas on x86 instead of nasm
-- test linux_restorer on i386. musl has an additional pop eax, why is that?
 - support x32
