@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.globl linux_rt_restorer
+.global linux_rt_restorer
 linux_rt_restorer:
 	mov x8, #139
 	svc #0

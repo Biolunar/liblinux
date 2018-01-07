@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.globl linux_syscall4
+.global linux_syscall4
 linux_syscall4:
 	mov x8, x4
 	svc #0

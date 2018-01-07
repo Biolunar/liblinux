@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.globl linux_exit
+.global linux_exit
 linux_exit:
 	mov x8, #93
 	svc #0

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.globl linux_syscall0
+.global linux_syscall0
 linux_syscall0:
 	mov x8, x0
 	svc #0

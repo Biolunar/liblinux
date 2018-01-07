@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.globl linux_syscall2
+.global linux_syscall2
 linux_syscall2:
 	mov x8, x2
 	svc #0
