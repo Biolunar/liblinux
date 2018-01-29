@@ -176,7 +176,7 @@ static void test_signal(void)
 		.sa_handler = &signal_handler,
 #endif // __i386__
 		.sa_flags = linux_SA_RESTORER,
-		.sa_restorer = &linux_rt_restorer,
+		.sa_restorer = &linux_rt_sigreturn,
 	};
 
 	if (linux_rt_sigaction(linux_SIGUSR1, &sa, 0, sizeof(linux_sigset_t)))

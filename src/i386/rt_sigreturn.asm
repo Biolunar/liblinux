@@ -16,9 +16,7 @@
 
 BITS 32
 
-GLOBAL linux_restorer
-linux_restorer:
-	pop eax ; This instruction is for historical reasons. See
-	        ; arch/x86/kernel/signal.c in the Linux source code.
-	mov eax, 119
+GLOBAL linux_rt_sigreturn
+linux_rt_sigreturn:
+	mov eax, 173
 	int 0x80

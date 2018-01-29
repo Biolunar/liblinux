@@ -16,7 +16,7 @@
 
 BITS 64
 
-GLOBAL linux_rt_restorer
-linux_rt_restorer:
+GLOBAL linux_rt_sigreturn
+linux_rt_sigreturn:
 	mov rax, 15
 	syscall

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-.global linux_rt_restorer
-linux_rt_restorer:
+.global linux_rt_sigreturn
+linux_rt_sigreturn:
 	mov x8, #139
 	svc #0
