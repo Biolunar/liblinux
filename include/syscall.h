@@ -89,14 +89,13 @@ noreturn void linux_exit_group(uint8_t status);
 
 /*
  * The following functions are intended to be used as the restorer callback in
- * the sigaction structure; they call sigreturn/rt_sigreturn internally. These
- * functions must be implemented in assembly because they don't use the C
- * calling convention.
+ * the sigaction structure. These functions must be implemented in assembly
+ * because they don't use the C calling convention.
  */
 #ifdef __i386__
-noreturn void linux_restorer(void);
+noreturn void linux_sigreturn(void);
 #endif // __i386__
-noreturn void linux_rt_restorer(void);
+noreturn void linux_rt_sigreturn(void);
 
 // Direct functions
 //------------------------------------------------------------------------------
