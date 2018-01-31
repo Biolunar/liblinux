@@ -19,7 +19,7 @@ PREFIX   := /usr/local
 LIBNAME  := liblinux_syscall
 TARGET   := $(LIBNAME).a
 BUILDDIR := build
-ARCH     := i386 x86_64 arm64
+ARCH     := x86 x32 x86_64 arm64
 
 all:
 	@echo "Choose an architecture as a build target:"

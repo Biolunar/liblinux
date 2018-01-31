@@ -49,7 +49,7 @@ enum
 };
 
 #ifdef __i386__
-#include "i386.h"
+#include "x86.h"
 #elif __x86_64__
 #ifdef __ILP32__
 #include "x32.h"
@@ -57,7 +57,7 @@ enum
 #include "x86_64.h"
 #endif // __ILP32__
 #elif __aarch64__
-#include "aarch64.h"
+#include "arm64.h"
 #else
 #error "Unsupported architecture"
 #endif

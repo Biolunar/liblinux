@@ -1,0 +1,24 @@
+C on Linux:
+===========
+return value: rax
+parameter: rdi, rsi, rdx, rcx, r8, r9, rest on stack in reversed order
+stack alignment: 16 bit
+preserved: rbx, rsp, rbp, r12, r13, r14, r15
+scratch: rax, rdi, rsi, rdx, rcx, r8, r9, r10, r11
+
+Linux syscalls:
+===============
+syscall number: rax
+return value: rax
+parameter: rdi, rsi, rdx, r10, r8, r9
+
+Sizes/Alignment:
+================
+_Bool: 1/1
+char: 1/1
+short: 2/2
+int: 4/4
+long: 4/4
+long long: 8/8
+T*: 4/4
+T (*)(): 4/4

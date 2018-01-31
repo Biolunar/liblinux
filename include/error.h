@@ -64,7 +64,7 @@ enum linux_error_t
 	linux_EDOM            =   33, // Math argument out of domain of func
 	linux_ERANGE          =   34, // Math result not representable
 
-	// generic (i386, x86_64, x32, arm64)
+	// generic (i386, x32, x86_64, arm64)
 	linux_EDEADLK         =   35, // Resource deadlock would occur
 	linux_ENAMETOOLONG    =   36, // File name too long
 	linux_ENOLCK          =   37, // No record locks available

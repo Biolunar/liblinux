@@ -37,7 +37,7 @@
 #ifdef __i386__
 
 /*
- * On i386 you use the assembly instruction "int 0x80" to invoke syscalls,
+ * On x86 you use the assembly instruction "int 0x80" to invoke syscalls,
  * which is not very fast. Therefore Linux exports a function called
  * "__kernel_vsyscall" in the vDSO for applications to use, to speed up the
  * the context switch.

@@ -11,13 +11,14 @@ Supported architectures can be queried by running
 $ make
 
 Currently supported are:
-- i386
+- x86
+- x32
 - x86_64
 - arm64
 
 REQUIRED ASSEMBLERS
 -------------------
-i386 and x86_64: NASM (Netwide Assembler)
+x86, x32 and x86_64: NASM (Netwide Assembler)
 arm64: gas (GNU Assembler)
 
 BUILDING
