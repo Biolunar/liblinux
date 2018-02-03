@@ -14,14 +14,24 @@
 # limitations under the License.
 #
 
+BUILDDIR ?= build
+TARGET   ?= $(BUILDDIR)/liblinux_syscall.a
+
 SOURCES  := $(sort $(wildcard *.asm))
 OBJECTS  := $(patsubst %.asm, $(BUILDDIR)/%.o, $(SOURCES))
 
-$(BUILDDIR)/$(TARGET): $(OBJECTS)
-	@ar rcs $@ $^
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	@$(AR) rcs $@ $^
 
 $(OBJECTS): $(BUILDDIR)/%.o: %.asm | $(BUILDDIR)
-	@nasm -f elfx32 $< -o $@
+	@$(AS) $< -o $@ $(ASFLAGS)
 
 $(BUILDDIR):
-	@mkdir $@
+	@mkdir -p $@
+
+clean:
+	@$(RM) -rf $(BUILDDIR)
+
+.PHONY: all clean
