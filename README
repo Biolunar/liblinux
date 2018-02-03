@@ -11,10 +11,10 @@ Supported architectures can be queried by running
 $ make
 
 Currently supported are:
-- x86
-- x32
-- x86_64
 - arm64
+- x32
+- x86
+- x86_64
 
 REQUIRED ASSEMBLERS
 -------------------

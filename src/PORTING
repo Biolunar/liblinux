@@ -1,4 +1,6 @@
 If you are porting to a new architecture, do not forget to:
-- update the README,
-- check if all types and constants in the test suite are correct,
-- and run the test suite.
+- update the README
+- port the test suite
+- create a new default config
+- run the test suite
+- fix errors
