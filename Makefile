@@ -30,13 +30,10 @@ all:
 $(ARCH):
 	@$(MAKE) --no-print-directory TARGET=$(TARGET) BUILDDIR=../../$(BUILDDIR) -C src/$@
 
-test: $(BUILDDIR)/$(TARGET)
-	@$(MAKE) --no-print-directory TARGET=$@ BUILDDIR=../$(BUILDDIR) -C tests
-
 install: $(BUILDDIR)
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib
-	@mkdir -p $(PREFIX)/include/$(LIBNAME) $(PREFIX)/lib
-	@cp -r include/* $(PREFIX)/include/$(LIBNAME)
+	@mkdir -p $(PREFIX)/include $(PREFIX)/lib
+	@cp -r include/$(LIBNAME) $(PREFIX)/include
 	@cp $(BUILDDIR)/$(TARGET) $(PREFIX)/lib
 
 uninstall:
@@ -47,4 +44,4 @@ uninstall:
 clean:
 	@rm -rf $(BUILDDIR)
 
-.PHONY: all test install uninstall clean $(ARCH)
+.PHONY: all install uninstall clean $(ARCH)

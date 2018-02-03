@@ -20,7 +20,7 @@
 typedef long linux_kernel_long_t;
 typedef void linux_signalfn_t(int);
 typedef linux_signalfn_t* linux_sighandler_t;
-typedef struct // TODO: In /arch/x86/include/uapi/asm/signal.h this is defined as an unsigned long. Which is correct?
+typedef struct
 {
 	unsigned long sig[2];
 } linux_sigset_t;
@@ -78,6 +78,7 @@ struct linux_siginfo_t
 		{
 			void* addr;
 			short addr_lsb;
+			char _pad[2];
 			union
 			{
 				struct

@@ -22,7 +22,7 @@ typedef void linux_signalfn_t(int);
 typedef linux_signalfn_t* linux_sighandler_t;
 typedef struct
 {
-	unsigned long sig[1]; // TODO: Is this really only 1?
+	unsigned long sig[2];
 } linux_sigset_t;
 struct linux_sigaction_t
 {

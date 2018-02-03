@@ -1,2 +1,2 @@
 - use gas on x86 instead of nasm
-- support x32
+- make install should automatically build the default target. What is the default?

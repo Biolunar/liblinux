@@ -1,0 +1,8 @@
+#include <stddef.h>
+
+#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_MEMSET_H_INCLUDED
+#define HEADER_LIBLINUX_SYSCALL_TESTS_MEMSET_H_INCLUDED
+
+void* memset(void* dest, int ch, size_t count);
+
+#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_MEMSET_H_INCLUDED

@@ -14,15 +14,18 @@
 # limitations under the License.
 #
 
-CFLAGS += -std=c11 -pedantic-errors -Wall -Wextra -g -static
+.global _start
+_start:
+	// mark the deepest stack frame
+	mov x29, #0
+	mov x30, #0
 
-all: $(BUILDDIR)/$(TARGET)
-	@$<
+	ldr x0, [sp] // argc
+	add x1, sp, #8 // argv
 
-$(BUILDDIR)/$(TARGET): test.c
-	@$(CC) $(CFLAGS) -D_POSIX_C_SOURCE=200809L test.c -I../include -L ../build -llinux_syscall -o $@
+	// envp
+	add x2, x1, x0, lsl #3
+	add x2, x2, #16
 
-clean:
-	@$(RM) -f test
-
-.PHONY: all clean
+	mov x3, #0 // fini
+	bl linux_main

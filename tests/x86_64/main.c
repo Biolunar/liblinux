@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-#include "syscall.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <limits.h>
 #include <stdbool.h>
 #if __STDC_VERSION__ >= 201112L
@@ -27,10 +24,7 @@
 #define noreturn
 #endif // __STDC_VERSION__ >= 201112L
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <liblinux_syscall/syscall.h>
 
 typedef int linux_kernel_pid_t;
 typedef linux_kernel_pid_t linux_pid_t;
@@ -48,22 +42,15 @@ enum
 	linux_MREMAP_MAYMOVE = 1,
 };
 
-#ifdef __i386__
-#include "x86.h"
-#elif __x86_64__
-#ifdef __ILP32__
-#include "x32.h"
-#else // __ILP32__
 #include "x86_64.h"
-#endif // __ILP32__
-#elif __aarch64__
-#include "arm64.h"
-#else
-#error "Unsupported architecture"
-#endif
+#include "../memset.h"
+#include "../memcpy.h"
+#include "../strlen.h"
 
 typedef linux_kernel_long_t linux_kernel_off_t;
 typedef linux_kernel_off_t linux_off_t;
+
+noreturn void linux_main(uintptr_t argc, char* argv[], char* envp[], void fini(void));
 
 /*
  * A small selection of syscalls from 0 to 6 parameters.
@@ -81,8 +68,8 @@ static LINUX_DEFINE_SYSCALL3_RET(write, linux_fd_t, fd, void const*, buf, size_t
 static LINUX_DEFINE_SYSCALL4_NORET(rt_sigaction, int, sig, struct linux_sigaction_t const*, act, struct linux_sigaction_t*, oact, size_t, sigsetsize)
 static LINUX_DEFINE_SYSCALL5_RET(mremap, void const*, addr, size_t, old_len, size_t, new_len, unsigned long, flags, void const*, new_addr, void*)
 #ifdef __i386__
-static LINUX_DEFINE_SYSCALL6_RET(mmap2, void const*, addr, size_t, len, unsigned long, prot, unsigned long, flags, linux_fd_t, fd, linux_off_t, off, void*)
-#else // __i386__
+static LINUX_DEFINE_SYSCALL6_RET(mmap_pgoff, void const*, addr, size_t, len, unsigned long, prot, unsigned long, flags, linux_fd_t, fd, linux_off_t, off, void*)
+#else
 static LINUX_DEFINE_SYSCALL6_RET(mmap, void const*, addr, size_t, len, unsigned long, prot, unsigned long, flags, linux_fd_t, fd, linux_off_t, off, void*)
 #endif // __i386__
 
@@ -92,29 +79,34 @@ enum { buffer_size = 512 };
 
 static noreturn void die(char const* const err)
 {
-	fprintf(stderr, "\x1B[31m%s\x1B[m\n", err);
-	exit(EXIT_FAILURE);
+	char const start_format[] = "\x1B[31m";
+	char const end_format[] = "\x1B[m\n";
+
+	size_t const len = strlen(err);
+
+	linux_write(1, start_format, sizeof start_format, 0);
+	linux_write(1, err, len, 0);
+	linux_write(1, end_format, sizeof end_format, 0);
+
+	linux_exit(1);
 }
 
 static linux_pid_t get_pid(void)
 {
-	linux_pid_t pid = 0;
+	linux_pid_t pid;
 	if (linux_getpid(&pid))
 		die("linux_getpid failed");
-
-	if (pid != getpid())
-		die("linux_getpid returned the wrong pid");
 
 	return pid;
 }
 
 static void test_pipe(void)
 {
-	linux_fd_t fds[2] = {(linux_fd_t)-1, (linux_fd_t)-1};
+	linux_fd_t fds[2];
 	if (linux_pipe2(fds, 0))
 		die("linux_pipe failed");
 
-	size_t bytes_written = 0;
+	size_t bytes_written;
 	if (linux_write(fds[1], msg, sizeof msg, &bytes_written))
 		die("linux_write failed");
 
@@ -122,7 +114,7 @@ static void test_pipe(void)
 		die("linux_write did not write everything");
 
 	char buf[sizeof msg];
-	size_t bytes_read = 0;
+	size_t bytes_read;
 	if (linux_read(fds[0], buf, sizeof buf, &bytes_read))
 		die("linux_read failed");
 
@@ -136,23 +128,22 @@ static void test_pipe(void)
 static void test_memory(void)
 {
 	size_t const old_size = sizeof msg;
-	void* old_addr = 0;
+	void* old_addr;
 #ifdef __i386__
-	if (linux_mmap2(0, old_size, linux_PROT_READ | linux_PROT_WRITE, linux_MAP_PRIVATE | linux_MAP_ANONYMOUS, 0, 0, &old_addr))
-#else // __i386__
+	if (linux_mmap_pgoff(0, old_size, linux_PROT_READ | linux_PROT_WRITE, linux_MAP_PRIVATE | linux_MAP_ANONYMOUS, 0, 0, &old_addr))
+		die("linux_mmap_pgoff failed");
+#else
 	if (linux_mmap(0, old_size, linux_PROT_READ | linux_PROT_WRITE, linux_MAP_PRIVATE | linux_MAP_ANONYMOUS, 0, 0, &old_addr))
-#endif // __i386__
 		die("linux_mmap failed");
+#endif // __i386__
+
 	memset(old_addr, 0, old_size);
 
 	size_t const new_size = 2 * old_size;
-	void* new_addr = 0;
-	enum linux_error_t err = linux_mremap(old_addr, old_size, new_size, linux_MREMAP_MAYMOVE, 0, &new_addr);
-	if (err)
-	{
-		printf("%d\n", err);
+	void* new_addr;
+	if (linux_mremap(old_addr, old_size, new_size, linux_MREMAP_MAYMOVE, 0, &new_addr))
 		die("linux_mremap failed");
-	}
+
 	memset(new_addr, 0, new_size);
 
 	if (linux_munmap(new_addr, new_size))
@@ -172,7 +163,7 @@ static void test_signal(void)
 	{
 #ifdef __i386__
 		.u.sa_handler = &signal_handler,
-#else // __i386__
+#else
 		.sa_handler = &signal_handler,
 #endif // __i386__
 		.sa_flags = linux_SA_RESTORER,
@@ -189,14 +180,24 @@ static void test_signal(void)
 		die("Signal did not fire");
 }
 
-int main(void)
+noreturn void linux_main(uintptr_t const argc, char* argv[const], char* envp[const], void fini(void))
 {
-	printf("Starting test...\n");
+	(void)argc;
+	(void)argv;
+	(void)envp;
+	(void)fini;
+
+	char const start_msg[] = "Starting test...\n";
+	if (linux_write(1, start_msg, sizeof start_msg, 0))
+		die("linux_write failed");
 
 	test_pipe();
 	test_memory();
 	test_signal();
 
-	printf("Test finished \x1B[32mSUCCESSFULLY\x1B[m\n");
-	return EXIT_SUCCESS;
+	char const end_msg[] = "Test finished \x1B[32mSUCCESSFULLY\x1B[m\n";
+	if (linux_write(1, end_msg, sizeof end_msg, 0))
+		die("linux_write failed");
+
+	linux_exit(0);
 }

@@ -18,15 +18,15 @@
 #define HEADER_LIBLINUX_SYSCALL_NAMES_H_INCLUDED
 
 #ifdef __i386__
-# include <x86/names.h>
+# include "x86/names.h"
 #elif __x86_64__
 # ifdef __ILP32__
-#  include <x32/names.h>
+#  include "x32/names.h"
 # else // __ILP32__
-#  include <x86_64/names.h>
+#  include "x86_64/names.h"
 # endif // __ILP32__
 #elif __aarch64__
-# include <arm64/names.h>
+# include "arm64/names.h"
 #endif
 
 #endif // !HEADER_LIBLINUX_SYSCALL_NAMES_H_INCLUDED
