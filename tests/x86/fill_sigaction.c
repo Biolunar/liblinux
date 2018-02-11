@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-#include "memset.h"
+#include "../fill_sigaction.h"
+#include "../memset.h"
 
-void* memset(void* const dest, int const ch, size_t count)
+#include <liblinux_syscall/syscall.h>
+
+void fill_sigaction(struct linux_sigaction_t* sa, linux_sighandler_t handler)
 {
-	unsigned char* d = dest;
-	while (count--)
-		*d++ = (unsigned char)ch;
-	return dest;
+	memset(sa, 0, sizeof *sa);
+	sa->u.sa_handler = handler;
+	sa->sa_flags = linux_SA_RESTORER;
+	sa->sa_restorer = &linux_rt_sigreturn;
 }

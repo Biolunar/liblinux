@@ -25,30 +25,12 @@
 #endif // __STDC_VERSION__ >= 201112L
 
 #include <liblinux_syscall/syscall.h>
+#include "types.h"
+#include "fill_sigaction.h"
 
-typedef int linux_kernel_pid_t;
-typedef linux_kernel_pid_t linux_pid_t;
-typedef unsigned int linux_fd_t;
-typedef unsigned short linux_umode_t;
-typedef void linux_restorefn_t(void);
-typedef linux_restorefn_t* linux_sigrestore_t;
-
-enum
-{
-	linux_AT_FDCWD = -100,
-
-	linux_O_RDONLY = 00000000,
-
-	linux_MREMAP_MAYMOVE = 1,
-};
-
-#include "arm64.h"
-#include "../memset.h"
-#include "../memcpy.h"
-#include "../strlen.h"
-
-typedef linux_kernel_long_t linux_kernel_off_t;
-typedef linux_kernel_off_t linux_off_t;
+#include "memset.h"
+#include "memcpy.h"
+#include "strlen.h"
 
 noreturn void linux_main(uintptr_t argc, char* argv[], char* envp[], void fini(void));
 
@@ -67,11 +49,7 @@ static LINUX_DEFINE_SYSCALL3_RET(read, linux_fd_t, fd, void*, buf, size_t, count
 static LINUX_DEFINE_SYSCALL3_RET(write, linux_fd_t, fd, void const*, buf, size_t, count, size_t)
 static LINUX_DEFINE_SYSCALL4_NORET(rt_sigaction, int, sig, struct linux_sigaction_t const*, act, struct linux_sigaction_t*, oact, size_t, sigsetsize)
 static LINUX_DEFINE_SYSCALL5_RET(mremap, void const*, addr, size_t, old_len, size_t, new_len, unsigned long, flags, void const*, new_addr, void*)
-#ifdef __i386__
-static LINUX_DEFINE_SYSCALL6_RET(mmap_pgoff, void const*, addr, size_t, len, unsigned long, prot, unsigned long, flags, linux_fd_t, fd, linux_off_t, off, void*)
-#else
-static LINUX_DEFINE_SYSCALL6_RET(mmap, void const*, addr, size_t, len, unsigned long, prot, unsigned long, flags, linux_fd_t, fd, linux_off_t, off, void*)
-#endif // __i386__
+#include "mmap.h" // A syscall with 6 arguments.
 
 static char const msg[] = "This is a test message.";
 static bool volatile signaled = false;
@@ -129,13 +107,8 @@ static void test_memory(void)
 {
 	size_t const old_size = sizeof msg;
 	void* old_addr;
-#ifdef __i386__
-	if (linux_mmap_pgoff(0, old_size, linux_PROT_READ | linux_PROT_WRITE, linux_MAP_PRIVATE | linux_MAP_ANONYMOUS, 0, 0, &old_addr))
-		die("linux_mmap_pgoff failed");
-#else
-	if (linux_mmap(0, old_size, linux_PROT_READ | linux_PROT_WRITE, linux_MAP_PRIVATE | linux_MAP_ANONYMOUS, 0, 0, &old_addr))
-		die("linux_mmap failed");
-#endif // __i386__
+	if (mmap(0, old_size, linux_PROT_READ | linux_PROT_WRITE, linux_MAP_PRIVATE | linux_MAP_ANONYMOUS, 0, 0, &old_addr))
+		die("mmap failed");
 
 	memset(old_addr, 0, old_size);
 
@@ -159,16 +132,8 @@ static void signal_handler(int sig)
 
 static void test_signal(void)
 {
-	struct linux_sigaction_t sa =
-	{
-#ifdef __i386__
-		.u.sa_handler = &signal_handler,
-#else
-		.sa_handler = &signal_handler,
-#endif // __i386__
-		.sa_flags = linux_SA_RESTORER,
-		.sa_restorer = &linux_rt_sigreturn,
-	};
+	struct linux_sigaction_t sa;
+	fill_sigaction(&sa, &signal_handler);
 
 	if (linux_rt_sigaction(linux_SIGUSR1, &sa, 0, sizeof(linux_sigset_t)))
 		die("linux_rt_sigaction failed");

@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-#include "memset.h"
+#include "../mmap.h"
 
-void* memset(void* const dest, int const ch, size_t count)
+#include <liblinux_syscall/syscall.h>
+
+enum linux_error_t mmap(void const* const addr, size_t const len, unsigned long const prot, unsigned long const flags, linux_fd_t const fd, linux_off_t const off, void** const result)
 {
-	unsigned char* d = dest;
-	while (count--)
-		*d++ = (unsigned char)ch;
-	return dest;
+	intptr_t const ret = linux_syscall6((intptr_t)addr, (intptr_t)len, (intptr_t)prot, (intptr_t)flags, (intptr_t)fd, (intptr_t)off, linux_syscall_name_mmap);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (void*)ret;
+	return linux_error_none;
 }

@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-#include "memset.h"
+#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_MMAP_H_INCLUDED
+#define HEADER_LIBLINUX_SYSCALL_TESTS_MMAP_H_INCLUDED
 
-void* memset(void* const dest, int const ch, size_t count)
-{
-	unsigned char* d = dest;
-	while (count--)
-		*d++ = (unsigned char)ch;
-	return dest;
-}
+#include "types.h"
+
+#include <stddef.h>
+
+#include <liblinux_syscall/error.h>
+
+enum linux_error_t mmap(void const* addr, size_t len, unsigned long prot, unsigned long flags, linux_fd_t fd, linux_off_t off, void** result);
+
+#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_MMAP_H_INCLUDED

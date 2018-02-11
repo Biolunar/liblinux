@@ -18,7 +18,7 @@ PREFIX   := /usr/local
 
 LIBNAME  := liblinux_syscall
 BUILDDIR := build
-TARGET   := $(BUILDDIR)/$(LIBNAME).a
+TARGET   := $(LIBNAME).a
 ARCH     := x86 x32 x86_64 arm64
 
 all:
@@ -28,7 +28,7 @@ all:
 	@echo "    $(ARCH)"
 
 $(ARCH):
-	@$(MAKE) --no-print-directory TARGET=../../$(TARGET) BUILDDIR=../../$(BUILDDIR) -C src/$@
+	@$(MAKE) --no-print-directory TARGET=../../$(BUILDDIR)/$(TARGET) BUILDDIR=../../$(BUILDDIR) -C src/$@
 
 install: $(BUILDDIR)
 	@echo Installing library to $(PREFIX)/include and $(PREFIX)/lib

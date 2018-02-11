@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_X32_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_TESTS_X32_H_INCLUDED
+#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_X32_ARCH_H_INCLUDED
+#define HEADER_LIBLINUX_SYSCALL_TESTS_X32_ARCH_H_INCLUDED
 
 typedef long long linux_kernel_long_t;
 typedef void linux_signalfn_t(int);
 typedef linux_signalfn_t* linux_sighandler_t;
+typedef void linux_restorefn_t(void);
+typedef linux_restorefn_t* linux_sigrestore_t;
 typedef struct
 {
 	unsigned long sig[2];
@@ -46,4 +48,4 @@ enum
 	linux_SA_RESTORER = 0x04000000,
 };
 
-#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_X32_H_INCLUDED
+#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_X32_ARCH_H_INCLUDED

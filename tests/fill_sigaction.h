@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-#include "memset.h"
+#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_FILL_SIGACTION_H_INCLUDED
+#define HEADER_LIBLINUX_SYSCALL_TESTS_FILL_SIGACTION_H_INCLUDED
 
-void* memset(void* const dest, int const ch, size_t count)
-{
-	unsigned char* d = dest;
-	while (count--)
-		*d++ = (unsigned char)ch;
-	return dest;
-}
+#include "types.h"
+
+void fill_sigaction(struct linux_sigaction_t* sa, linux_sighandler_t handler);
+
+#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_FILL_SIGACTION_H_INCLUDED
