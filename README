@@ -7,14 +7,11 @@ required (C11 is recommended).
 
 SUPPORTED ARCHITECTURES
 -----------------------
-Supported architectures can be queried by running
-$ make
-
 Currently supported are:
-- arm64
-- x32
 - x86
+- x32
 - x86_64
+- arm64
 
 REQUIRED ASSEMBLERS
 -------------------
@@ -23,16 +20,39 @@ arm64: gas (GNU Assembler)
 
 BUILDING
 --------
-To build the library, run
-$ make <arch>
-And to install the library, run
-# make [PREFIX=<path>] install
-The default prefix is /usr/local.
+To build a version of the library, run
+    make [option=value ...] <arch>
+where "option" can be: (multiple option=value pairs can be provided by separating them with spaces)
+    TARGET  - the name of the library (default: liblinux_syscall.a)
+    AS      - name of the assembler program to use (default depends on the architecture)
+    ASFLAGS - additional flags passed to the assembler (default depends on the architecture)
+    AR      - name of the archiver program to use (default depends on the architecture)
+    ARFLAGS - commands passed to the archiver (default depends on the architecture)
+and "arch" can be one of:
+    x86
+    x32
+    x86_64
+    arm64
+
+You can build multiple versions of the library as long as you use a different name for each (or
+they will just replace eachother)
+
+INSTALLATION
+------------
+To (un)install the library, run
+    make [option=value ...] command
+where "option" can be: (multiple option=value pairs can be provided by separating them with spaces)
+    DESTDIR   - overrides the destination directory for the installation (default is empty)
+    PREFIX    - the installation prefix (default: /usr/local)
+and "command" can be one of:
+    install   - copies the headers and all previously build libraries to (DESTDIR)(PREFIX)
+    uninstall - removes the headers and all previously build libraries from (DESTDIR)(PREFIX)
+
+If you install the library without building it first, only the headers will be copied.
 
 TESTING
 -------
-First, build the library. Then run
-$ make test
+TODO
 
 BUGS
 ----

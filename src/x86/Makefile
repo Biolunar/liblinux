@@ -14,24 +14,43 @@
 # limitations under the License.
 #
 
-BUILDDIR ?= build
-TARGET   ?= $(BUILDDIR)/liblinux_syscall.a
+.POSIX:
+.SUFFIXES:
 
-SOURCES  := $(sort $(wildcard *.asm))
-OBJECTS  := $(patsubst %.asm, $(BUILDDIR)/%.o, $(SOURCES))
+AS       = nasm
+ASFLAGS  = -w+all
+AR       = ar
+ARFLAGS  = rcs
+TARGET   = liblinux_syscall.a
+
+objects  = exit.o\
+	   exit_group.o\
+	   rt_sigreturn.o\
+	   sigreturn.o\
+	   syscall0.o\
+	   syscall1.o\
+	   syscall2.o\
+	   syscall3.o\
+	   syscall4.o\
+	   syscall5.o\
+	   syscall6.o\
+	   vsyscall0.o\
+	   vsyscall1.o\
+	   vsyscall2.o\
+	   vsyscall3.o\
+	   vsyscall4.o\
+	   vsyscall5.o\
+	   vsyscall6.o\
+	   vsyscall_ptr.o
 
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
-	@$(AR) rcs $@ $^
+$(TARGET): $(objects)
+	$(AR) $(ARFLAGS) $@ $(objects)
 
-$(OBJECTS): $(BUILDDIR)/%.o: %.asm | $(BUILDDIR)
-	@$(AS) $< -o $@ $(ASFLAGS)
-
-$(BUILDDIR):
-	@mkdir -p $@
+.SUFFIXES: .asm .o
+.asm.o:
+	$(AS) $(ASFLAGS) -o $@ -f elf32 $<
 
 clean:
-	@$(RM) -rf $(BUILDDIR)
-
-.PHONY: all clean
+	rm -f *.o *.a
