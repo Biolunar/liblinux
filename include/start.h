@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-.global _start
-_start:
-	/* mark the deepest stack frame */
-	mov x29, #0
-	mov x30, #0
+#ifndef HEADER_LIBLINUX_START_H_INCLUDED
+#define HEADER_LIBLINUX_START_H_INCLUDED
 
-	ldr x0, [sp] /* argc */
-	add x1, sp, #8 /* argv */
+#include <stdint.h>
+#if __STDC_VERSION__ >= 201112L
+#include <stdnoreturn.h>
+#else // __STDC_VERSION__ >= 201112L
+#define noreturn
+#endif // __STDC_VERSION__ >= 201112L
 
-	/* envp */
-	add x2, x1, x0, lsl #3
-	add x2, x2, #16
+/*
+ * If you are not using the libc you can implement this function and link to
+ * the liblinux_start library for this function to be your entry point.
+ */
+noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[]);
 
-	bl linux_start
+#endif // !HEADER_LIBLINUX_START_H_INCLUDED

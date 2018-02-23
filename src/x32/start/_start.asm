@@ -15,17 +15,16 @@
 ;
 
 BITS 64
-EXTERN linux_main
+EXTERN linux_start
 
 GLOBAL _start
 _start:
 	xor rbp, rbp ; mark the deepest stack frame
 
-	mov rcx, rdx ; fini
 	mov edi, [rsp] ; argc
-	lea esi, [4+rsp] ; argv
-	lea edx, [4+4*rdi+rsp + 4] ; envp
+	lea esi, [4 + rsp] ; argv
+	lea edx, [4 + 4 * rdi + rsp + 4] ; envp
 
 	; Use the call instruction so that the rip register gets pushed onto the stack
 	; to correctly set up the stack frame for the C function.
-	call linux_main
+	call linux_start

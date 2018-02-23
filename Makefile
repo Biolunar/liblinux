@@ -43,19 +43,19 @@ help:
 
 $(arch):
 	@cd src/$@ && $(MAKE)
-	mkdir -p build/liblinux_syscall
-	cp src/$@/start/$(TARGET)_start.a src/$@/syscall/$(TARGET)_syscall.a build/liblinux_syscall
+	mkdir -p build
+	cp src/$@/start/$(TARGET)_start.a src/$@/syscall/$(TARGET)_syscall.a build
 
 install:
-	@echo "Installing library to $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib"
-	mkdir -p $(DESTDIR)$(PREFIX)/include $(DESTDIR)$(PREFIX)/lib
-	cp -r include/* $(DESTDIR)$(PREFIX)/include
-	-cp -r build/liblinux_syscall $(DESTDIR)$(PREFIX)/lib
+	@echo "Installing library to $(DESTDIR)$(PREFIX)/include/liblinux and $(DESTDIR)$(PREFIX)/lib/liblinux"
+	mkdir -p $(DESTDIR)$(PREFIX)/include/liblinux $(DESTDIR)$(PREFIX)/lib/liblinux
+	cp -r include/* $(DESTDIR)$(PREFIX)/include/liblinux
+	-cp -r build/*.a $(DESTDIR)$(PREFIX)/lib/liblinux
 
 uninstall:
-	@echo "Uninstalling library from $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib"
-	rm -rf $(DESTDIR)$(PREFIX)/include/liblinux_syscall
-	rm -rf $(DESTDIR)$(PREFIX)/lib/liblinux_syscall
+	@echo "Uninstalling library from $(DESTDIR)$(PREFIX)/include/liblinux and $(DESTDIR)$(PREFIX)/lib/liblinux"
+	rm -rf $(DESTDIR)$(PREFIX)/include/liblinux
+	rm -rf $(DESTDIR)$(PREFIX)/lib/liblinux
 
 clean:
 	rm -rf build

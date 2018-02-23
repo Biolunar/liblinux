@@ -15,18 +15,15 @@
 ;
 
 BITS 32
-EXTERN linux_main
+EXTERN linux_start
 
 GLOBAL _start
 _start:
 	xor ebp, ebp ; mark the deepest stack frame
-	push edx ; fini
 
-	; Need an additional +4 offset for every [esp] access because the fini pointer
-	; was pushed onto the stack.
-	mov edi, [esp + 4] ; argc
-	lea esi, [esp + 8] ; argv
-	lea edx, [4 * edi + esp + 12] ; envp
+	mov edi, [esp] ; argc
+	lea esi, [esp + 4] ; argv
+	lea edx, [4 * edi + esp + 8] ; envp
 
 	push edx ; envp
 	push esi ; argv
@@ -34,4 +31,4 @@ _start:
 
 	; Use the call instruction so that the eip register gets pushed onto the stack
 	; to correctly set up the stack frame for the C function.
-	call linux_main
+	call linux_start
