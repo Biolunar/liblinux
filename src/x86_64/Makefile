@@ -23,7 +23,7 @@ ASFLAGS  = -w+all
 AR       = ar
 ARFLAGS  = rcs
 
-makecmd  = $(MAKE) TARGET=$(TARGET) AS=$(AS) ASFLAGS=$(ASFLAGS) AR=$(AR) ARFLAGS=$(ARFLAGS)
+makecmd  = $(MAKE) TARGET=$(TARGET) AS=$(AS) AR=$(AR) ASFLAGS="$(ASFLAGS)" ARFLAGS="$(ARFLAGS)"
 
 all:
 	@cd start   && $(makecmd)

@@ -17,53 +17,46 @@
 .POSIX:
 .SUFFIXES:
 
-DESTDIR  =
-PREFIX   = /usr/local
-TARGET   = liblinux
+CONFIG  = config.mk
 
-arch     = x86 x32 x86_64 arm64
+-include $(CONFIG)
+
+makecmd = $(MAKE) ARCH=$(ARCH) TARGET=$(TARGET) AS=$(AS) AR=$(AR) CC=$(CC) LD=$(LD) ASFLAGS="$(ASFLAGS)" ARFLAGS="$(ARFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 help:
-	@echo "Usage: make [option=value ...] <architecture/command>"
-	@echo "Valid architectures:"
-	@echo "    $(arch)"
+	@echo "Usage: make [CONFIG=filename.mk ...] <command>"
 	@echo "Valid commands:"
+	@echo "    help      - this help message"
+	@echo "    build     - builds the library"
+	@echo "    test      - builds the library and runs the test suite"
 	@echo "    clean     - removes all previously build files"
-	@echo "    install   - copies the headers and all previously build libraries from (DESTDIR)(PREFIX)"
+	@echo "    install   - copies the headers and all previously build libraries to (DESTDIR)(PREFIX)"
 	@echo "    uninstall - removes the headers and all previously build libraries from (DESTDIR)(PREFIX)"
-	@echo "Valid architecture options:"
-	@echo "    TARGET    - the name of the library (default: $(TARGET))"
-	@echo "    AS        - name of the assembler program to use (default depends on the architecture)"
-	@echo "    ASFLAGS   - additional flags passed to the assembler (default depends on the architecture)"
-	@echo "    AR        - name of the archiver program to use (default depends on the architecture)"
-	@echo "    ARFLAGS   - commands passed to the archiver (default depends on the architecture)"
-	@echo "Valid command options:"
-	@echo "    DESTDIR   - overrides the destination directory for the installation (default: $(DESTDIR))"
-	@echo "    PREFIX    - the installation prefix (default: $(PREFIX))"
+	@echo "You need to specfiy a config file to build or install the library or you can create a default config file named 'config.mk'."
 
-$(arch):
-	@cd src/$@ && $(MAKE)
+build:
+	@cd src/$(ARCH) && $(makecmd)
 	mkdir -p build
-	cp src/$@/start/$(TARGET)_start.a src/$@/syscall/$(TARGET)_syscall.a build
+	cp src/$(ARCH)/start/$(TARGET)_start.a src/$(ARCH)/syscall/$(TARGET)_syscall.a build
+
+test: build
+	@cd tests && $(makecmd)
 
 install:
-	@echo "Installing library to $(DESTDIR)$(PREFIX)/include/liblinux and $(DESTDIR)$(PREFIX)/lib/liblinux"
-	mkdir -p $(DESTDIR)$(PREFIX)/include/liblinux $(DESTDIR)$(PREFIX)/lib/liblinux
-	cp -r include/* $(DESTDIR)$(PREFIX)/include/liblinux
+	@echo "Installing library to $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib/liblinux"
+	mkdir -p $(DESTDIR)$(PREFIX)/include $(DESTDIR)$(PREFIX)/lib/liblinux
+	cp -r include/liblinux $(DESTDIR)$(PREFIX)/include
 	-cp -r build/*.a $(DESTDIR)$(PREFIX)/lib/liblinux
 
 uninstall:
-	@echo "Uninstalling library from $(DESTDIR)$(PREFIX)/include/liblinux and $(DESTDIR)$(PREFIX)/lib/liblinux"
+	@echo "Uninstalling library from $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib"
 	rm -rf $(DESTDIR)$(PREFIX)/include/liblinux
 	rm -rf $(DESTDIR)$(PREFIX)/lib/liblinux
 
 clean:
 	rm -rf build
-	@cd src/x86/start      && $(MAKE) clean
-	@cd src/x86/syscall    && $(MAKE) clean
-	@cd src/x32/start      && $(MAKE) clean
-	@cd src/x32/syscall    && $(MAKE) clean
-	@cd src/x86_64/start   && $(MAKE) clean
-	@cd src/x86_64/syscall && $(MAKE) clean
-	@cd src/arm64/start    && $(MAKE) clean
-	@cd src/arm64/syscall  && $(MAKE) clean
+	@cd tests      && $(makecmd) clean
+	@cd src/x86    && $(makecmd) clean
+	@cd src/x32    && $(makecmd) clean
+	@cd src/x86_64 && $(makecmd) clean
+	@cd src/arm64  && $(makecmd) clean

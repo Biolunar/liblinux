@@ -21,7 +21,7 @@
 
 #include <stddef.h>
 
-#include <liblinux_syscall/error.h>
+#include <liblinux/error.h>
 
 enum linux_error_t mmap(void const* addr, size_t len, unsigned long prot, unsigned long flags, linux_fd_t fd, linux_off_t off, void** result);
 

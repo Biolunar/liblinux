@@ -36,7 +36,7 @@ enum
 #elif __x86_64__
 #ifdef __ILP32__
 #include "x32/arch.h"
-#else
+#else // __ILP32__
 #include "x86_64/arch.h"
 #endif // __ILP32__
 #elif __aarch64__

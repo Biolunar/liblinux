@@ -16,23 +16,16 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <limits.h>
 #include <stdbool.h>
-#if __STDC_VERSION__ >= 201112L
-#include <stdnoreturn.h>
-#else // __STDC_VERSION__ >= 201112L
-#define noreturn
-#endif // __STDC_VERSION__ >= 201112L
 
-#include <liblinux_syscall/syscall.h>
+#include <liblinux/syscall.h>
+#include <liblinux/start.h>
 #include "types.h"
 #include "fill_sigaction.h"
 
 #include "memset.h"
 #include "memcpy.h"
 #include "strlen.h"
-
-noreturn void linux_main(uintptr_t argc, char* argv[], char* envp[], void fini(void));
 
 /*
  * A small selection of syscalls from 0 to 6 parameters.
@@ -145,12 +138,11 @@ static void test_signal(void)
 		die("Signal did not fire");
 }
 
-noreturn void linux_main(uintptr_t const argc, char* argv[const], char* envp[const], void fini(void))
+noreturn void linux_start(uintptr_t const argc, char* argv[const], char* envp[const])
 {
 	(void)argc;
 	(void)argv;
 	(void)envp;
-	(void)fini;
 
 	char const start_msg[] = "Starting test...\n";
 	if (linux_write(1, start_msg, sizeof start_msg, 0))

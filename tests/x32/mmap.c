@@ -16,7 +16,7 @@
 
 #include "../mmap.h"
 
-#include <liblinux_syscall/syscall.h>
+#include <liblinux/syscall.h>
 
 enum linux_error_t mmap(void const* const addr, size_t const len, unsigned long const prot, unsigned long const flags, linux_fd_t const fd, linux_off_t const off, void** const result)
 {

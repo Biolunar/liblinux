@@ -17,7 +17,7 @@
 #include "../fill_sigaction.h"
 #include "../memset.h"
 
-#include <liblinux_syscall/syscall.h>
+#include <liblinux/syscall.h>
 
 void fill_sigaction(struct linux_sigaction_t* sa, linux_sighandler_t handler)
 {
