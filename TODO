@@ -1,2 +1,1 @@
 - use gas on x86 instead of nasm
-- make install should automatically build the default target. What is the default?

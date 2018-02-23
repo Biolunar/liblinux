@@ -17,18 +17,17 @@
 .POSIX:
 .SUFFIXES:
 
-TARGET   = liblinux
-AS       = nasm
-ASFLAGS  = -w+all
-AR       = ar
-ARFLAGS  = rcs
+lib      = $(TARGET)_start.a
+objects  = _start.o
 
-makecmd  = $(MAKE) TARGET=$(TARGET) AS=$(AS) ASFLAGS=$(ASFLAGS) AR=$(AR) ARFLAGS=$(ARFLAGS)
+all: $(lib)
 
-all:
-	@cd start   && $(makecmd)
-	@cd syscall && $(makecmd)
+$(lib): $(objects)
+	$(AR) $(ARFLAGS) $@ $(objects)
+
+.SUFFIXES: .asm .o
+.asm.o:
+	$(AS) $(ASFLAGS) -o $@ -f elf32 $<
 
 clean:
-	@cd start   && $(makecmd) clean
-	@cd syscall && $(makecmd) clean
+	rm -f *.o *.a

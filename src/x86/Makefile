@@ -17,40 +17,18 @@
 .POSIX:
 .SUFFIXES:
 
+TARGET   = liblinux
 AS       = nasm
 ASFLAGS  = -w+all
 AR       = ar
 ARFLAGS  = rcs
-TARGET   = liblinux_syscall.a
 
-objects  = exit.o\
-	   exit_group.o\
-	   rt_sigreturn.o\
-	   sigreturn.o\
-	   syscall0.o\
-	   syscall1.o\
-	   syscall2.o\
-	   syscall3.o\
-	   syscall4.o\
-	   syscall5.o\
-	   syscall6.o\
-	   vsyscall0.o\
-	   vsyscall1.o\
-	   vsyscall2.o\
-	   vsyscall3.o\
-	   vsyscall4.o\
-	   vsyscall5.o\
-	   vsyscall6.o\
-	   vsyscall_ptr.o
+makecmd  = $(MAKE) TARGET=$(TARGET) AS=$(AS) ASFLAGS=$(ASFLAGS) AR=$(AR) ARFLAGS=$(ARFLAGS)
 
-all: $(TARGET)
-
-$(TARGET): $(objects)
-	$(AR) $(ARFLAGS) $@ $(objects)
-
-.SUFFIXES: .asm .o
-.asm.o:
-	$(AS) $(ASFLAGS) -o $@ -f elf32 $<
+all:
+	@cd start   && $(makecmd)
+	@cd syscall && $(makecmd)
 
 clean:
-	rm -f *.o *.a
+	@cd start   && $(makecmd) clean
+	@cd syscall && $(makecmd) clean

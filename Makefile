@@ -19,7 +19,7 @@
 
 DESTDIR  =
 PREFIX   = /usr/local
-TARGET   = liblinux_syscall.a
+TARGET   = liblinux
 
 arch     = x86 x32 x86_64 arm64
 
@@ -44,7 +44,7 @@ help:
 $(arch):
 	@cd src/$@ && $(MAKE)
 	mkdir -p build/liblinux_syscall
-	cp src/$@/$(TARGET) build/liblinux_syscall
+	cp src/$@/start/$(TARGET)_start.a src/$@/syscall/$(TARGET)_syscall.a build/liblinux_syscall
 
 install:
 	@echo "Installing library to $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib"
@@ -59,7 +59,11 @@ uninstall:
 
 clean:
 	rm -rf build
-	@cd src/x86    && $(MAKE) clean
-	@cd src/x32    && $(MAKE) clean
-	@cd src/x86_64 && $(MAKE) clean
-	@cd src/arm64  && $(MAKE) clean
+	@cd src/x86/start      && $(MAKE) clean
+	@cd src/x86/syscall    && $(MAKE) clean
+	@cd src/x32/start      && $(MAKE) clean
+	@cd src/x32/syscall    && $(MAKE) clean
+	@cd src/x86_64/start   && $(MAKE) clean
+	@cd src/x86_64/syscall && $(MAKE) clean
+	@cd src/arm64/start    && $(MAKE) clean
+	@cd src/arm64/syscall  && $(MAKE) clean
