@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_X86_64_NAMES_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_X86_64_NAMES_H_INCLUDED
+#ifndef HEADER_LIBLINUX_X86_64_NAMES_H_INCLUDED
+#define HEADER_LIBLINUX_X86_64_NAMES_H_INCLUDED
 
 enum
 {
@@ -354,4 +354,4 @@ enum
 	linux_syscall_name_statx                  = 332,
 };
 
-#endif // !HEADER_LIBLINUX_SYSCALL_X86_64_NAMES_H_INCLUDED
+#endif // !HEADER_LIBLINUX_X86_64_NAMES_H_INCLUDED

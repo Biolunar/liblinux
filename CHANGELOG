@@ -1,0 +1,8 @@
+0.4.0
+=====
+
+- Renamed the library from liblinux_syscall to just liblinux.
+- Added a second library, liblinux_start.a, that can be used to compile applications without the need for a libc.
+- Build system completely revamped, check README for details how to build the library.
+- Added x32 ABI.
+- Renamed i386 to x86.

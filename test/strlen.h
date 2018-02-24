@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_MMAP_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_TESTS_MMAP_H_INCLUDED
-
-#include "types.h"
+#ifndef HEADER_LIBLINUX_TEST_STRLEN_H_INCLUDED
+#define HEADER_LIBLINUX_TEST_STRLEN_H_INCLUDED
 
 #include <stddef.h>
 
-#include <liblinux/error.h>
+size_t strlen(char const* str);
 
-enum linux_error_t mmap(void const* addr, size_t len, unsigned long prot, unsigned long flags, linux_fd_t fd, linux_off_t off, void** result);
-
-#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_MMAP_H_INCLUDED
+#endif // !HEADER_LIBLINUX_TEST_STRLEN_H_INCLUDED

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_SYSCALL_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_SYSCALL_H_INCLUDED
+#ifndef HEADER_LIBLINUX_SYSCALL_H_INCLUDED
+#define HEADER_LIBLINUX_SYSCALL_H_INCLUDED
 
 #if __STDC_VERSION__ < 199901L
 #error "This library needs at least a C99 compiler."
@@ -444,4 +444,4 @@ noreturn void linux_rt_sigreturn(void);
 // Definition without return value
 //------------------------------------------------------------------------------
 
-#endif // !HEADER_LIBLINUX_SYSCALL_SYSCALL_H_INCLUDED
+#endif // !HEADER_LIBLINUX_SYSCALL_H_INCLUDED

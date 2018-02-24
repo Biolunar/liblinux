@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
+#ifndef HEADER_LIBLINUX_ERROR_H_INCLUDED
+#define HEADER_LIBLINUX_ERROR_H_INCLUDED
 
 #if __STDC_VERSION__ < 199901L
 #error "This library needs at least a C99 compiler."
@@ -173,4 +173,4 @@ static inline bool linux_syscall_returned_error(intptr_t const ret)
 	return ret < 0 && ret >= -linux_error_max;
 }
 
-#endif // !HEADER_LIBLINUX_SYSCALL_ERROR_H_INCLUDED
+#endif // !HEADER_LIBLINUX_ERROR_H_INCLUDED

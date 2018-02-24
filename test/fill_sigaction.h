@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_STRLEN_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_TESTS_STRLEN_H_INCLUDED
+#ifndef HEADER_LIBLINUX_TEST_FILL_SIGACTION_H_INCLUDED
+#define HEADER_LIBLINUX_TEST_FILL_SIGACTION_H_INCLUDED
 
-#include <stddef.h>
+#include "types.h"
 
-size_t strlen(char const* str);
+void fill_sigaction(struct linux_sigaction_t* sa, linux_sighandler_t handler);
 
-#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_STRLEN_H_INCLUDED
+#endif // !HEADER_LIBLINUX_TEST_FILL_SIGACTION_H_INCLUDED

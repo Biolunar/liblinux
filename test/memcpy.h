@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_MEMSET_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_TESTS_MEMSET_H_INCLUDED
+#ifndef HEADER_LIBLINUX_TEST_MEMCPY_H_INCLUDED
+#define HEADER_LIBLINUX_TEST_MEMCPY_H_INCLUDED
 
 #include <stddef.h>
 
-void* memset(void* dest, int ch, size_t count);
+void* memcpy(void* dest, void const* src, size_t count);
 
-#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_MEMSET_H_INCLUDED
+#endif // !HEADER_LIBLINUX_TEST_MEMCPY_H_INCLUDED

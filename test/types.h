@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_TYPES_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_TESTS_TYPES_H_INCLUDED
+#ifndef HEADER_LIBLINUX_TEST_TYPES_H_INCLUDED
+#define HEADER_LIBLINUX_TEST_TYPES_H_INCLUDED
 
 typedef int linux_kernel_pid_t;
 typedef linux_kernel_pid_t linux_pid_t;
@@ -46,4 +46,4 @@ enum
 typedef linux_kernel_long_t linux_kernel_off_t;
 typedef linux_kernel_off_t linux_off_t;
 
-#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_TYPES_H_INCLUDED
+#endif // !HEADER_LIBLINUX_TEST_TYPES_H_INCLUDED

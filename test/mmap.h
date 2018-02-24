@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_MEMCPY_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_TESTS_MEMCPY_H_INCLUDED
+#ifndef HEADER_LIBLINUX_TEST_MMAP_H_INCLUDED
+#define HEADER_LIBLINUX_TEST_MMAP_H_INCLUDED
+
+#include "types.h"
 
 #include <stddef.h>
 
-void* memcpy(void* dest, void const* src, size_t count);
+#include <liblinux/error.h>
 
-#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_MEMCPY_H_INCLUDED
+enum linux_error_t mmap(void const* addr, size_t len, unsigned long prot, unsigned long flags, linux_fd_t fd, linux_off_t off, void** result);
+
+#endif // !HEADER_LIBLINUX_TEST_MMAP_H_INCLUDED

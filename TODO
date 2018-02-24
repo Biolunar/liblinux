@@ -1,3 +1,2 @@
-- use gas on x86 instead of nasm
+- support gas for x86/x32/x86_64
 - support fini
-- check include guards

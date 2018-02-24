@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_TESTS_X86_ARCH_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_TESTS_X86_ARCH_H_INCLUDED
+#ifndef HEADER_LIBLINUX_TEST_X86_ARCH_H_INCLUDED
+#define HEADER_LIBLINUX_TEST_X86_ARCH_H_INCLUDED
 
 typedef long linux_kernel_long_t;
 typedef void linux_signalfn_t(int);
@@ -134,4 +134,4 @@ enum
 	linux_PAGE_SHIFT = 12,
 };
 
-#endif // !HEADER_LIBLINUX_SYSCALL_TESTS_X86_ARCH_H_INCLUDED
+#endif // !HEADER_LIBLINUX_TEST_X86_ARCH_H_INCLUDED

@@ -24,7 +24,7 @@ CONFIG  = config.mk
 makecmd = $(MAKE) ARCH=$(ARCH) TARGET=$(TARGET) AS=$(AS) AR=$(AR) CC=$(CC) LD=$(LD) ASFLAGS="$(ASFLAGS)" ARFLAGS="$(ARFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 help:
-	@echo "Usage: make [CONFIG=filename.mk ...] <command>"
+	@echo "Usage: make [CONFIG=filename.mk] <command>"
 	@echo "Valid commands:"
 	@echo "    help      - this help message"
 	@echo "    build     - builds the library"
@@ -40,7 +40,7 @@ build:
 	cp src/$(ARCH)/start/$(TARGET)_start.a src/$(ARCH)/syscall/$(TARGET)_syscall.a build
 
 test: build
-	@cd tests && $(makecmd)
+	@cd test && $(makecmd)
 
 install:
 	@echo "Installing library to $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib/liblinux"
@@ -55,7 +55,7 @@ uninstall:
 
 clean:
 	rm -rf build
-	@cd tests      && $(makecmd) clean
+	@cd test       && $(makecmd) clean
 	@cd src/x86    && $(makecmd) clean
 	@cd src/x32    && $(makecmd) clean
 	@cd src/x86_64 && $(makecmd) clean

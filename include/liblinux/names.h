@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_NAMES_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_NAMES_H_INCLUDED
+#ifndef HEADER_LIBLINUX_NAMES_H_INCLUDED
+#define HEADER_LIBLINUX_NAMES_H_INCLUDED
 
 #ifdef __i386__
 # include "x86/names.h"
@@ -29,4 +29,4 @@
 # include "arm64/names.h"
 #endif
 
-#endif // !HEADER_LIBLINUX_SYSCALL_NAMES_H_INCLUDED
+#endif // !HEADER_LIBLINUX_NAMES_H_INCLUDED

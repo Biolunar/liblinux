@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_SYSCALL_X86_NAMES_H_INCLUDED
-#define HEADER_LIBLINUX_SYSCALL_X86_NAMES_H_INCLUDED
+#ifndef HEADER_LIBLINUX_X86_NAMES_H_INCLUDED
+#define HEADER_LIBLINUX_X86_NAMES_H_INCLUDED
 
 enum
 {
@@ -406,4 +406,4 @@ enum
 	linux_syscall_name_arch_prctl             = 384,
 };
 
-#endif // !HEADER_LIBLINUX_SYSCALL_X86_NAMES_H_INCLUDED
+#endif // !HEADER_LIBLINUX_X86_NAMES_H_INCLUDED
