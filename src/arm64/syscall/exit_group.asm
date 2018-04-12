@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+.section .text
+
 .global linux_exit_group
 linux_exit_group:
 	mov x8, #94

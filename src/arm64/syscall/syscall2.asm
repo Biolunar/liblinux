@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+.section .text
+
 .global linux_syscall2
 linux_syscall2:
 	mov x8, x2

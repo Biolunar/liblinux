@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+.section .text
+
 .global linux_rt_sigreturn
 linux_rt_sigreturn:
 	mov x8, #139

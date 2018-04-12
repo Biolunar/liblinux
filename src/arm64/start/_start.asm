@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+.section .text
+
 .global _start
 _start:
 	/* mark the deepest stack frame */

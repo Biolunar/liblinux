@@ -15,6 +15,7 @@
 ;
 
 BITS 32
+SECTION .text
 
 EXTERN linux_vsyscall_ptr
 

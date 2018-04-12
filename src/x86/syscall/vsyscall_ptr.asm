@@ -15,8 +15,7 @@
 ;
 
 BITS 32
-
-SEGMENT .bss
+SECTION .bss
 
 GLOBAL linux_vsyscall_ptr
 linux_vsyscall_ptr: resd 1

@@ -15,6 +15,7 @@
 ;
 
 BITS 32
+SECTION .text
 
 GLOBAL linux_syscall5
 linux_syscall5:

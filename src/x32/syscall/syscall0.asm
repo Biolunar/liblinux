@@ -15,6 +15,7 @@
 ;
 
 BITS 64
+SECTION .text
 
 GLOBAL linux_syscall0
 linux_syscall0:

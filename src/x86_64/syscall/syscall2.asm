@@ -15,6 +15,7 @@
 ;
 
 BITS 64
+SECTION .text
 
 GLOBAL linux_syscall2
 linux_syscall2:

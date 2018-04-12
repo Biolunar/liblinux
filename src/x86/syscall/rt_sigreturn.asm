@@ -15,6 +15,7 @@
 ;
 
 BITS 32
+SECTION .text
 
 GLOBAL linux_rt_sigreturn
 linux_rt_sigreturn:

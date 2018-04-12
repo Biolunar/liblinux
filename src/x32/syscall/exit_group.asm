@@ -15,6 +15,7 @@
 ;
 
 BITS 64
+SECTION .text
 
 GLOBAL linux_exit_group
 linux_exit_group:
