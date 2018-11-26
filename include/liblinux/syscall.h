@@ -37,13 +37,12 @@
 #ifdef __i386__
 
 /*
- * On x86 you use the assembly instruction "int 0x80" to invoke syscalls,
- * which is not very fast. Therefore Linux exports a function called
+ * On x86 you use the assembly instruction "int 0x80" to invoke syscalls, which
+ * is not very fast. Therefore Linux exports a function called
  * "__kernel_vsyscall" in the vDSO for applications to use, to speed up the
- * the context switch.
- * To make use of this function, just assign to the address of the
- * __kernel_vsyscall symbol to the variable linux_vsyscall_ptr. Then you can
- * invoke syscalls with the linux_vsyscallX functions.
+ * context switch. To make use of this function, just assign to the address of
+ * the __kernel_vsyscall symbol to the variable linux_vsyscall_ptr. Then you
+ * can invoke syscalls with the linux_vsyscallX functions.
  */
 
 extern void const* linux_vsyscall_ptr; // Set this to the __kernel_vsyscall symbol exported by the vDSO or the following functions will segfault.
