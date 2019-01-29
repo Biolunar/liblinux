@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Mahdi Khanalizadeh
+ * Copyright 2018-2019 Mahdi Khanalizadeh
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,15 @@
 
 #ifndef HEADER_LIBLINUX_X32_NAMES_H_INCLUDED
 #define HEADER_LIBLINUX_X32_NAMES_H_INCLUDED
+
+// Different names:
+// ----------------
+// stat newstat
+// fstat newfstat
+// lstat newlstat
+// sendfile sendfile64
+// uname newuname
+// umount2 umount
 
 enum
 {
@@ -153,7 +162,7 @@ enum
 	// linux_syscall_name_sigaltstack            = 0x40000000 + 131, // x86_64
 	linux_syscall_name_utime                  = 0x40000000 + 132,
 	linux_syscall_name_mknod                  = 0x40000000 + 133,
-	// linux_syscall_name_uselib                 = 0x40000000 + 134, // Unimplemented
+	// (unused) linux_syscall_name_uselib                 = 0x40000000 + 134,
 	linux_syscall_name_personality            = 0x40000000 + 135,
 	linux_syscall_name_ustat                  = 0x40000000 + 136,
 	linux_syscall_name_statfs                 = 0x40000000 + 137,
@@ -193,18 +202,18 @@ enum
 	linux_syscall_name_setdomainname          = 0x40000000 + 171,
 	linux_syscall_name_iopl                   = 0x40000000 + 172,
 	linux_syscall_name_ioperm                 = 0x40000000 + 173,
-	// linux_syscall_name_create_module          = 0x40000000 + 174, // Unimplemented
+	// (unused) linux_syscall_name_create_module          = 0x40000000 + 174,
 	linux_syscall_name_init_module            = 0x40000000 + 175,
 	linux_syscall_name_delete_module          = 0x40000000 + 176,
-	// linux_syscall_name_get_kernel_syms        = 0x40000000 + 177, // Unimplemented
-	// linux_syscall_name_query_module           = 0x40000000 + 178, // Unimplemented
+	// (unused) linux_syscall_name_get_kernel_syms        = 0x40000000 + 177,
+	// (unused) linux_syscall_name_query_module           = 0x40000000 + 178,
 	linux_syscall_name_quotactl               = 0x40000000 + 179,
-	// linux_syscall_name_nfsservctl             = 0x40000000 + 180, // Unimplemented
-	// linux_syscall_name_getpmsg                = 0x40000000 + 181, // Unimplemented
-	// linux_syscall_name_putpmsg                = 0x40000000 + 182, // Unimplemented
-	// linux_syscall_name_afs_syscall            = 0x40000000 + 183, // Unimplemented
-	// linux_syscall_name_tuxcall                = 0x40000000 + 184, // Unimplemented
-	// linux_syscall_name_security               = 0x40000000 + 185, // Unimplemented
+	// (unused) linux_syscall_name_nfsservctl             = 0x40000000 + 180,
+	// (unused) linux_syscall_name_getpmsg                = 0x40000000 + 181,
+	// (unused) linux_syscall_name_putpmsg                = 0x40000000 + 182,
+	// (unused) linux_syscall_name_afs_syscall            = 0x40000000 + 183,
+	// (unused) linux_syscall_name_tuxcall                = 0x40000000 + 184,
+	// (unused) linux_syscall_name_security               = 0x40000000 + 185,
 	linux_syscall_name_gettid                 = 0x40000000 + 186,
 	linux_syscall_name_readahead              = 0x40000000 + 187,
 	linux_syscall_name_setxattr               = 0x40000000 + 188,
@@ -224,21 +233,21 @@ enum
 	linux_syscall_name_futex                  = 0x40000000 + 202,
 	linux_syscall_name_sched_setaffinity      = 0x40000000 + 203,
 	linux_syscall_name_sched_getaffinity      = 0x40000000 + 204,
-	// linux_syscall_name_set_thread_area        = 0x40000000 + 205, // Unimplemented
+	// (unused) linux_syscall_name_set_thread_area        = 0x40000000 + 205,
 	// linux_syscall_name_io_setup               = 0x40000000 + 206, // x86_64
 	linux_syscall_name_io_destroy             = 0x40000000 + 207,
 	linux_syscall_name_io_getevents           = 0x40000000 + 208,
 	// linux_syscall_name_io_submit              = 0x40000000 + 209, // x86_64
 	linux_syscall_name_io_cancel              = 0x40000000 + 210,
-	// linux_syscall_name_get_thread_area        = 0x40000000 + 211, // Unimplemented
+	// (unused) linux_syscall_name_get_thread_area        = 0x40000000 + 211,
 	linux_syscall_name_lookup_dcookie         = 0x40000000 + 212,
 	linux_syscall_name_epoll_create           = 0x40000000 + 213,
-	// linux_syscall_name_epoll_ctl_old          = 0x40000000 + 214, // Unimplemented
-	// linux_syscall_name_epoll_wait_old         = 0x40000000 + 215, // Unimplemented
+	// (unused) linux_syscall_name_epoll_ctl_old          = 0x40000000 + 214,
+	// (unused) linux_syscall_name_epoll_wait_old         = 0x40000000 + 215,
 	linux_syscall_name_remap_file_pages       = 0x40000000 + 216,
 	linux_syscall_name_getdents64             = 0x40000000 + 217,
 	linux_syscall_name_set_tid_address        = 0x40000000 + 218,
-	linux_syscall_name_restart_syscall        = 0x40000000 + 219,
+	// (don't use) linux_syscall_name_restart_syscall        = 0x40000000 + 219,
 	linux_syscall_name_semtimedop             = 0x40000000 + 220,
 	linux_syscall_name_fadvise64              = 0x40000000 + 221,
 	// linux_syscall_name_timer_create           = 0x40000000 + 222, // x86_64
@@ -255,7 +264,7 @@ enum
 	linux_syscall_name_epoll_ctl              = 0x40000000 + 233,
 	linux_syscall_name_tgkill                 = 0x40000000 + 234,
 	linux_syscall_name_utimes                 = 0x40000000 + 235,
-	// linux_syscall_name_vserver                = 0x40000000 + 236, // Unimplemented
+	// (unused) linux_syscall_name_vserver                = 0x40000000 + 236,
 	linux_syscall_name_mbind                  = 0x40000000 + 237,
 	linux_syscall_name_set_mempolicy          = 0x40000000 + 238,
 	linux_syscall_name_get_mempolicy          = 0x40000000 + 239,
@@ -352,6 +361,8 @@ enum
 	linux_syscall_name_pkey_alloc             = 0x40000000 + 330,
 	linux_syscall_name_pkey_free              = 0x40000000 + 331,
 	linux_syscall_name_statx                  = 0x40000000 + 332,
+	linux_syscall_name_io_pgetevents          = 0x40000000 + 333,
+	linux_syscall_name_rseq                   = 0x40000000 + 334,
 
 	linux_syscall_name_rt_sigaction           = 0x40000000 + 512,
 	linux_syscall_name_rt_sigreturn           = 0x40000000 + 513,
@@ -375,8 +386,8 @@ enum
 	linux_syscall_name_get_robust_list        = 0x40000000 + 531,
 	linux_syscall_name_vmsplice               = 0x40000000 + 532,
 	linux_syscall_name_move_pages             = 0x40000000 + 533,
-	linux_syscall_name_preadv64               = 0x40000000 + 534,
-	linux_syscall_name_pwritev64              = 0x40000000 + 535,
+	linux_syscall_name_preadv                 = 0x40000000 + 534,
+	linux_syscall_name_pwritev                = 0x40000000 + 535,
 	linux_syscall_name_rt_tgsigqueueinfo      = 0x40000000 + 536,
 	linux_syscall_name_recvmmsg               = 0x40000000 + 537,
 	linux_syscall_name_sendmmsg               = 0x40000000 + 538,
@@ -387,8 +398,8 @@ enum
 	linux_syscall_name_io_setup               = 0x40000000 + 543,
 	linux_syscall_name_io_submit              = 0x40000000 + 544,
 	linux_syscall_name_execveat               = 0x40000000 + 545,
-	linux_syscall_name_preadv64v2             = 0x40000000 + 546,
-	linux_syscall_name_pwritev64v2            = 0x40000000 + 547,
+	linux_syscall_name_preadv2                = 0x40000000 + 546,
+	linux_syscall_name_pwritev2               = 0x40000000 + 547,
 };
 
 #endif // !HEADER_LIBLINUX_X32_NAMES_H_INCLUDED

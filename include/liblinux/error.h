@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Mahdi Khanalizadeh
+ * Copyright 2018-2019 Mahdi Khanalizadeh
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,16 @@
 #ifndef HEADER_LIBLINUX_ERROR_H_INCLUDED
 #define HEADER_LIBLINUX_ERROR_H_INCLUDED
 
-#if __STDC_VERSION__ < 199901L
-#error "This library needs at least a C99 compiler."
-#endif // __STDC_VERSION__ < 199901L
+#include "version.h"
+#include "arch.h"
 
 #include <stdbool.h>
-#include <stdint.h>
 
 enum linux_error_t
 {
 	linux_error_none      =    0,
 
-	// base
+	// Base: These are shared by ALL architectures.
 	linux_EPERM           =    1, // Operation not permitted
 	linux_ENOENT          =    2, // No such file or directory
 	linux_ESRCH           =    3, // No such process
@@ -39,7 +37,11 @@ enum linux_error_t
 	linux_ENOEXEC         =    8, // Exec format error
 	linux_EBADF           =    9, // Bad file number
 	linux_ECHILD          =   10, // No child processes
+#if defined(LINUX_ARCH_ALPHA)
+	linux_EAGAIN          =   35, // Try again
+#else
 	linux_EAGAIN          =   11, // Try again
+#endif
 	linux_ENOMEM          =   12, // Out of memory
 	linux_EACCES          =   13, // Permission denied
 	linux_EFAULT          =   14, // Bad address
@@ -64,7 +66,7 @@ enum linux_error_t
 	linux_EDOM            =   33, // Math argument out of domain of func
 	linux_ERANGE          =   34, // Math result not representable
 
-	// generic (i386, x32, x86_64, arm64)
+	// Generic: Shared by all architectures except: alpha, mips, parisc, sparc
 	linux_EDEADLK         =   35, // Resource deadlock would occur
 	linux_ENAMETOOLONG    =   36, // File name too long
 	linux_ENOLCK          =   37, // No record locks available
@@ -168,7 +170,7 @@ enum linux_error_t
 	linux_error_max       = 4095,
 };
 
-static inline bool linux_syscall_returned_error(intptr_t const ret)
+inline bool linux_syscall_returned_error(linux_word_t const ret)
 {
 	return ret < 0 && ret >= -linux_error_max;
 }

@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_NAMES_H_INCLUDED
-#define HEADER_LIBLINUX_NAMES_H_INCLUDED
+#ifndef HEADER_LIBLINUX_VERSION_H_INCLUDED
+#define HEADER_LIBLINUX_VERSION_H_INCLUDED
 
-#include "version.h"
-#include "arch.h"
+#if __STDC_VERSION__ < 201112L
+#error "This library needs at least a C11 compiler."
+#endif // __STDC_VERSION__ < 201112L
 
-#if defined(LINUX_ARCH_ARM_EABI)
-#include "arm-eabi/names.h"
-#elif defined(LINUX_ARCH_ARM64)
-#include "arm64/names.h"
-#elif defined(LINUX_ARCH_X86)
-#include "x86/names.h"
-#elif defined(LINUX_ARCH_X32)
-#include "x32/names.h"
-#elif defined(LINUX_ARCH_X86_64)
-#include "x86_64/names.h"
-#endif
+#define LIBLINUX_MAJOR 0
+#define LIBLINUX_MINOR 5
+#define LIBLINUX_PATCH 0
 
-#endif // !HEADER_LIBLINUX_NAMES_H_INCLUDED
+#endif // !HEADER_LIBLINUX_VERSION_H_INCLUDED

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Mahdi Khanalizadeh
+ * Copyright 2018-2019 Mahdi Khanalizadeh
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,15 @@
 
 #ifndef HEADER_LIBLINUX_ARM64_NAMES_H_INCLUDED
 #define HEADER_LIBLINUX_ARM64_NAMES_H_INCLUDED
+
+// Different names:
+// ----------------
+//umount2 umount
+//sendfile sendfile64
+//fstatat newfstatat
+//fstat newfstat
+//uname newuname
+//fadvise64 fadvise64_64
 
 enum
 {
@@ -61,7 +70,7 @@ enum
 	linux_syscall_name_umount                 =  39,
 	linux_syscall_name_mount                  =  40,
 	linux_syscall_name_pivot_root             =  41,
-	linux_syscall_name_ni_syscall             =  42,
+	// (unused) nfsservctl
 	linux_syscall_name_statfs                 =  43,
 	linux_syscall_name_fstatfs                =  44,
 	linux_syscall_name_truncate               =  45,
@@ -296,6 +305,8 @@ enum
 	linux_syscall_name_pkey_alloc             = 289,
 	linux_syscall_name_pkey_free              = 290,
 	linux_syscall_name_statx                  = 291,
+	linux_syscall_name_io_pgetevents          = 292,
+	linux_syscall_name_rseq                   = 293,
 };
 
 #endif // !HEADER_LIBLINUX_ARM64_NAMES_H_INCLUDED
