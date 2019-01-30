@@ -1,5 +1,5 @@
 #
-# Copyright 2018 Mahdi Khanalizadeh
+# Copyright 2018-2019 Mahdi Khanalizadeh
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,49 +14,43 @@
 # limitations under the License.
 #
 
-.POSIX:
 .SUFFIXES:
 
-CONFIG  = config.mk
+###############################################################################
+# Public variables
 
--include $(CONFIG)
+CONFIG = config.mk
+include $(CONFIG)
 
-makecmd = $(MAKE) ARCH=$(ARCH) TARGET=$(TARGET) AS=$(AS) AR=$(AR) CC=$(CC) LD=$(LD) ASFLAGS="$(ASFLAGS)" ARFLAGS="$(ARFLAGS)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
+###############################################################################
+# Private variables
 
-help:
-	@echo "Usage: make [CONFIG=filename.mk] <command>"
-	@echo "Valid commands:"
-	@echo "    help      - this help message"
-	@echo "    build     - builds the library"
-	@echo "    test      - builds the library and runs the test suite"
-	@echo "    clean     - removes all previously build files"
-	@echo "    install   - copies the headers and all previously build libraries to (DESTDIR)(PREFIX)"
-	@echo "    uninstall - removes the headers and all previously build libraries from (DESTDIR)(PREFIX)"
-	@echo "You need to specfiy a config file to build or install the library or you can create a default config file named 'config.mk'."
+include src/$(ARCH)/build.mk
 
-build:
-	@cd src/$(ARCH) && $(makecmd)
-	mkdir -p build
-	cp src/$(ARCH)/start/$(TARGET)_start.a src/$(ARCH)/syscall/$(TARGET)_syscall.a build
+asmobj = $(asmsrc:.asm=.o)
+cobj   = $(csrc:.c=.o)
 
-test: build
-	@cd test && $(makecmd)
+###############################################################################
+# Public targets
 
-install:
-	@echo "Installing library to $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib/liblinux"
-	mkdir -p $(DESTDIR)$(PREFIX)/include $(DESTDIR)$(PREFIX)/lib/liblinux
-	cp -r include/liblinux $(DESTDIR)$(PREFIX)/include
-	-cp -r build/*.a $(DESTDIR)$(PREFIX)/lib/liblinux
-
-uninstall:
-	@echo "Uninstalling library from $(DESTDIR)$(PREFIX)/include and $(DESTDIR)$(PREFIX)/lib"
-	rm -rf $(DESTDIR)$(PREFIX)/include/liblinux
-	rm -rf $(DESTDIR)$(PREFIX)/lib/liblinux
+all: $(TARGET)
 
 clean:
-	rm -rf build
-	@cd test       && $(makecmd) clean
-	@cd src/x86    && $(makecmd) clean
-	@cd src/x32    && $(makecmd) clean
-	@cd src/x86_64 && $(makecmd) clean
-	@cd src/arm64  && $(makecmd) clean
+	rm -f $(TARGET) $(asmobj) $(cobj) tests/start
+
+test:
+	@echo "Tests are not implemented yet!"
+
+###############################################################################
+# Private targets
+
+.SUFFIXES: .asm .o
+.asm.o:
+	$(ASM) $(ASMFLAGS) $(asmflags) -o $@ $<
+
+.SUFFIXES: .c .o
+.c.o:
+	$(CC) $(CFLAGS) -c -I include/liblinux -o $@ $<
+	
+$(TARGET): $(asmobj) $(cobj)
+	$(AR) $(ARFLAGS) $@ $(asmobj) $(cobj)

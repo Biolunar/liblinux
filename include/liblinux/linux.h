@@ -21,6 +21,7 @@
 #include "arch.h"
 #include "endian.h"
 #include "syscall.h"
+#include "names.h"
 
 #include <stdint.h>
 #include <stdalign.h>
@@ -793,8 +794,8 @@ inline LINUX_DEFINE_SYSCALL1_RET(getpgid, linux_pid_t, pid, int)
 inline LINUX_DEFINE_SYSCALL1_RET(setfsuid, linux_uid_t, uid, long)
 inline LINUX_DEFINE_SYSCALL1_RET(setfsgid, linux_gid_t, gid, long)
 inline LINUX_DEFINE_SYSCALL1_RET(getsid, linux_pid_t, pid, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(capget, linux_cap_user_header_t, header, linux_cap_user_data_t, dataptr)
-inline LINUX_DEFINE_SYSCALL2_NORET(capset, linux_cap_user_header_t, header, const linux_cap_user_data_t, data)
+inline LINUX_DEFINE_SYSCALL2_NORET(capget, linux_cap_user_header_t, header, struct linux_user_cap_data_struct*, dataptr)
+inline LINUX_DEFINE_SYSCALL2_NORET(capset, linux_cap_user_header_t, header, struct linux_user_cap_data_struct const*, data)
 inline LINUX_DEFINE_SYSCALL2_NORET(rt_sigpending, linux_sigset_t*, uset, linux_size_t, sigsetsize)
 inline LINUX_DEFINE_SYSCALL4_RET(rt_sigtimedwait, linux_sigset_t const*, uthese, linux_siginfo_t*, uinfo, struct linux_kernel_timespec const*, uts, linux_size_t, sigsetsize, int)
 inline LINUX_DEFINE_SYSCALL3_NORET(rt_sigqueueinfo, linux_pid_t, pid, int, sig, linux_siginfo_t*, uinfo)
@@ -1101,11 +1102,11 @@ inline LINUX_DEFINE_SYSCALL1_RET(alarm, unsigned int, seconds, unsigned int)
 inline LINUX_DEFINE_SYSCALL2_NORET(utime, char*, filename, struct linux_utimbuf*, times)
 enum linux_error_t linux_modify_ldt(int const func, void* const ptr, unsigned long const bytecount, int* const result)
 {
-	int const ret = (int)linux_syscall3(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), linux_syscall_name_ ## name);
+	int const ret = (int)linux_syscall3(LINUX_PARAM(func), LINUX_PARAM(ptr), LINUX_PARAM(bytecount), linux_syscall_name_modify_ldt);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error_t)-ret;
 	if (result)
-		*result = (ret_t)ret;
+		*result = (int)ret;
 	return linux_error_none;
 }
 inline LINUX_DEFINE_SYSCALL2_NORET(arch_prctl, int, option, unsigned long, arg2)

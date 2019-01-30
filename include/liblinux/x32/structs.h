@@ -123,11 +123,11 @@ union linux_sifields
 };
 typedef struct linux_siginfo
 {
-	alignas(8) union
+	union
 	{
 		struct
 		{
-			int si_signo;
+			alignas(8) int si_signo;
 			int si_errno;
 			int si_code;
 			union linux_sifields sifields;
