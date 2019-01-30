@@ -9,13 +9,13 @@ platform specific (or temproray if not used): x18
 callee-saved registers: x19 – x28
 frame pointer: x29
 link register: x30
-stack alignment: 16
+stack alignment: 16 byte
 
 C on Linux:
 ===========
 return value: x0
 parameter: x0 – x7, rest on stack in normal order
-stack alignment: 16 bit
+stack alignment: 16 byte
 preserved: x19 – x28
 scratch: x0 – x18
 
@@ -25,8 +25,8 @@ syscall number: x8
 return value: x0
 parameter: x0 – x5
 
-Sizes/Alignment:
-================
+Size/Alignment:
+===============
 _Bool: 1/1
 char: 1/1
 short: 2/2

@@ -12,8 +12,8 @@ syscall number: rax
 return value: rax
 parameter: rdi, rsi, rdx, r10, r8, r9
 
-Sizes/Alignment:
-================
+Size/Alignment:
+===============
 _Bool: 1/1
 char: 1/1
 short: 2/2

@@ -12,8 +12,8 @@ syscall number: eax
 return value: eax
 parameter: ebx, ecx, edx, esi, edi, ebp
 
-Sizes/Alignment:
-================
+Size/Alignment:
+===============
 _Bool: 1/1
 char: 1/1
 short: 2/2
