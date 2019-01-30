@@ -27,8 +27,10 @@ CONFIG = config.mk
 include $(CONFIG)
 include src/$(ARCH)/build.mk
 
-asmobj = $(asmsrc:.asm=.o)
-cobj   = $(csrc:.c=.o)
+asmobj  = $(asmsrc:.asm=.o)
+cobj    = $(csrc:.c=.o)
+testobj = $(testsrc:.c=.o)
+testapp = $(testsrc:.c=)
 
 ###############################################################################
 # Public targets
@@ -36,12 +38,9 @@ cobj   = $(csrc:.c=.o)
 all: $(TARGET)
 
 clean:
-	rm -f $(TARGET) $(asmobj) $(cobj) tests/compile tests/compile.o tests/error tests/error.o tests/syscalls/sched_yield tests/syscalls/sched_yield.o tests/syscalls/getpid tests/syscalls/getpid.o
+	rm -f $(TARGET) $(asmobj) $(cobj) $(testobj) $(testapp)
 
-test: tests/compile tests/error tests/syscalls/sched_yield tests/syscalls/getpid
-	tests/error
-	tests/syscalls/sched_yield
-	tests/syscalls/getpid
+test: $(testapp)
 
 ###############################################################################
 # Private targets
@@ -57,14 +56,5 @@ test: tests/compile tests/error tests/syscalls/sched_yield tests/syscalls/getpid
 $(TARGET): $(asmobj) $(cobj)
 	$(AR) $(ARFLAGS) $@ $(asmobj) $(cobj)
 
-tests/compile: $(TARGET) tests/compile.o
-	$(CC) $(CFLAGS) -I include -o $@ tests/compile.o $(TARGET)
-
-tests/error: $(TARGET) tests/error.o
-	$(CC) $(CFLAGS) -I include -o $@ tests/error.o $(TARGET)
-
-tests/syscalls/sched_yield: $(TARGET) tests/syscalls/sched_yield.o
-	$(CC) $(CFLAGS) -I include -o $@ tests/syscalls/sched_yield.o $(TARGET)
-
-tests/syscalls/getpid: $(TARGET) tests/syscalls/getpid.o
-	$(CC) $(CFLAGS) -I include -o $@ tests/syscalls/getpid.o $(TARGET)
+$(testapp): $(TARGET) $(testobj)
+	$(CC) $(CFLAGS) -I include -o $@ $@.o $(TARGET)
