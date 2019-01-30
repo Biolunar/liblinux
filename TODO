@@ -1,2 +1,2 @@
-- support gas for x86/x32/x86_64
-- support fini
+- Support ARM Thumb mode
+- Clean up the types in linux.h

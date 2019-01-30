@@ -36,10 +36,12 @@ cobj   = $(csrc:.c=.o)
 all: $(TARGET)
 
 clean:
-	rm -f $(TARGET) $(asmobj) $(cobj) tests/compile tests/compile.o
+	rm -f $(TARGET) $(asmobj) $(cobj) tests/compile tests/compile.o tests/error tests/error.o tests/syscalls/sched_yield tests/syscalls/sched_yield.o tests/syscalls/getpid tests/syscalls/getpid.o
 
-test:
-	@echo "Tests are not implemented yet!"
+test: tests/compile tests/error tests/syscalls/sched_yield tests/syscalls/getpid
+	tests/error
+	tests/syscalls/sched_yield
+	tests/syscalls/getpid
 
 ###############################################################################
 # Private targets
@@ -57,3 +59,12 @@ $(TARGET): $(asmobj) $(cobj)
 
 tests/compile: $(TARGET) tests/compile.o
 	$(CC) $(CFLAGS) -I include -o $@ tests/compile.o $(TARGET)
+
+tests/error: $(TARGET) tests/error.o
+	$(CC) $(CFLAGS) -I include -o $@ tests/error.o $(TARGET)
+
+tests/syscalls/sched_yield: $(TARGET) tests/syscalls/sched_yield.o
+	$(CC) $(CFLAGS) -I include -o $@ tests/syscalls/sched_yield.o $(TARGET)
+
+tests/syscalls/getpid: $(TARGET) tests/syscalls/getpid.o
+	$(CC) $(CFLAGS) -I include -o $@ tests/syscalls/getpid.o $(TARGET)
