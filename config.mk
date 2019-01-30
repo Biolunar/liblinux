@@ -41,4 +41,4 @@ include src/$(ARCH)/$(TOOL)/build.mk # Sets following variables: ASM, ASMFLAGS
 AR       = ar
 ARFLAGS  = rc
 CC       = cc
-CFLAGS   = -std=c11 -pedantic-errors -nostdlib -ffreestanding -fno-stack-protector
+CFLAGS   = -std=c11 -pedantic-errors -nostdlib -ffreestanding -fno-stack-protector -Wno-pointer-to-int-cast
