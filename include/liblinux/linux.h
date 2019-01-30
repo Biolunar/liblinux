@@ -1100,7 +1100,7 @@ inline LINUX_DEFINE_SYSCALL1_RET(eventfd, unsigned int, count, int)
 #if defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline LINUX_DEFINE_SYSCALL1_RET(alarm, unsigned int, seconds, unsigned int)
 inline LINUX_DEFINE_SYSCALL2_NORET(utime, char*, filename, struct linux_utimbuf*, times)
-enum linux_error_t linux_modify_ldt(int const func, void* const ptr, unsigned long const bytecount, int* const result)
+inline enum linux_error_t linux_modify_ldt(int const func, void* const ptr, unsigned long const bytecount, int* const result)
 {
 	int const ret = (int)linux_syscall3(LINUX_PARAM(func), LINUX_PARAM(ptr), LINUX_PARAM(bytecount), linux_syscall_name_modify_ldt);
 	if (linux_syscall_returned_error(ret))

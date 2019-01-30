@@ -1,4 +1,6 @@
 If you are porting to a new architecture, do not forget to:
+- Add a test function to tests/compile.c for the new arch where ALL syscalls are being called
+
 - update the README
 - port the test suite
 - create a new default config

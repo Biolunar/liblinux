@@ -20,11 +20,11 @@
 # Public variables
 
 CONFIG = config.mk
-include $(CONFIG)
 
 ###############################################################################
 # Private variables
 
+include $(CONFIG)
 include src/$(ARCH)/build.mk
 
 asmobj = $(asmsrc:.asm=.o)
@@ -36,7 +36,7 @@ cobj   = $(csrc:.c=.o)
 all: $(TARGET)
 
 clean:
-	rm -f $(TARGET) $(asmobj) $(cobj) tests/start
+	rm -f $(TARGET) $(asmobj) $(cobj) tests/compile tests/compile.o
 
 test:
 	@echo "Tests are not implemented yet!"
@@ -50,7 +50,10 @@ test:
 
 .SUFFIXES: .c .o
 .c.o:
-	$(CC) $(CFLAGS) -c -I include/liblinux -o $@ $<
+	$(CC) $(CFLAGS) -c -I include -o $@ $<
 	
 $(TARGET): $(asmobj) $(cobj)
 	$(AR) $(ARFLAGS) $@ $(asmobj) $(cobj)
+
+tests/compile: $(TARGET) tests/compile.o
+	$(CC) $(CFLAGS) -I include -o $@ tests/compile.o $(TARGET)

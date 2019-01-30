@@ -5,7 +5,7 @@
 - Added arm-eabi architecture.
 - Added endian detection.
 - Added architecture detection.
-- Added preliminary prototypes for all syscalls with only the necessary types.
+- Added functions for all syscalls.
 
 0.4.0
 =====
