@@ -1221,7 +1221,7 @@ inline LINUX_DEFINE_SYSCALL1_NORET(set_thread_area, struct linux_user_desc*, u_i
 inline LINUX_DEFINE_SYSCALL1_NORET(get_thread_area, struct linux_user_desc*, u_info)
 #endif
 
-#if defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline LINUX_DEFINE_SYSCALL5_NORET(kexec_file_load, int, kernel_fd, int, initrd_fd, unsigned long, cmdline_len, char const*, cmdline_ptr, unsigned long, flags)
 #endif
 

@@ -307,6 +307,7 @@ enum
 	linux_syscall_name_statx                  = 291,
 	linux_syscall_name_io_pgetevents          = 292,
 	linux_syscall_name_rseq                   = 293,
+	linux_syscall_name_kexec_file_load        = 294,
 };
 
 #endif // !HEADER_LIBLINUX_ARM64_NAMES_H_INCLUDED
