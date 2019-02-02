@@ -6,6 +6,7 @@
 - Added endian detection.
 - Added architecture detection.
 - Added functions for all syscalls.
+- Fixed parameter sign-extension bug on x32.
 
 0.4.0
 =====

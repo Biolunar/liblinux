@@ -1022,6 +1022,12 @@ inline enum linux_error_t linux_sync_file_range2(int const fd, unsigned int cons
 		return (enum linux_error_t)-ret;
 	return linux_error_none;
 }
+inline LINUX_DEFINE_SYSCALL0_NORET(breakpoint)
+inline LINUX_DEFINE_SYSCALL3_NORET(cacheflush, unsigned long start, unsigned long end, int flags)
+inline LINUX_DEFINE_SYSCALL0_NORET(usr26)
+inline LINUX_DEFINE_SYSCALL0_NORET(usr32)
+inline LINUX_DEFINE_SYSCALL1_NORET(set_tls, unsigned long val)
+inline LINUX_DEFINE_SYSCALL0_RET(get_tls, unsigned long)
 #endif
 
 #if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86)

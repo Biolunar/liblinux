@@ -468,6 +468,13 @@ enum
 	linux_syscall_name_statx                  = 397,
 	linux_syscall_name_rseq                   = 398,
 	linux_syscall_name_io_pgetevents          = 399,
+
+	linux_syscall_name_breakpoint             = 0x0f0000 + 1,
+	linux_syscall_name_cacheflush             = 0x0f0000 + 2,
+	linux_syscall_name_usr26                  = 0x0f0000 + 3,
+	linux_syscall_name_usr32                  = 0x0f0000 + 4,
+	linux_syscall_name_set_tls                = 0x0f0000 + 5,
+	linux_syscall_name_get_tls                = 0x0f0000 + 6,
 };
 
 #endif // !HEADER_LIBLINUX_ARM_EABI_NAMES_H_INCLUDED
