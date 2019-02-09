@@ -347,7 +347,13 @@ csrc = \
        src/pkey_free.c\
        src/statx.c\
        src/rseq.c\
-       src/io_pgetevents.c
+       src/io_pgetevents.c\
+       src/breakpoint.c\
+       src/cacheflush.c\
+       src/usr26.c\
+       src/usr32.c\
+       src/set_tls.c\
+       src/get_tls.c
 
 testsrc = \
           tests/compile.c\

@@ -31,6 +31,9 @@
 // TODO: Add arm-eabi thumb mode.
 // TODO: Check if x32 takes syscall arguments as 32 bit or 64 bit (why is there no truncate64?).
 
+//=============================================================================
+// Generic types
+
 typedef int                      linux_kernel_key_t;
 typedef int                      linux_kernel_mqd_t;
 typedef unsigned int             linux_kernel_uid32_t;
@@ -410,6 +413,9 @@ struct linux_old_utsname
 
 typedef linux_kernel_fd_set linux_fd_set;
 
+//=============================================================================
+// Architecture specific types
+
 #if defined(LINUX_ARCH_ARM_EABI)
 #include "arm-eabi/types.h"
 #elif defined(LINUX_ARCH_ARM64)
@@ -421,6 +427,9 @@ typedef linux_kernel_fd_set linux_fd_set;
 #elif defined(LINUX_ARCH_X86_64)
 #include "x86_64/types.h"
 #endif
+
+//=============================================================================
+// Architecture dependent types
 
 typedef linux_kernel_long_t  linux_kernel_off_t;
 typedef linux_kernel_long_t  linux_kernel_time_t;
@@ -663,6 +672,9 @@ struct linux_kexec_segment
 	linux_size_t memsz;
 };
 
+//=============================================================================
+// Deprecated types
+
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
 struct linux_old_sigaction
 {
@@ -681,17 +693,111 @@ struct linux_sel_arg_struct
 };
 #endif
 
+//=============================================================================
+// Generic syscalls
+
+//-----------------------------------------------------------------------------
+// aio
+
+inline LINUX_DEFINE_SYSCALL2_NORET(io_setup, unsigned int, nr_events, linux_aio_context_t*, ctxp)
+inline LINUX_DEFINE_SYSCALL1_NORET(io_destroy, linux_aio_context_t, ctx)
+inline LINUX_DEFINE_SYSCALL3_RET(io_submit, linux_aio_context_t, ctx_id, long, nr, struct linux_iocb**, iocbpp, long)
+inline LINUX_DEFINE_SYSCALL3_NORET(io_cancel, linux_aio_context_t, ctx_id, struct linux_iocb*, iocb, struct linux_io_event*, result)
+inline LINUX_DEFINE_SYSCALL5_RET(io_getevents, linux_aio_context_t, ctx_id, long, min_nr, long, nr, struct linux_io_event*, events, struct linux_timespec*, timeout, long)
+inline LINUX_DEFINE_SYSCALL6_RET(io_pgetevents, linux_aio_context_t, ctx_id, long, min_nr, long, nr, struct linux_io_event*, events, struct linux_timespec*, timeout, struct linux_aio_sigset const*, usig, long)
+
+//-----------------------------------------------------------------------------
+// xattr
+
+inline LINUX_DEFINE_SYSCALL5_NORET(setxattr, char const*, pathname, char const*, name, void const*, value, linux_size_t, size, int, flags)
+inline LINUX_DEFINE_SYSCALL5_NORET(lsetxattr, char const*, pathname, char const*, name, void const*, value, linux_size_t, size, int, flags)
+inline LINUX_DEFINE_SYSCALL5_NORET(fsetxattr, int, fd, char const*, name, void const*,value, linux_size_t, size, int, flags)
+inline LINUX_DEFINE_SYSCALL4_RET(getxattr, char const*, pathname, char const*, name, void*, value, linux_size_t, size, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL4_RET(lgetxattr, char const*, pathname, char const*, name, void*, value, linux_size_t, size, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL4_RET(fgetxattr, int, fd, char const*, name, void*, value, linux_size_t, size, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL3_RET(listxattr, char const*, pathname, char*, list, linux_size_t, size, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL3_RET(llistxattr, char const*, pathname, char*, list, linux_size_t, size, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL3_RET(flistxattr, int, fd, char*, list, linux_size_t, size, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL2_NORET(removexattr, char const*, pathname, char const*, name)
+inline LINUX_DEFINE_SYSCALL2_NORET(lremovexattr, char const*, pathname, char const*, name)
+inline LINUX_DEFINE_SYSCALL2_NORET(fremovexattr, int, fd, char const*, name)
+
+//-----------------------------------------------------------------------------
+// polling
+
+inline LINUX_DEFINE_SYSCALL1_RET(epoll_create1, int, flags, int)
+inline LINUX_DEFINE_SYSCALL4_NORET(epoll_ctl, int, epfd, int, op, int, fd, struct linux_epoll_event*, event)
+inline LINUX_DEFINE_SYSCALL6_RET(epoll_pwait, int, epfd, struct linux_epoll_event*, events, int, maxevents, int, timeout, linux_sigset_t const*, sigmask, linux_size_t, sigsetsize, int)
+inline LINUX_DEFINE_SYSCALL6_RET(pselect6, int, n, linux_fd_set*, inp, linux_fd_set*, outp, linux_fd_set*, exp, struct linux_timespec*, tsp, void*, sig, long)
+inline LINUX_DEFINE_SYSCALL5_RET(ppoll, struct linux_pollfd*, ufds, unsigned int, nfds, struct linux_timespec*, tsp, linux_sigset_t const*, sigmask, linux_size_t, sigsetsize, int)
+
+//-----------------------------------------------------------------------------
+// file decriptors
+
+inline LINUX_DEFINE_SYSCALL1_RET(dup, unsigned int, fildes, int)
+inline LINUX_DEFINE_SYSCALL3_RET(dup3, unsigned int, oldfd, unsigned int, newfd, int, flags, int)
+inline LINUX_DEFINE_SYSCALL3_RET(fcntl, unsigned int, fd, unsigned int, cmd, unsigned long, arg, long)
+inline LINUX_DEFINE_SYSCALL3_RET(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(flock, unsigned int, fd, unsigned int, cmd)
+inline LINUX_DEFINE_SYSCALL1_NORET(close, unsigned int, fd)
+
+//-----------------------------------------------------------------------------
+// inotify
+
+inline LINUX_DEFINE_SYSCALL1_RET(inotify_init1, int, flags, int)
+inline LINUX_DEFINE_SYSCALL3_RET(inotify_add_watch, int, fd, char const*, pathname, uint32_t, mask, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(inotify_rm_watch, int, fd, int32_t, wd)
+
+//-----------------------------------------------------------------------------
+// filesystem
+
+inline LINUX_DEFINE_SYSCALL4_NORET(mknodat, int, dfd, char const*, filename, linux_umode_t, mode, unsigned int, dev)
+inline LINUX_DEFINE_SYSCALL3_NORET(mkdirat, int, dfd, char const*, pathname, linux_umode_t, mode)
+inline LINUX_DEFINE_SYSCALL3_NORET(unlinkat, int, dfd, char const*, pathname, int, flag)
+inline LINUX_DEFINE_SYSCALL3_NORET(symlinkat, char const*, oldname, int, newdfd, char const*, newname)
+inline LINUX_DEFINE_SYSCALL5_NORET(linkat, int, olddfd, char const*, oldname, int, newdfd, char const*, newname, int, flags)
+inline LINUX_DEFINE_SYSCALL4_NORET(renameat, int, olddfd, char const*, oldname, int, newdfd, char const*, newname)
+inline LINUX_DEFINE_SYSCALL2_NORET(statfs, char const*, pathname, struct linux_statfs*, buf)
+inline LINUX_DEFINE_SYSCALL2_NORET(fstatfs, unsigned int, fd, struct linux_statfs*, buf)
+inline LINUX_DEFINE_SYSCALL3_RET(getdents64, unsigned int, fd, struct linux_dirent64*, dirent, unsigned int, count, int)
+inline LINUX_DEFINE_SYSCALL4_RET(readlinkat, int, dfd, char const*, pathname, char*, buf, int, bufsiz, int)
+inline LINUX_DEFINE_SYSCALL5_NORET(renameat2, int, olddfd, char const*, oldname, int, newdfd, char const*, newname, unsigned int, flags)
+
+//-----------------------------------------------------------------------------
+// real files
+
+inline LINUX_DEFINE_SYSCALL2_NORET(truncate, char const*, path, long, length)
+inline LINUX_DEFINE_SYSCALL2_NORET(ftruncate, unsigned int, fd, unsigned long, length)
+inline enum linux_error_t linux_fallocate(int const fd, int const mode, linux_loff_t const offset, linux_loff_t const len)
+{
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
+	linux_word_t const ret = linux_syscall6(LINUX_PARAM(fd), LINUX_PARAM(mode), LINUX_EXPAND(offset), LINUX_EXPAND(len), linux_syscall_name_fallocate);
+#else
+	linux_word_t const ret = linux_syscall4(LINUX_PARAM(fd), LINUX_PARAM(mode), LINUX_PARAM(offset), LINUX_PARAM(len), linux_syscall_name_fallocate);
+#endif
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	return linux_error_none;
+}
+inline LINUX_DEFINE_SYSCALL3_NORET(faccessat, int, dfd, char const*, filename, int, mode)
+inline LINUX_DEFINE_SYSCALL2_NORET(fchmod, unsigned int, fd, linux_umode_t, mode)
+inline LINUX_DEFINE_SYSCALL3_NORET(fchmodat, int, dfd, char const*, filename, linux_umode_t, mode)
+inline LINUX_DEFINE_SYSCALL5_NORET(fchownat, int, dfd, char const*, filename, linux_uid_t, user, linux_gid_t, group, int, flag)
+inline LINUX_DEFINE_SYSCALL3_NORET(fchown, unsigned int, fd, linux_uid_t, user, linux_gid_t, group)
+inline LINUX_DEFINE_SYSCALL4_RET(openat, int, dfd, char const*, filename, int, flags, linux_umode_t, mode, long)
+inline LINUX_DEFINE_SYSCALL5_NORET(name_to_handle_at, int, dfd, char const*, name, struct linux_file_handle*, handle, int*, mnt_id, int, flag)
+inline LINUX_DEFINE_SYSCALL3_RET(open_by_handle_at, int, mountdirfd, struct linux_file_handle*, handle, int, flags, long)
+inline LINUX_DEFINE_SYSCALL2_NORET(newfstat, unsigned int, fd, struct linux_stat*, statbuf)
+inline LINUX_DEFINE_SYSCALL5_NORET(statx, int, dfd, char const*, filename, unsigned, flags, unsigned int, mask, struct linux_statx*, buffer)
+
+//-----------------------------------------------------------------------------
+// read/write
+
+inline LINUX_DEFINE_SYSCALL3_RET(lseek, unsigned int, fd, linux_off_t, offset, unsigned int, whence, linux_off_t)
 inline LINUX_DEFINE_SYSCALL3_RET(read, unsigned int, fd, char*, buf, linux_size_t, count, linux_ssize_t)
 inline LINUX_DEFINE_SYSCALL3_RET(write, unsigned int, fd, char const*, buf, linux_size_t, count, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL1_NORET(close, unsigned int, fd)
-inline LINUX_DEFINE_SYSCALL2_NORET(newfstat, unsigned int, fd, struct linux_stat*, statbuf)
-inline LINUX_DEFINE_SYSCALL3_RET(lseek, unsigned int, fd, linux_off_t, offset, unsigned int, whence, linux_off_t)
-inline LINUX_DEFINE_SYSCALL3_NORET(mprotect, unsigned long, start, linux_size_t, len, unsigned long, prot)
-inline LINUX_DEFINE_SYSCALL2_NORET(munmap, unsigned long, addr, linux_size_t, len)
-inline LINUX_DEFINE_SYSCALL1_RET(brk, unsigned long, brk, unsigned long)
-inline LINUX_DEFINE_SYSCALL4_NORET(rt_sigaction, int, sig, struct linux_sigaction const*, act, struct linux_sigaction*, oact, linux_size_t, sigsetsize)
-inline LINUX_DEFINE_SYSCALL4_NORET(rt_sigprocmask, int, how, linux_sigset_t*, nset, linux_sigset_t*, oset, linux_size_t, sigsetsize)
-inline LINUX_DEFINE_SYSCALL3_RET(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg, int)
+inline LINUX_DEFINE_SYSCALL3_RET(readv, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL3_RET(writev, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, linux_ssize_t)
 inline enum linux_error_t linux_pread64(unsigned int const fd, char* const buf, linux_size_t const count, linux_loff_t const pos, linux_ssize_t* const result)
 {
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -722,121 +828,12 @@ inline enum linux_error_t linux_pwrite64(unsigned int const fd, char const* cons
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
-inline LINUX_DEFINE_SYSCALL3_RET(readv, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL3_RET(writev, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL0_NORET(sched_yield)
-inline LINUX_DEFINE_SYSCALL5_RET(mremap, unsigned long, addr, unsigned long, old_len, unsigned long, new_len, unsigned long, flags, unsigned long, new_addr, unsigned long)
-inline LINUX_DEFINE_SYSCALL3_NORET(msync, unsigned long, start, linux_size_t, len, int, flags)
-inline LINUX_DEFINE_SYSCALL3_NORET(mincore, unsigned long, start, linux_size_t, len, unsigned char*, vec)
-inline LINUX_DEFINE_SYSCALL3_NORET(madvise, unsigned long, start, linux_size_t, len_in, int, behavior)
-inline LINUX_DEFINE_SYSCALL1_RET(dup, unsigned int, fildes, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(nanosleep, struct linux_kernel_timespec*, rqtp, struct linux_kernel_timespec*, rmtp)
-inline LINUX_DEFINE_SYSCALL2_NORET(getitimer, int, which, struct linux_itimerval*, value)
-inline LINUX_DEFINE_SYSCALL3_NORET(setitimer, int, which, struct linux_itimerval*, value, struct linux_itimerval*, ovalue)
-inline LINUX_DEFINE_SYSCALL0_RET(getpid, linux_pid_t)
+inline LINUX_DEFINE_SYSCALL5_RET(preadv, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL5_RET(pwritev, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_ssize_t)
 inline LINUX_DEFINE_SYSCALL4_RET(sendfile64, int, out_fd, int, in_fd, linux_loff_t*, offset, linux_size_t, count, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL3_RET(socket, int, family, int, type, int, protocol, int)
-inline LINUX_DEFINE_SYSCALL3_NORET(connect, int, fd, struct linux_sockaddr*, uservaddr, int, addrlen)
-inline LINUX_DEFINE_SYSCALL6_RET(sendto, int, fd, void*, buff, linux_size_t, len, unsigned int, flags, struct linux_sockaddr*, addr, int, addr_le, int)
-inline LINUX_DEFINE_SYSCALL6_RET(recvfrom, int, fd, void*, ubuf, linux_size_t, size, unsigned int, flags, struct linux_sockaddr*, addr, int*, addr_len, int)
-inline LINUX_DEFINE_SYSCALL3_RET(sendmsg, int, fd, struct linux_user_msghdr*, msg, unsigned int, flags, int)
-inline LINUX_DEFINE_SYSCALL3_RET(recvmsg, int, fd, struct linux_user_msghdr*, msg, unsigned int, flags, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(shutdown, int, fd, int, how)
-inline LINUX_DEFINE_SYSCALL3_NORET(bind, int, fd, struct linux_sockaddr*, umyaddr, int, addrlen)
-inline LINUX_DEFINE_SYSCALL2_NORET(listen, int, fd, int, backlog)
-inline LINUX_DEFINE_SYSCALL3_NORET(getsockname, int, fd, struct linux_sockaddr*, usockaddr, int*, usockaddr_len)
-inline LINUX_DEFINE_SYSCALL3_NORET(getpeername, int, fd, struct linux_sockaddr*, usockaddr, int*, usockaddr_len)
-inline LINUX_DEFINE_SYSCALL4_NORET(socketpair, int, family, int, type, int, protocol, int*, usockvec)
-inline LINUX_DEFINE_SYSCALL5_NORET(setsockopt, int, fd, int, level, int, optname, char*, optval, int, optlen)
-inline LINUX_DEFINE_SYSCALL5_NORET(getsockopt, int, fd, int, level, int, optname, char*, optval, int*, optlen)
-inline LINUX_DEFINE_SYSCALL5_RET(clone, unsigned long, clone_flags, unsigned long, newsp, int*, parent_tidptr, int*, child_tidptr, unsigned long, tls, long)
-inline LINUX_DEFINE_SYSCALL3_NORET(execve, char const*, filename, char const* const*, argv, char const* const*, envp)
-inline LINUX_DEFINE_SYSCALL4_RET(wait4, linux_pid_t, upid, int*, stat_addr, int, options, struct linux_rusage*, ru, long)
-inline LINUX_DEFINE_SYSCALL2_NORET(kill, linux_pid_t, pid, int, sig)
-inline LINUX_DEFINE_SYSCALL1_NORET(newuname, struct linux_new_utsname*, name)
-inline LINUX_DEFINE_SYSCALL3_RET(fcntl, unsigned int, fd, unsigned int, cmd, unsigned long, arg, long)
-inline LINUX_DEFINE_SYSCALL2_NORET(flock, unsigned int, fd, unsigned int, cmd)
-inline LINUX_DEFINE_SYSCALL1_NORET(fsync, unsigned int, fd)
-inline LINUX_DEFINE_SYSCALL1_NORET(fdatasync, unsigned int, fd)
-inline LINUX_DEFINE_SYSCALL2_NORET(truncate, char const*, path, long, length)
-inline LINUX_DEFINE_SYSCALL2_NORET(ftruncate, unsigned int, fd, unsigned long, length)
-inline LINUX_DEFINE_SYSCALL2_RET(getcwd, char*, buf, unsigned long, size, int)
-inline LINUX_DEFINE_SYSCALL1_NORET(chdir, char const*, filename)
-inline LINUX_DEFINE_SYSCALL1_NORET(fchdir, unsigned int, fd)
-inline LINUX_DEFINE_SYSCALL2_NORET(fchmod, unsigned int, fd, linux_umode_t, mode)
-inline LINUX_DEFINE_SYSCALL3_NORET(fchown, unsigned int, fd, linux_uid_t, user, linux_gid_t, group)
-inline LINUX_DEFINE_SYSCALL1_RET(umask, int, mask, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(gettimeofday, struct linux_timeval*, tv, struct linux_timezone*, tz)
-inline LINUX_DEFINE_SYSCALL2_NORET(getrlimit, unsigned int, resource, struct linux_rlimit*, rlim)
-inline LINUX_DEFINE_SYSCALL2_NORET(getrusage, int, who, struct linux_rusage*, ru)
-inline LINUX_DEFINE_SYSCALL1_NORET(sysinfo, struct linux_sysinfo*, info)
-inline LINUX_DEFINE_SYSCALL1_RET(times, struct linux_tms*, tbuf, long)
-inline LINUX_DEFINE_SYSCALL4_RET(ptrace, long, request, long, pid, unsigned long, addr, unsigned long, data, long)
-inline LINUX_DEFINE_SYSCALL0_RET(getuid, linux_uid_t)
-inline LINUX_DEFINE_SYSCALL3_RET(syslog, int, type, char*, buf, int, len, int)
-inline LINUX_DEFINE_SYSCALL0_RET(getgid, linux_gid_t)
-inline LINUX_DEFINE_SYSCALL1_NORET(setuid, linux_uid_t, uid)
-inline LINUX_DEFINE_SYSCALL1_NORET(setgid, linux_gid_t, gid)
-inline LINUX_DEFINE_SYSCALL0_RET(geteuid, linux_uid_t)
-inline LINUX_DEFINE_SYSCALL0_RET(getegid, linux_gid_t)
-inline LINUX_DEFINE_SYSCALL2_NORET(setpgid, linux_pid_t, pid, linux_pid_t, pgid)
-inline LINUX_DEFINE_SYSCALL0_RET(getppid, int)
-inline LINUX_DEFINE_SYSCALL0_RET(setsid, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(setreuid, linux_uid_t, ruid, linux_uid_t, euid)
-inline LINUX_DEFINE_SYSCALL2_NORET(setregid, linux_gid_t, rgid, linux_gid_t, egid)
-inline LINUX_DEFINE_SYSCALL2_RET(getgroups, int, gidsetsize, linux_gid_t*, grouplis, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(setgroups, int, gidsetsize, linux_gid_t*, grouplist)
-inline LINUX_DEFINE_SYSCALL3_NORET(setresuid, linux_uid_t, ruid, linux_uid_t, euid, linux_uid_t, suid)
-inline LINUX_DEFINE_SYSCALL3_NORET(getresuid, linux_uid_t*, ruidp, linux_uid_t*, euidp, linux_uid_t*, suidp)
-inline LINUX_DEFINE_SYSCALL3_NORET(setresgid, linux_gid_t, rgid, linux_gid_t, egid, linux_gid_t, sgid)
-inline LINUX_DEFINE_SYSCALL3_NORET(getresgid, linux_gid_t*, rgidp, linux_gid_t*, egidp, linux_gid_t*, sgidp)
-inline LINUX_DEFINE_SYSCALL1_RET(getpgid, linux_pid_t, pid, int)
-inline LINUX_DEFINE_SYSCALL1_RET(setfsuid, linux_uid_t, uid, long)
-inline LINUX_DEFINE_SYSCALL1_RET(setfsgid, linux_gid_t, gid, long)
-inline LINUX_DEFINE_SYSCALL1_RET(getsid, linux_pid_t, pid, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(capget, linux_cap_user_header_t, header, struct linux_user_cap_data_struct*, dataptr)
-inline LINUX_DEFINE_SYSCALL2_NORET(capset, linux_cap_user_header_t, header, struct linux_user_cap_data_struct const*, data)
-inline LINUX_DEFINE_SYSCALL2_NORET(rt_sigpending, linux_sigset_t*, uset, linux_size_t, sigsetsize)
-inline LINUX_DEFINE_SYSCALL4_RET(rt_sigtimedwait, linux_sigset_t const*, uthese, linux_siginfo_t*, uinfo, struct linux_kernel_timespec const*, uts, linux_size_t, sigsetsize, int)
-inline LINUX_DEFINE_SYSCALL3_NORET(rt_sigqueueinfo, linux_pid_t, pid, int, sig, linux_siginfo_t*, uinfo)
-inline LINUX_DEFINE_SYSCALL2_NORET(rt_sigsuspend, linux_sigset_t*, unewset, linux_size_t, sigsetsize)
-inline LINUX_DEFINE_SYSCALL2_NORET(sigaltstack, linux_stack_t const*, uss, linux_stack_t*, uoss)
-inline LINUX_DEFINE_SYSCALL1_RET(personality, unsigned int, personality, unsigned int)
-inline LINUX_DEFINE_SYSCALL2_NORET(statfs, char const*, pathname, struct linux_statfs*, buf)
-inline LINUX_DEFINE_SYSCALL2_NORET(fstatfs, unsigned int, fd, struct linux_statfs*, buf)
-inline LINUX_DEFINE_SYSCALL2_RET(getpriority, int, which, int, who, long)
-inline LINUX_DEFINE_SYSCALL3_NORET(setpriority, int, which, int, who, int, niceval)
-inline LINUX_DEFINE_SYSCALL2_NORET(sched_setparam, linux_pid_t, pid, struct linux_sched_param*, param)
-inline LINUX_DEFINE_SYSCALL2_NORET(sched_getparam, linux_pid_t, pid, struct linux_sched_param*, param)
-inline LINUX_DEFINE_SYSCALL3_NORET(sched_setscheduler, linux_pid_t, pid, int, policy, struct linux_sched_param*, param)
-inline LINUX_DEFINE_SYSCALL1_RET(sched_getscheduler, linux_pid_t, pid, int)
-inline LINUX_DEFINE_SYSCALL1_RET(sched_get_priority_max, int, policy, int)
-inline LINUX_DEFINE_SYSCALL1_RET(sched_get_priority_min, int, policy, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(sched_rr_get_interval, linux_pid_t, pid, struct linux_kernel_timespec*, interval)
-inline LINUX_DEFINE_SYSCALL2_NORET(mlock, unsigned long, start, linux_size_t, len)
-inline LINUX_DEFINE_SYSCALL2_NORET(munlock, unsigned long, start, linux_size_t, len)
-inline LINUX_DEFINE_SYSCALL1_NORET(mlockall, int, flags)
-inline LINUX_DEFINE_SYSCALL0_NORET(munlockall)
-inline LINUX_DEFINE_SYSCALL0_NORET(vhangup)
-inline LINUX_DEFINE_SYSCALL2_NORET(pivot_root, char const*, new_root, char const*, put_old)
-inline LINUX_DEFINE_SYSCALL5_RET(prctl, int, option, unsigned long, arg2, unsigned long, arg3, unsigned long, arg4, unsigned long, arg5, long)
-inline LINUX_DEFINE_SYSCALL1_RET(adjtimex, struct linux_timex*, txc_p, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(setrlimit, unsigned int, resource, struct linux_rlimit*, rlim)
-inline LINUX_DEFINE_SYSCALL1_NORET(chroot, char const*, filename)
-inline LINUX_DEFINE_SYSCALL0_NORET(sync)
-inline LINUX_DEFINE_SYSCALL1_NORET(acct, char const*, name)
-inline LINUX_DEFINE_SYSCALL2_NORET(settimeofday, struct linux_timeval*, tv, struct linux_timezone*, tz)
-inline LINUX_DEFINE_SYSCALL5_NORET(mount, char*, dev_name, char*, dir_name, char*, type, unsigned long, flags, void*, data)
-inline LINUX_DEFINE_SYSCALL2_NORET(umount, char*, name, int, flags)
-inline LINUX_DEFINE_SYSCALL2_NORET(swapon, char const*, specialfile, int, swap_flags)
-inline LINUX_DEFINE_SYSCALL1_NORET(swapoff, char const*, specialfile)
-inline LINUX_DEFINE_SYSCALL4_NORET(reboot, int, magic1, int, magic2, unsigned int, cmd, void*, arg)
-inline LINUX_DEFINE_SYSCALL2_NORET(sethostname, char*, name, int, len)
-inline LINUX_DEFINE_SYSCALL2_NORET(setdomainname, char*, name, int, len)
-inline LINUX_DEFINE_SYSCALL3_NORET(init_module, void*, umod, unsigned long, len, char const*, uargs)
-inline LINUX_DEFINE_SYSCALL2_NORET(delete_module, char const*, name_user, unsigned int, flags)
-inline LINUX_DEFINE_SYSCALL4_NORET(quotactl, unsigned int, cmd, char const*, special, linux_qid_t, id, void*, addr)
-inline LINUX_DEFINE_SYSCALL0_RET(gettid, linux_pid_t)
+inline LINUX_DEFINE_SYSCALL4_RET(vmsplice, int, fd, struct linux_iovec const*, uiov, unsigned long, nr_segs, unsigned int, flags, long)
+inline LINUX_DEFINE_SYSCALL6_RET(splice, int, fd_in, linux_loff_t*, off_in, int, fd_out, linux_loff_t*, off_out, linux_size_t, len, unsigned int, flags, long)
+inline LINUX_DEFINE_SYSCALL4_RET(tee, int, fdin, int, fdout, linux_size_t, len, unsigned int, flags, int)
 inline enum linux_error_t linux_readahead(int const fd, linux_loff_t const offset, linux_size_t const count)
 {
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -850,145 +847,276 @@ inline enum linux_error_t linux_readahead(int const fd, linux_loff_t const offse
 		return (enum linux_error_t)-ret;
 	return linux_error_none;
 }
-inline LINUX_DEFINE_SYSCALL5_NORET(setxattr, char const*, pathname, char const*, name, void const*, value, linux_size_t, size, int, flags)
-inline LINUX_DEFINE_SYSCALL5_NORET(lsetxattr, char const*, pathname, char const*, name, void const*, value, linux_size_t, size, int, flags)
-inline LINUX_DEFINE_SYSCALL5_NORET(fsetxattr, int, fd, char const*, name, void const*,value, linux_size_t, size, int, flags)
-inline LINUX_DEFINE_SYSCALL4_RET(getxattr, char const*, pathname, char const*, name, void*, value, linux_size_t, size, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL4_RET(lgetxattr, char const*, pathname, char const*, name, void*, value, linux_size_t, size, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL4_RET(fgetxattr, int, fd, char const*, name, void*, value, linux_size_t, size, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL3_RET(listxattr, char const*, pathname, char*, list, linux_size_t, size, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL3_RET(llistxattr, char const*, pathname, char*, list, linux_size_t, size, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL3_RET(flistxattr, int, fd, char*, list, linux_size_t, size, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL2_NORET(removexattr, char const*, pathname, char const*, name)
-inline LINUX_DEFINE_SYSCALL2_NORET(lremovexattr, char const*, pathname, char const*, name)
-inline LINUX_DEFINE_SYSCALL2_NORET(fremovexattr, int, fd, char const*, name)
-inline LINUX_DEFINE_SYSCALL2_NORET(tkill, linux_pid_t, pid, int, sig)
+inline LINUX_DEFINE_SYSCALL6_RET(process_vm_readv, linux_pid_t, pid, struct linux_iovec const*, lvec, unsigned long, liovcnt, struct linux_iovec const*, rvec, unsigned long, riovcnt, unsigned long, flags, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL6_RET(process_vm_writev, linux_pid_t, pid, struct linux_iovec const*, lvec, unsigned long, liovcnt, struct linux_iovec const*, rvec, unsigned long, riovcnt, unsigned long, flags, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL6_RET(copy_file_range, int, fd_in, linux_loff_t*, off_in, int, fd_out, linux_loff_t*, off_out, linux_size_t, len, unsigned int, flags, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL6_RET(preadv2, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_rwf_t, flags, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL6_RET(pwritev2, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_rwf_t, flags, linux_ssize_t)
+
+//-----------------------------------------------------------------------------
+// timerfd
+
+inline LINUX_DEFINE_SYSCALL2_RET(timerfd_create, int, clockid, int, flags, int)
+inline LINUX_DEFINE_SYSCALL4_NORET(timerfd_settime, int, ufd, int, flags, struct linux_kernel_itimerspec const*, utmr, struct linux_kernel_itimerspec*, otmr)
+inline LINUX_DEFINE_SYSCALL2_NORET(timerfd_gettime, int, ufd, struct linux_kernel_itimerspec*, otmr)
+
+//-----------------------------------------------------------------------------
+// capabilities
+
+inline LINUX_DEFINE_SYSCALL2_NORET(capget, linux_cap_user_header_t, header, struct linux_user_cap_data_struct*, dataptr)
+inline LINUX_DEFINE_SYSCALL2_NORET(capset, linux_cap_user_header_t, header, struct linux_user_cap_data_struct const*, data)
+
+//-----------------------------------------------------------------------------
+// futexes
+
 inline LINUX_DEFINE_SYSCALL6_RET(futex, uint32_t*, uaddr, int, op, uint32_t, val, struct linux_timespec*, utime, uint32_t*, uaddr2, uint32_t, val3, long)
-inline LINUX_DEFINE_SYSCALL3_NORET(sched_setaffinity, linux_pid_t, pid, unsigned int, len, unsigned long*, user_mask_ptr)
-inline LINUX_DEFINE_SYSCALL3_NORET(sched_getaffinity, linux_pid_t, pid, unsigned int, len, unsigned long*, user_mask_ptr)
-inline LINUX_DEFINE_SYSCALL2_NORET(io_setup, unsigned int, nr_events, linux_aio_context_t*, ctxp)
-inline LINUX_DEFINE_SYSCALL1_NORET(io_destroy, linux_aio_context_t, ctx)
-inline LINUX_DEFINE_SYSCALL5_RET(io_getevents, linux_aio_context_t, ctx_id, long, min_nr, long, nr, struct linux_io_event*, events, struct linux_timespec*, timeout, long)
-inline LINUX_DEFINE_SYSCALL3_RET(io_submit, linux_aio_context_t, ctx_id, long, nr, struct linux_iocb**, iocbpp, long)
-inline LINUX_DEFINE_SYSCALL3_NORET(io_cancel, linux_aio_context_t, ctx_id, struct linux_iocb*, iocb, struct linux_io_event*, result)
-inline LINUX_DEFINE_SYSCALL3_RET(lookup_dcookie, uint64_t, cookie64, char*, buf, linux_size_t, len, int)
-inline LINUX_DEFINE_SYSCALL5_NORET(remap_file_pages, unsigned long, start, unsigned long, size, unsigned long, prot, unsigned long, pgoff, unsigned long, flags)
-inline LINUX_DEFINE_SYSCALL3_RET(getdents64, unsigned int, fd, struct linux_dirent64*, dirent, unsigned int, count, int)
-inline LINUX_DEFINE_SYSCALL1_RET(set_tid_address, int*, tidptr, linux_pid_t)
+inline LINUX_DEFINE_SYSCALL3_NORET(get_robust_list, int, pid, struct linux_robust_list_head**, head_ptr, linux_size_t*, len_ptr)
+inline LINUX_DEFINE_SYSCALL2_NORET(set_robust_list, struct linux_robust_list_head*, head, linux_size_t, len)
+
+//-----------------------------------------------------------------------------
+// interval timer
+
+inline LINUX_DEFINE_SYSCALL2_NORET(getitimer, int, which, struct linux_itimerval*, value)
+inline LINUX_DEFINE_SYSCALL3_NORET(setitimer, int, which, struct linux_itimerval*, value, struct linux_itimerval*, ovalue)
+
+//-----------------------------------------------------------------------------
+// kernel
+
+inline LINUX_DEFINE_SYSCALL4_NORET(kexec_load, unsigned long, entry, unsigned long, nr_segments, struct linux_kexec_segment*, segments, unsigned long, flags)
+inline LINUX_DEFINE_SYSCALL3_NORET(init_module, void*, umod, unsigned long, len, char const*, uargs)
+inline LINUX_DEFINE_SYSCALL2_NORET(delete_module, char const*, name_user, unsigned int, flags)
+inline LINUX_DEFINE_SYSCALL4_NORET(reboot, int, magic1, int, magic2, unsigned int, cmd, void*, arg)
+inline LINUX_DEFINE_SYSCALL3_NORET(finit_module, int, fd, char const*, uargs, int, flags)
+
+//-----------------------------------------------------------------------------
+// timer
+
 inline LINUX_DEFINE_SYSCALL3_NORET(timer_create, linux_clockid_t, which_clock, struct linux_sigevent*, timer_event_spec, linux_timer_t*, created_timer_id)
-inline LINUX_DEFINE_SYSCALL4_NORET(timer_settime, linux_timer_t, timer_id, int, flags, struct linux_kernel_itimerspec const*, new_setting, struct linux_kernel_itimerspec*, old_setting)
 inline LINUX_DEFINE_SYSCALL2_NORET(timer_gettime, linux_timer_t, timer_id, struct linux_kernel_itimerspec*, setting)
 inline LINUX_DEFINE_SYSCALL1_RET(timer_getoverrun, linux_timer_t, timer_id, int)
+inline LINUX_DEFINE_SYSCALL4_NORET(timer_settime, linux_timer_t, timer_id, int, flags, struct linux_kernel_itimerspec const*, new_setting, struct linux_kernel_itimerspec*, old_setting)
 inline LINUX_DEFINE_SYSCALL1_NORET(timer_delete, linux_timer_t, timer_id)
+
+//-----------------------------------------------------------------------------
+// clock
+
 inline LINUX_DEFINE_SYSCALL2_NORET(clock_settime, linux_clockid_t, which_clock, struct linux_kernel_timespec const*, tp)
 inline LINUX_DEFINE_SYSCALL2_NORET(clock_gettime, linux_clockid_t, which_clock, struct linux_kernel_timespec*, tp)
 inline LINUX_DEFINE_SYSCALL2_NORET(clock_getres, linux_clockid_t, which_clock, struct linux_kernel_timespec*, tp)
 inline LINUX_DEFINE_SYSCALL4_NORET(clock_nanosleep, linux_clockid_t, which_clock, int, flags, struct linux_kernel_timespec const*, rqtp, struct linux_kernel_timespec*, rmtp)
-inline LINUX_DEFINE_SYSCALL4_NORET(epoll_ctl, int, epfd, int, op, int, fd, struct linux_epoll_event*, event)
+inline LINUX_DEFINE_SYSCALL2_RET(clock_adjtime, linux_clockid_t, which_clock, struct linux_timex*, utx, int)
+
+//-----------------------------------------------------------------------------
+// scheduler
+
+inline LINUX_DEFINE_SYSCALL3_NORET(ioprio_set, int, which, int, who, int, ioprio)
+inline LINUX_DEFINE_SYSCALL2_RET(ioprio_get, int, which, int, who, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(sched_setparam, linux_pid_t, pid, struct linux_sched_param*, param)
+inline LINUX_DEFINE_SYSCALL3_NORET(sched_setscheduler, linux_pid_t, pid, int, policy, struct linux_sched_param*, param)
+inline LINUX_DEFINE_SYSCALL1_RET(sched_getscheduler, linux_pid_t, pid, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(sched_getparam, linux_pid_t, pid, struct linux_sched_param*, param)
+inline LINUX_DEFINE_SYSCALL3_NORET(sched_setaffinity, linux_pid_t, pid, unsigned int, len, unsigned long*, user_mask_ptr)
+inline LINUX_DEFINE_SYSCALL3_NORET(sched_getaffinity, linux_pid_t, pid, unsigned int, len, unsigned long*, user_mask_ptr)
+inline LINUX_DEFINE_SYSCALL0_NORET(sched_yield)
+inline LINUX_DEFINE_SYSCALL1_RET(sched_get_priority_max, int, policy, int)
+inline LINUX_DEFINE_SYSCALL1_RET(sched_get_priority_min, int, policy, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(sched_rr_get_interval, linux_pid_t, pid, struct linux_kernel_timespec*, interval)
+inline LINUX_DEFINE_SYSCALL3_NORET(setpriority, int, which, int, who, int, niceval)
+inline LINUX_DEFINE_SYSCALL2_RET(getpriority, int, which, int, who, long)
+inline LINUX_DEFINE_SYSCALL3_NORET(sched_setattr, linux_pid_t, pid, struct linux_sched_attr*, uattr, unsigned int, flags)
+inline LINUX_DEFINE_SYSCALL4_NORET(sched_getattr, linux_pid_t, pid, struct linux_sched_attr*, uattr, unsigned int, size, unsigned int, flags)
+
+//-----------------------------------------------------------------------------
+// signals
+
+inline LINUX_DEFINE_SYSCALL4_RET(signalfd4, int, ufd, linux_sigset_t*, user_mask, linux_size_t, sizemask, int, flags, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(kill, linux_pid_t, pid, int, sig)
+inline LINUX_DEFINE_SYSCALL2_NORET(tkill, linux_pid_t, pid, int, sig)
 inline LINUX_DEFINE_SYSCALL3_NORET(tgkill, linux_pid_t, tgid, linux_pid_t, pid, int, sig)
-inline LINUX_DEFINE_SYSCALL6_NORET(mbind, unsigned long, start, unsigned long, len, unsigned long, mode, unsigned long const*, nmask, unsigned long, maxnode, unsigned int, flags)
-inline LINUX_DEFINE_SYSCALL3_NORET(set_mempolicy, int, mode, unsigned long const*, nmask, unsigned long, maxnode)
-inline LINUX_DEFINE_SYSCALL5_NORET(get_mempolicy, int*, policy, unsigned long*, nmask, unsigned long, maxnode, unsigned long, addr, unsigned long, flags)
+inline LINUX_DEFINE_SYSCALL2_NORET(sigaltstack, linux_stack_t const*, uss, linux_stack_t*, uoss)
+inline LINUX_DEFINE_SYSCALL2_NORET(rt_sigsuspend, linux_sigset_t*, unewset, linux_size_t, sigsetsize)
+inline LINUX_DEFINE_SYSCALL4_NORET(rt_sigaction, int, sig, struct linux_sigaction const*, act, struct linux_sigaction*, oact, linux_size_t, sigsetsize)
+inline LINUX_DEFINE_SYSCALL4_NORET(rt_sigprocmask, int, how, linux_sigset_t*, nset, linux_sigset_t*, oset, linux_size_t, sigsetsize)
+inline LINUX_DEFINE_SYSCALL2_NORET(rt_sigpending, linux_sigset_t*, uset, linux_size_t, sigsetsize)
+inline LINUX_DEFINE_SYSCALL4_RET(rt_sigtimedwait, linux_sigset_t const*, uthese, linux_siginfo_t*, uinfo, struct linux_kernel_timespec const*, uts, linux_size_t, sigsetsize, int)
+inline LINUX_DEFINE_SYSCALL3_NORET(rt_sigqueueinfo, linux_pid_t, pid, int, sig, linux_siginfo_t*, uinfo)
+inline LINUX_DEFINE_SYSCALL4_NORET(rt_tgsigqueueinfo, linux_pid_t, tgid, linux_pid_t, pid, int, sig, linux_siginfo_t*, uinfo)
+
+//-----------------------------------------------------------------------------
+// process user/group id
+
+inline LINUX_DEFINE_SYSCALL1_NORET(setuid, linux_uid_t, uid)
+inline LINUX_DEFINE_SYSCALL1_NORET(setgid, linux_gid_t, gid)
+inline LINUX_DEFINE_SYSCALL2_NORET(setreuid, linux_uid_t, ruid, linux_uid_t, euid)
+inline LINUX_DEFINE_SYSCALL2_NORET(setregid, linux_gid_t, rgid, linux_gid_t, egid)
+inline LINUX_DEFINE_SYSCALL3_NORET(setresuid, linux_uid_t, ruid, linux_uid_t, euid, linux_uid_t, suid)
+inline LINUX_DEFINE_SYSCALL3_NORET(setresgid, linux_gid_t, rgid, linux_gid_t, egid, linux_gid_t, sgid)
+inline LINUX_DEFINE_SYSCALL1_RET(setfsuid, linux_uid_t, uid, long)
+inline LINUX_DEFINE_SYSCALL1_RET(setfsgid, linux_gid_t, gid, long)
+inline LINUX_DEFINE_SYSCALL0_RET(getuid, linux_uid_t)
+inline LINUX_DEFINE_SYSCALL0_RET(getgid, linux_gid_t)
+inline LINUX_DEFINE_SYSCALL0_RET(geteuid, linux_uid_t)
+inline LINUX_DEFINE_SYSCALL0_RET(getegid, linux_gid_t)
+inline LINUX_DEFINE_SYSCALL3_NORET(getresuid, linux_uid_t*, ruidp, linux_uid_t*, euidp, linux_uid_t*, suidp)
+inline LINUX_DEFINE_SYSCALL3_NORET(getresgid, linux_gid_t*, rgidp, linux_gid_t*, egidp, linux_gid_t*, sgidp)
+
+//-----------------------------------------------------------------------------
+// process/process group/session id
+
+inline LINUX_DEFINE_SYSCALL2_NORET(setpgid, linux_pid_t, pid, linux_pid_t, pgid)
+inline LINUX_DEFINE_SYSCALL0_RET(setsid, int)
+inline LINUX_DEFINE_SYSCALL1_RET(getpgid, linux_pid_t, pid, int)
+inline LINUX_DEFINE_SYSCALL1_RET(getsid, linux_pid_t, pid, int)
+inline LINUX_DEFINE_SYSCALL0_RET(getpid, linux_pid_t)
+inline LINUX_DEFINE_SYSCALL0_RET(getppid, int)
+inline LINUX_DEFINE_SYSCALL0_RET(gettid, linux_pid_t)
+
+//-----------------------------------------------------------------------------
+// system time
+
+inline LINUX_DEFINE_SYSCALL2_NORET(gettimeofday, struct linux_timeval*, tv, struct linux_timezone*, tz)
+inline LINUX_DEFINE_SYSCALL2_NORET(settimeofday, struct linux_timeval*, tv, struct linux_timezone*, tz)
+inline LINUX_DEFINE_SYSCALL1_RET(adjtimex, struct linux_timex*, txc_p, int)
+
+//-----------------------------------------------------------------------------
+// message queue
+
 inline LINUX_DEFINE_SYSCALL4_RET(mq_open, char const*, u_name, int, oflag, linux_umode_t, mode, struct linux_mq_attr*, u_attr, int)
 inline LINUX_DEFINE_SYSCALL1_NORET(mq_unlink, char const*, u_name)
 inline LINUX_DEFINE_SYSCALL5_NORET(mq_timedsend, linux_mqd_t, mqdes, char const*, u_msg_ptr, linux_size_t, msg_len, unsigned int, msg_prio, struct linux_kernel_timespec const*, u_abs_timeout)
 inline LINUX_DEFINE_SYSCALL5_RET(mq_timedreceive, linux_mqd_t, mqdes, char*, u_msg_ptr, linux_size_t, msg_len, unsigned int*, u_msg_prio, struct linux_kernel_timespec const*, u_abs_timeout, int)
 inline LINUX_DEFINE_SYSCALL2_NORET(mq_notify, linux_mqd_t, mqdes, struct linux_sigevent const*, u_notification)
 inline LINUX_DEFINE_SYSCALL3_NORET(mq_getsetattr, linux_mqd_t, mqdes, struct linux_mq_attr const*, u_mqstat, struct linux_mq_attr*, u_omqstat)
-inline LINUX_DEFINE_SYSCALL4_NORET(kexec_load, unsigned long, entry, unsigned long, nr_segments, struct linux_kexec_segment*, segments, unsigned long, flags)
-inline LINUX_DEFINE_SYSCALL5_NORET(waitid, int, which, linux_pid_t, upid, struct linux_siginfo*, infop, int, options, struct linux_rusage*, ru)
-inline LINUX_DEFINE_SYSCALL5_RET(add_key, char const*, type, char const*, description, void const*, payload, linux_size_t, plen, linux_key_serial_t, ringid, long)
-inline LINUX_DEFINE_SYSCALL4_RET(request_key, char const*, type, char const*, description, char const*, callout_info, linux_key_serial_t, destringid, long)
-inline LINUX_DEFINE_SYSCALL5_RET(keyctl, int, option, unsigned long, arg2, unsigned long, arg3, unsigned long, arg4, unsigned long, arg5, long)
-inline LINUX_DEFINE_SYSCALL3_NORET(ioprio_set, int, which, int, who, int, ioprio)
-inline LINUX_DEFINE_SYSCALL2_RET(ioprio_get, int, which, int, who, int)
-inline LINUX_DEFINE_SYSCALL3_RET(inotify_add_watch, int, fd, char const*, pathname, uint32_t, mask, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(inotify_rm_watch, int, fd, int32_t, wd)
-inline LINUX_DEFINE_SYSCALL4_RET(openat, int, dfd, char const*, filename, int, flags, linux_umode_t, mode, long)
-inline LINUX_DEFINE_SYSCALL3_NORET(mkdirat, int, dfd, char const*, pathname, linux_umode_t, mode)
-inline LINUX_DEFINE_SYSCALL4_NORET(mknodat, int, dfd, char const*, filename, linux_umode_t, mode, unsigned int, dev)
-inline LINUX_DEFINE_SYSCALL5_NORET(fchownat, int, dfd, char const*, filename, linux_uid_t, user, linux_gid_t, group, int, flag)
-inline LINUX_DEFINE_SYSCALL3_NORET(unlinkat, int, dfd, char const*, pathname, int, flag)
-inline LINUX_DEFINE_SYSCALL4_NORET(renameat, int, olddfd, char const*, oldname, int, newdfd, char const*, newname)
-inline LINUX_DEFINE_SYSCALL5_NORET(linkat, int, olddfd, char const*, oldname, int, newdfd, char const*, newname, int, flags)
-inline LINUX_DEFINE_SYSCALL3_NORET(symlinkat, char const*, oldname, int, newdfd, char const*, newname)
-inline LINUX_DEFINE_SYSCALL4_RET(readlinkat, int, dfd, char const*, pathname, char*, buf, int, bufsiz, int)
-inline LINUX_DEFINE_SYSCALL3_NORET(fchmodat, int, dfd, char const*, filename, linux_umode_t, mode)
-inline LINUX_DEFINE_SYSCALL3_NORET(faccessat, int, dfd, char const*, filename, int, mode)
-inline LINUX_DEFINE_SYSCALL6_RET(pselect6, int, n, linux_fd_set*, inp, linux_fd_set*, outp, linux_fd_set*, exp, struct linux_timespec*, tsp, void*, sig, long)
-inline LINUX_DEFINE_SYSCALL5_RET(ppoll, struct linux_pollfd*, ufds, unsigned int, nfds, struct linux_timespec*, tsp, linux_sigset_t const*, sigmask, linux_size_t, sigsetsize, int)
-inline LINUX_DEFINE_SYSCALL1_NORET(unshare, unsigned long, unshare_flags)
-inline LINUX_DEFINE_SYSCALL2_NORET(set_robust_list, struct linux_robust_list_head*, head, linux_size_t, len)
-inline LINUX_DEFINE_SYSCALL3_NORET(get_robust_list, int, pid, struct linux_robust_list_head**, head_ptr, linux_size_t*, len_ptr)
-inline LINUX_DEFINE_SYSCALL6_RET(splice, int, fd_in, linux_loff_t*, off_in, int, fd_out, linux_loff_t*, off_out, linux_size_t, len, unsigned int, flags, long)
-inline LINUX_DEFINE_SYSCALL4_RET(tee, int, fdin, int, fdout, linux_size_t, len, unsigned int, flags, int)
-inline LINUX_DEFINE_SYSCALL4_RET(vmsplice, int, fd, struct linux_iovec const*, uiov, unsigned long, nr_segs, unsigned int, flags, long)
-inline LINUX_DEFINE_SYSCALL6_NORET(move_pages, linux_pid_t, pid, unsigned long, nr_pages, void const**, pages, int const*, nodes, int*, status, int, flags)
-inline LINUX_DEFINE_SYSCALL4_NORET(utimensat, int, dfd, char const*, filename, struct linux_kernel_timespec*, utimes, int, flags)
-inline LINUX_DEFINE_SYSCALL6_RET(epoll_pwait, int, epfd, struct linux_epoll_event*, events, int, maxevents, int, timeout, linux_sigset_t const*, sigmask, linux_size_t, sigsetsize, int)
-inline LINUX_DEFINE_SYSCALL2_RET(timerfd_create, int, clockid, int, flags, int)
-inline enum linux_error_t linux_fallocate(int const fd, int const mode, linux_loff_t const offset, linux_loff_t const len)
-{
-#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
-	linux_word_t const ret = linux_syscall6(LINUX_PARAM(fd), LINUX_PARAM(mode), LINUX_EXPAND(offset), LINUX_EXPAND(len), linux_syscall_name_fallocate);
-#else
-	linux_word_t const ret = linux_syscall4(LINUX_PARAM(fd), LINUX_PARAM(mode), LINUX_PARAM(offset), LINUX_PARAM(len), linux_syscall_name_fallocate);
-#endif
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	return linux_error_none;
-}
-inline LINUX_DEFINE_SYSCALL4_NORET(timerfd_settime, int, ufd, int, flags, struct linux_kernel_itimerspec const*, utmr, struct linux_kernel_itimerspec*, otmr)
-inline LINUX_DEFINE_SYSCALL2_NORET(timerfd_gettime, int, ufd, struct linux_kernel_itimerspec*, otmr)
+
+//-----------------------------------------------------------------------------
+// socket
+
+inline LINUX_DEFINE_SYSCALL3_RET(socket, int, family, int, type, int, protocol, int)
+inline LINUX_DEFINE_SYSCALL4_NORET(socketpair, int, family, int, type, int, protocol, int*, usockvec)
+inline LINUX_DEFINE_SYSCALL3_NORET(bind, int, fd, struct linux_sockaddr*, umyaddr, int, addrlen)
+inline LINUX_DEFINE_SYSCALL2_NORET(listen, int, fd, int, backlog)
+inline LINUX_DEFINE_SYSCALL3_NORET(connect, int, fd, struct linux_sockaddr*, uservaddr, int, addrlen)
+inline LINUX_DEFINE_SYSCALL3_NORET(getsockname, int, fd, struct linux_sockaddr*, usockaddr, int*, usockaddr_len)
+inline LINUX_DEFINE_SYSCALL3_NORET(getpeername, int, fd, struct linux_sockaddr*, usockaddr, int*, usockaddr_len)
+inline LINUX_DEFINE_SYSCALL6_RET(sendto, int, fd, void*, buff, linux_size_t, len, unsigned int, flags, struct linux_sockaddr*, addr, int, addr_le, int)
+inline LINUX_DEFINE_SYSCALL6_RET(recvfrom, int, fd, void*, ubuf, linux_size_t, size, unsigned int, flags, struct linux_sockaddr*, addr, int*, addr_len, int)
+inline LINUX_DEFINE_SYSCALL5_NORET(setsockopt, int, fd, int, level, int, optname, char*, optval, int, optlen)
+inline LINUX_DEFINE_SYSCALL5_NORET(getsockopt, int, fd, int, level, int, optname, char*, optval, int*, optlen)
+inline LINUX_DEFINE_SYSCALL2_NORET(shutdown, int, fd, int, how)
+inline LINUX_DEFINE_SYSCALL3_RET(sendmsg, int, fd, struct linux_user_msghdr*, msg, unsigned int, flags, int)
+inline LINUX_DEFINE_SYSCALL3_RET(recvmsg, int, fd, struct linux_user_msghdr*, msg, unsigned int, flags, int)
 inline LINUX_DEFINE_SYSCALL4_RET(accept4, int, fd, struct linux_sockaddr*, upeer_sockaddr, int*, upeer_addrlen, int, flags, int)
-inline LINUX_DEFINE_SYSCALL4_RET(signalfd4, int, ufd, linux_sigset_t*, user_mask, linux_size_t, sizemask, int, flags, int)
-inline LINUX_DEFINE_SYSCALL2_RET(eventfd2, unsigned int, count, int, flags, int)
-inline LINUX_DEFINE_SYSCALL1_RET(epoll_create1, int, flags, int)
-inline LINUX_DEFINE_SYSCALL3_RET(dup3, unsigned int, oldfd, unsigned int, newfd, int, flags, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(pipe2, int*, fildes, int, flags)
-inline LINUX_DEFINE_SYSCALL1_RET(inotify_init1, int, flags, int)
-inline LINUX_DEFINE_SYSCALL5_RET(preadv, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL5_RET(pwritev, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL4_NORET(rt_tgsigqueueinfo, linux_pid_t, tgid, linux_pid_t, pid, int, sig, linux_siginfo_t*, uinfo)
-inline LINUX_DEFINE_SYSCALL5_RET(perf_event_open, struct linux_perf_event_attr*, attr_uptr, linux_pid_t, pid, int, cpu, int, group_fd, unsigned long, flags, int)
 inline LINUX_DEFINE_SYSCALL5_RET(recvmmsg, int, fd, struct linux_mmsghdr*, mmsg, unsigned int, vlen, unsigned int, flags, struct linux_kernel_timespec*, timeout, int)
-inline LINUX_DEFINE_SYSCALL2_RET(fanotify_init, unsigned int, flags, unsigned int, event_f_flags, int)
-inline LINUX_DEFINE_SYSCALL5_NORET(fanotify_mark, int, fanotify_fd, unsigned int, flags, uint64_t, mask, int, dfd, char const*, pathname)
-inline LINUX_DEFINE_SYSCALL4_NORET(prlimit64, linux_pid_t, pid, unsigned int, resource, struct linux_rlimit64 const*, new_rlim, struct linux_rlimit64*, old_rlim)
-inline LINUX_DEFINE_SYSCALL5_NORET(name_to_handle_at, int, dfd, char const*, name, struct linux_file_handle*, handle, int*, mnt_id, int, flag)
-inline LINUX_DEFINE_SYSCALL3_RET(open_by_handle_at, int, mountdirfd, struct linux_file_handle*, handle, int, flags, long)
-inline LINUX_DEFINE_SYSCALL2_RET(clock_adjtime, linux_clockid_t, which_clock, struct linux_timex*, utx, int)
-inline LINUX_DEFINE_SYSCALL1_NORET(syncfs, int, fd)
 inline LINUX_DEFINE_SYSCALL4_RET(sendmmsg, int, fd, struct linux_mmsghdr*, mmsg, unsigned int, vlen, unsigned int, flags, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(setns, int, fd, int, nstype)
-inline LINUX_DEFINE_SYSCALL3_NORET(getcpu, unsigned int*, cpup, unsigned int*, nodep, struct linux_getcpu_cache*, unused)
-inline LINUX_DEFINE_SYSCALL6_RET(process_vm_readv, linux_pid_t, pid, struct linux_iovec const*, lvec, unsigned long, liovcnt, struct linux_iovec const*, rvec, unsigned long, riovcnt, unsigned long, flags, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL6_RET(process_vm_writev, linux_pid_t, pid, struct linux_iovec const*, lvec, unsigned long, liovcnt, struct linux_iovec const*, rvec, unsigned long, riovcnt, unsigned long, flags, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL5_RET(kcmp, linux_pid_t, pid1, linux_pid_t, pid2, int, type, unsigned long, idx1, unsigned long, idx2, int)
-inline LINUX_DEFINE_SYSCALL3_NORET(finit_module, int, fd, char const*, uargs, int, flags)
-inline LINUX_DEFINE_SYSCALL3_NORET(sched_setattr, linux_pid_t, pid, struct linux_sched_attr*, uattr, unsigned int, flags)
-inline LINUX_DEFINE_SYSCALL4_NORET(sched_getattr, linux_pid_t, pid, struct linux_sched_attr*, uattr, unsigned int, size, unsigned int, flags)
-inline LINUX_DEFINE_SYSCALL5_NORET(renameat2, int, olddfd, char const*, oldname, int, newdfd, char const*, newname, unsigned int, flags)
-inline LINUX_DEFINE_SYSCALL3_RET(seccomp, unsigned int, op, unsigned int, flags, char const*, uargs, long)
-inline LINUX_DEFINE_SYSCALL3_RET(getrandom, char*, buf, linux_size_t, count, unsigned int, flags, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL2_RET(memfd_create, char const*, uname, unsigned int, flags, int)
-inline LINUX_DEFINE_SYSCALL3_RET(bpf, int, cmd, union linux_bpf_attr*, uattr, unsigned int, size, int)
-inline LINUX_DEFINE_SYSCALL5_NORET(execveat, int, fd, char const*, filename, char const* const*, argv, char const* const*, envp, int, flags)
-inline LINUX_DEFINE_SYSCALL1_RET(userfaultfd, int, flags, int)
+
+//-----------------------------------------------------------------------------
+// memory
+
+inline LINUX_DEFINE_SYSCALL1_RET(brk, unsigned long, brk, unsigned long)
+inline LINUX_DEFINE_SYSCALL2_NORET(munmap, unsigned long, addr, linux_size_t, len)
+inline LINUX_DEFINE_SYSCALL5_RET(mremap, unsigned long, addr, unsigned long, old_len, unsigned long, new_len, unsigned long, flags, unsigned long, new_addr, unsigned long)
+inline LINUX_DEFINE_SYSCALL3_NORET(mprotect, unsigned long, start, linux_size_t, len, unsigned long, prot)
+inline LINUX_DEFINE_SYSCALL3_NORET(msync, unsigned long, start, linux_size_t, len, int, flags)
+inline LINUX_DEFINE_SYSCALL2_NORET(mlock, unsigned long, start, linux_size_t, len)
+inline LINUX_DEFINE_SYSCALL2_NORET(munlock, unsigned long, start, linux_size_t, len)
+inline LINUX_DEFINE_SYSCALL1_NORET(mlockall, int, flags)
+inline LINUX_DEFINE_SYSCALL0_NORET(munlockall)
+inline LINUX_DEFINE_SYSCALL3_NORET(mincore, unsigned long, start, linux_size_t, len, unsigned char*, vec)
+inline LINUX_DEFINE_SYSCALL3_NORET(madvise, unsigned long, start, linux_size_t, len_in, int, behavior)
+inline LINUX_DEFINE_SYSCALL5_NORET(remap_file_pages, unsigned long, start, unsigned long, size, unsigned long, prot, unsigned long, pgoff, unsigned long, flags)
+inline LINUX_DEFINE_SYSCALL6_NORET(mbind, unsigned long, start, unsigned long, len, unsigned long, mode, unsigned long const*, nmask, unsigned long, maxnode, unsigned int, flags)
+inline LINUX_DEFINE_SYSCALL5_NORET(get_mempolicy, int*, policy, unsigned long*, nmask, unsigned long, maxnode, unsigned long, addr, unsigned long, flags)
+inline LINUX_DEFINE_SYSCALL3_NORET(set_mempolicy, int, mode, unsigned long const*, nmask, unsigned long, maxnode)
+inline LINUX_DEFINE_SYSCALL6_NORET(move_pages, linux_pid_t, pid, unsigned long, nr_pages, void const**, pages, int const*, nodes, int*, status, int, flags)
 inline LINUX_DEFINE_SYSCALL2_RET(membarrier, int, cmd, int, flags, int)
 inline LINUX_DEFINE_SYSCALL3_NORET(mlock2, unsigned long, start, linux_size_t, len, int, flags)
-inline LINUX_DEFINE_SYSCALL6_RET(copy_file_range, int, fd_in, linux_loff_t*, off_in, int, fd_out, linux_loff_t*, off_out, linux_size_t, len, unsigned int, flags, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL6_RET(preadv2, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_rwf_t, flags, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL6_RET(pwritev2, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_rwf_t, flags, linux_ssize_t)
 inline LINUX_DEFINE_SYSCALL4_NORET(pkey_mprotect, unsigned long, start, linux_size_t, len, unsigned long, prot, int, pkey)
 inline LINUX_DEFINE_SYSCALL2_RET(pkey_alloc, unsigned long, flags, unsigned long, init_val, int)
 inline LINUX_DEFINE_SYSCALL1_NORET(pkey_free, int, pkey)
-inline LINUX_DEFINE_SYSCALL5_NORET(statx, int, dfd, char const*, filename, unsigned, flags, unsigned int, mask, struct linux_statx*, buffer)
-inline LINUX_DEFINE_SYSCALL6_RET(io_pgetevents, linux_aio_context_t, ctx_id, long, min_nr, long, nr, struct linux_io_event*, events, struct linux_timespec*, timeout, struct linux_aio_sigset const*, usig, long)
+
+//-----------------------------------------------------------------------------
+// keys management
+
+inline LINUX_DEFINE_SYSCALL5_RET(add_key, char const*, type, char const*, description, void const*, payload, linux_size_t, plen, linux_key_serial_t, ringid, long)
+inline LINUX_DEFINE_SYSCALL4_RET(request_key, char const*, type, char const*, description, char const*, callout_info, linux_key_serial_t, destringid, long)
+inline LINUX_DEFINE_SYSCALL5_RET(keyctl, int, option, unsigned long, arg2, unsigned long, arg3, unsigned long, arg4, unsigned long, arg5, long)
+
+//-----------------------------------------------------------------------------
+// process creation
+
+inline LINUX_DEFINE_SYSCALL5_NORET(waitid, int, which, linux_pid_t, upid, struct linux_siginfo*, infop, int, options, struct linux_rusage*, ru)
+inline LINUX_DEFINE_SYSCALL5_RET(clone, unsigned long, clone_flags, unsigned long, newsp, int*, parent_tidptr, int*, child_tidptr, unsigned long, tls, long)
+inline LINUX_DEFINE_SYSCALL3_NORET(execve, char const*, filename, char const* const*, argv, char const* const*, envp)
+inline LINUX_DEFINE_SYSCALL4_RET(wait4, linux_pid_t, upid, int*, stat_addr, int, options, struct linux_rusage*, ru, long)
+inline LINUX_DEFINE_SYSCALL5_NORET(execveat, int, fd, char const*, filename, char const* const*, argv, char const* const*, envp, int, flags)
+
+//-----------------------------------------------------------------------------
+// fanotify
+
+inline LINUX_DEFINE_SYSCALL2_RET(fanotify_init, unsigned int, flags, unsigned int, event_f_flags, int)
+inline LINUX_DEFINE_SYSCALL5_NORET(fanotify_mark, int, fanotify_fd, unsigned int, flags, uint64_t, mask, int, dfd, char const*, pathname)
+
+//-----------------------------------------------------------------------------
+// misc file descriptors
+
+inline LINUX_DEFINE_SYSCALL2_RET(eventfd2, unsigned int, count, int, flags, int)
+inline LINUX_DEFINE_SYSCALL2_RET(memfd_create, char const*, uname, unsigned int, flags, int)
+inline LINUX_DEFINE_SYSCALL1_RET(userfaultfd, int, flags, int)
+
+//-----------------------------------------------------------------------------
+// misc
+
+inline LINUX_DEFINE_SYSCALL2_RET(getcwd, char*, buf, unsigned long, size, int)
+inline LINUX_DEFINE_SYSCALL3_RET(lookup_dcookie, uint64_t, cookie64, char*, buf, linux_size_t, len, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(umount, char*, name, int, flags)
+inline LINUX_DEFINE_SYSCALL5_NORET(mount, char*, dev_name, char*, dir_name, char*, type, unsigned long, flags, void*, data)
+inline LINUX_DEFINE_SYSCALL2_NORET(pivot_root, char const*, new_root, char const*, put_old)
+inline LINUX_DEFINE_SYSCALL1_NORET(chdir, char const*, filename)
+inline LINUX_DEFINE_SYSCALL1_NORET(fchdir, unsigned int, fd)
+inline LINUX_DEFINE_SYSCALL1_NORET(chroot, char const*, filename)
+inline LINUX_DEFINE_SYSCALL0_NORET(vhangup)
+inline LINUX_DEFINE_SYSCALL2_NORET(pipe2, int*, fildes, int, flags)
+inline LINUX_DEFINE_SYSCALL4_NORET(quotactl, unsigned int, cmd, char const*, special, linux_qid_t, id, void*, addr)
+inline LINUX_DEFINE_SYSCALL0_NORET(sync)
+inline LINUX_DEFINE_SYSCALL1_NORET(fsync, unsigned int, fd)
+inline LINUX_DEFINE_SYSCALL1_NORET(fdatasync, unsigned int, fd)
+inline LINUX_DEFINE_SYSCALL4_NORET(utimensat, int, dfd, char const*, filename, struct linux_kernel_timespec*, utimes, int, flags)
+inline LINUX_DEFINE_SYSCALL1_NORET(acct, char const*, name)
+inline LINUX_DEFINE_SYSCALL1_RET(personality, unsigned int, personality, unsigned int)
+inline LINUX_DEFINE_SYSCALL1_RET(set_tid_address, int*, tidptr, linux_pid_t)
+inline LINUX_DEFINE_SYSCALL1_NORET(unshare, unsigned long, unshare_flags)
+inline LINUX_DEFINE_SYSCALL2_NORET(nanosleep, struct linux_kernel_timespec*, rqtp, struct linux_kernel_timespec*, rmtp)
+inline LINUX_DEFINE_SYSCALL3_RET(syslog, int, type, char*, buf, int, len, int)
+inline LINUX_DEFINE_SYSCALL4_RET(ptrace, long, request, long, pid, unsigned long, addr, unsigned long, data, long)
+inline LINUX_DEFINE_SYSCALL1_RET(times, struct linux_tms*, tbuf, long)
+inline LINUX_DEFINE_SYSCALL2_RET(getgroups, int, gidsetsize, linux_gid_t*, grouplis, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(setgroups, int, gidsetsize, linux_gid_t*, grouplist)
+inline LINUX_DEFINE_SYSCALL1_NORET(newuname, struct linux_new_utsname*, name)
+inline LINUX_DEFINE_SYSCALL2_NORET(sethostname, char*, name, int, len)
+inline LINUX_DEFINE_SYSCALL2_NORET(setdomainname, char*, name, int, len)
+inline LINUX_DEFINE_SYSCALL2_NORET(getrlimit, unsigned int, resource, struct linux_rlimit*, rlim)
+inline LINUX_DEFINE_SYSCALL2_NORET(setrlimit, unsigned int, resource, struct linux_rlimit*, rlim)
+inline LINUX_DEFINE_SYSCALL2_NORET(getrusage, int, who, struct linux_rusage*, ru)
+inline LINUX_DEFINE_SYSCALL1_RET(umask, int, mask, int)
+inline LINUX_DEFINE_SYSCALL5_RET(prctl, int, option, unsigned long, arg2, unsigned long, arg3, unsigned long, arg4, unsigned long, arg5, long)
+inline LINUX_DEFINE_SYSCALL3_NORET(getcpu, unsigned int*, cpup, unsigned int*, nodep, struct linux_getcpu_cache*, unused)
+inline LINUX_DEFINE_SYSCALL1_NORET(sysinfo, struct linux_sysinfo*, info)
+inline LINUX_DEFINE_SYSCALL2_NORET(swapon, char const*, specialfile, int, swap_flags)
+inline LINUX_DEFINE_SYSCALL1_NORET(swapoff, char const*, specialfile)
+inline LINUX_DEFINE_SYSCALL5_RET(perf_event_open, struct linux_perf_event_attr*, attr_uptr, linux_pid_t, pid, int, cpu, int, group_fd, unsigned long, flags, int)
+inline LINUX_DEFINE_SYSCALL4_NORET(prlimit64, linux_pid_t, pid, unsigned int, resource, struct linux_rlimit64 const*, new_rlim, struct linux_rlimit64*, old_rlim)
+inline LINUX_DEFINE_SYSCALL1_NORET(syncfs, int, fd)
+inline LINUX_DEFINE_SYSCALL2_NORET(setns, int, fd, int, nstype)
+inline LINUX_DEFINE_SYSCALL5_RET(kcmp, linux_pid_t, pid1, linux_pid_t, pid2, int, type, unsigned long, idx1, unsigned long, idx2, int)
+inline LINUX_DEFINE_SYSCALL3_RET(seccomp, unsigned int, op, unsigned int, flags, char const*, uargs, long)
+inline LINUX_DEFINE_SYSCALL3_RET(getrandom, char*, buf, linux_size_t, count, unsigned int, flags, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL3_RET(bpf, int, cmd, union linux_bpf_attr*, uattr, unsigned int, size, int)
 inline LINUX_DEFINE_SYSCALL4_NORET(rseq, struct linux_rseq*, rseq, uint32_t, rseq_len, int, flags, uint32_t, sig)
 
+//=============================================================================
+// Architecture specific syscalls
+
 #if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline LINUX_DEFINE_SYSCALL4_RET(migrate_pages, linux_pid_t, pid, unsigned long, maxnode, unsigned long const*, old_nodes, unsigned long const*, new_nodes, int)
 inline enum linux_error_t linux_sync_file_range(int const fd, linux_loff_t const offset, linux_loff_t const nbytes, unsigned int const flags)
 {
 #if defined(LINUX_ARCH_X86)
@@ -1000,9 +1128,17 @@ inline enum linux_error_t linux_sync_file_range(int const fd, linux_loff_t const
 		return (enum linux_error_t)-ret;
 	return linux_error_none;
 }
+inline LINUX_DEFINE_SYSCALL4_RET(migrate_pages, linux_pid_t, pid, unsigned long, maxnode, unsigned long const*, old_nodes, unsigned long const*, new_nodes, int)
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI)
+inline enum linux_error_t linux_sync_file_range2(int const fd, unsigned int const flags, linux_loff_t const offset, linux_loff_t const nbytes)
+{
+	linux_word_t const ret = linux_syscall6(LINUX_PARAM(fd), LINUX_PARAM(flags), LINUX_EXPAND(offset), LINUX_EXPAND(nbytes), linux_syscall_name_sync_file_range2);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	return linux_error_none;
+}
 inline enum linux_error_t linux_arm_fadvise64_64(int const fd, int const advice, linux_loff_t const offset, linux_loff_t const len)
 {
 	linux_word_t const ret = linux_syscall6(LINUX_PARAM(fd), LINUX_PARAM(advice), LINUX_EXPAND(offset), LINUX_EXPAND(len), linux_syscall_name_arm_fadvise64_64);
@@ -1015,18 +1151,11 @@ inline LINUX_DEFINE_SYSCALL5_NORET(pciconfig_read, unsigned long, bus, unsigned 
 inline LINUX_DEFINE_SYSCALL5_NORET(pciconfig_write, unsigned long, bus, unsigned long, dfn, unsigned long, off, unsigned long, len, void*, buf) // TODO: This should fail with ENOSYS.
 inline LINUX_DEFINE_SYSCALL4_RET(send, int, fd, void*, buff, linux_size_t, len, unsigned int, flags, int)
 inline LINUX_DEFINE_SYSCALL4_RET(recv, int, fd, void*, ubuf, linux_size_t, size, unsigned int, flags, int)
-inline enum linux_error_t linux_sync_file_range2(int const fd, unsigned int const flags, linux_loff_t const offset, linux_loff_t const nbytes)
-{
-	linux_word_t const ret = linux_syscall6(LINUX_PARAM(fd), LINUX_PARAM(flags), LINUX_EXPAND(offset), LINUX_EXPAND(nbytes), linux_syscall_name_sync_file_range2);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	return linux_error_none;
-}
 inline LINUX_DEFINE_SYSCALL0_NORET(breakpoint)
-inline LINUX_DEFINE_SYSCALL3_NORET(cacheflush, unsigned long start, unsigned long end, int flags)
+inline LINUX_DEFINE_SYSCALL3_NORET(cacheflush, unsigned long, start, unsigned long, end, int, flags)
 inline LINUX_DEFINE_SYSCALL0_NORET(usr26)
 inline LINUX_DEFINE_SYSCALL0_NORET(usr32)
-inline LINUX_DEFINE_SYSCALL1_NORET(set_tls, unsigned long val)
+inline LINUX_DEFINE_SYSCALL1_NORET(set_tls, unsigned long, val)
 inline LINUX_DEFINE_SYSCALL0_RET(get_tls, unsigned long)
 #endif
 
@@ -1045,19 +1174,19 @@ inline enum linux_error_t linux_fadvise64_64(int const fd, linux_loff_t const of
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline LINUX_DEFINE_SYSCALL3_RET(accept, int, fd, struct linux_sockaddr*, upeer_sockaddr, int*, upeer_addrlen, int)
-inline LINUX_DEFINE_SYSCALL3_NORET(semop, int, semid, struct linux_sembuf*, tsops, unsigned, nsops)
-inline LINUX_DEFINE_SYSCALL3_RET(semget, linux_key_t, key, int, nsems, int, semflg, long)
-inline LINUX_DEFINE_SYSCALL4_RET(semctl, int, semid, int, semnum, int, cmd, unsigned long, arg, long)
-inline LINUX_DEFINE_SYSCALL4_NORET(msgsnd, int, msqid, struct linux_msgbuf*, msgp, linux_size_t, msgsz, int, msgflg)
-inline LINUX_DEFINE_SYSCALL5_RET(msgrcv, int, msqid, struct linux_msgbuf*, msgp, linux_size_t, msgsz, long, msgtyp, int, msgflg, long)
 inline LINUX_DEFINE_SYSCALL2_RET(msgget, linux_key_t, key, int, msgflg, long)
 inline LINUX_DEFINE_SYSCALL3_RET(msgctl, int, msqid, int, cmd, struct linux_msqid64_ds*, buf, long)
-inline LINUX_DEFINE_SYSCALL3_RET(shmat, int, shmid, char*, shmaddr, int, shmflg, long)
-inline LINUX_DEFINE_SYSCALL1_NORET(shmdt, char*, shmaddr)
+inline LINUX_DEFINE_SYSCALL5_RET(msgrcv, int, msqid, struct linux_msgbuf*, msgp, linux_size_t, msgsz, long, msgtyp, int, msgflg, long)
+inline LINUX_DEFINE_SYSCALL4_NORET(msgsnd, int, msqid, struct linux_msgbuf*, msgp, linux_size_t, msgsz, int, msgflg)
+inline LINUX_DEFINE_SYSCALL3_RET(semget, linux_key_t, key, int, nsems, int, semflg, long)
+inline LINUX_DEFINE_SYSCALL4_RET(semctl, int, semid, int, semnum, int, cmd, unsigned long, arg, long)
+inline LINUX_DEFINE_SYSCALL4_NORET(semtimedop, int, semid, struct linux_sembuf*, tsops, unsigned int, nsops, struct linux_kernel_timespec const*, timeout)
+inline LINUX_DEFINE_SYSCALL3_NORET(semop, int, semid, struct linux_sembuf*, tsops, unsigned, nsops)
 inline LINUX_DEFINE_SYSCALL3_RET(shmget, linux_key_t, key, linux_size_t, size, int, shmflg, long)
 inline LINUX_DEFINE_SYSCALL3_RET(shmctl, int, shmid, int, cmd, struct linux_shmid64_ds*, buf, long)
-inline LINUX_DEFINE_SYSCALL4_NORET(semtimedop, int, semid, struct linux_sembuf*, tsops, unsigned int, nsops, struct linux_kernel_timespec const*, timeout)
+inline LINUX_DEFINE_SYSCALL3_RET(shmat, int, shmid, char*, shmaddr, int, shmflg, long)
+inline LINUX_DEFINE_SYSCALL1_NORET(shmdt, char*, shmaddr)
+inline LINUX_DEFINE_SYSCALL3_RET(accept, int, fd, struct linux_sockaddr*, upeer_sockaddr, int*, upeer_addrlen, int)
 #endif
 
 #if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
@@ -1066,6 +1195,7 @@ inline LINUX_DEFINE_SYSCALL6_RET(mmap, unsigned long, addr, unsigned long, len, 
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline LINUX_DEFINE_SYSCALL3_RET(signalfd, int, ufd, linux_sigset_t*, user_mask, linux_size_t, sizemask, int)
 inline LINUX_DEFINE_SYSCALL0_RET(fork, long)
 inline LINUX_DEFINE_SYSCALL3_RET(open, char const*, filename, int, flags, linux_umode_t, mode, long)
 inline LINUX_DEFINE_SYSCALL2_RET(creat, char const*, pathname, linux_umode_t, mode, long)
@@ -1099,7 +1229,6 @@ inline LINUX_DEFINE_SYSCALL4_RET(epoll_wait, int, epfd, struct linux_epoll_event
 inline LINUX_DEFINE_SYSCALL2_NORET(utimes, char*, filename, struct linux_timeval*, utimes)
 inline LINUX_DEFINE_SYSCALL0_RET(inotify_init, int)
 inline LINUX_DEFINE_SYSCALL3_NORET(futimesat, int, dfd, char const*, filename, struct linux_timeval*, utimes)
-inline LINUX_DEFINE_SYSCALL3_RET(signalfd, int, ufd, linux_sigset_t*, user_mask, linux_size_t, sizemask, int)
 inline LINUX_DEFINE_SYSCALL1_RET(eventfd, unsigned int, count, int)
 #endif
 
@@ -1133,35 +1262,9 @@ inline enum linux_error_t linux_fadvise64(int const fd, linux_loff_t const offse
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
-inline LINUX_DEFINE_SYSCALL3_NORET(lchown16, char const*, filename, linux_old_uid_t, user, linux_old_gid_t, group)
-inline LINUX_DEFINE_SYSCALL1_NORET(setuid16, linux_old_uid_t, uid)
-inline LINUX_DEFINE_SYSCALL0_RET(getuid16, linux_old_uid_t)
-inline LINUX_DEFINE_SYSCALL1_RET(nice, int, increment, long)
-inline LINUX_DEFINE_SYSCALL1_NORET(setgid16, linux_old_gid_t, gid)
-inline LINUX_DEFINE_SYSCALL0_RET(getgid16, linux_old_gid_t)
-inline LINUX_DEFINE_SYSCALL0_RET(geteuid16, linux_old_uid_t)
-inline LINUX_DEFINE_SYSCALL0_RET(getegid16, linux_old_gid_t)
-inline LINUX_DEFINE_SYSCALL3_NORET(sigaction, int, sig, struct linux_old_sigaction const*, act, struct linux_old_sigaction*, oact)
-inline LINUX_DEFINE_SYSCALL2_NORET(setreuid16, linux_old_uid_t, ruid, linux_old_uid_t, euid)
-inline LINUX_DEFINE_SYSCALL2_NORET(setregid16, linux_old_gid_t, rgid, linux_old_gid_t, egid)
-inline LINUX_DEFINE_SYSCALL3_NORET(sigsuspend, int, unused1, int, unused2, linux_old_sigset_t, mask)
-inline LINUX_DEFINE_SYSCALL1_NORET(sigpending, linux_old_sigset_t*, uset)
-inline LINUX_DEFINE_SYSCALL2_RET(getgroups16, int, gidsetsize, linux_old_gid_t*, grouplist, int)
-inline LINUX_DEFINE_SYSCALL2_NORET(setgroups16, int, gidsetsize, linux_old_gid_t*, grouplist)
-inline LINUX_DEFINE_SYSCALL1_NORET(uselib, char const*, library)
-inline LINUX_DEFINE_SYSCALL3_NORET(fchown16, unsigned int, fd, linux_old_uid_t, user, linux_old_gid_t, group)
-inline LINUX_DEFINE_SYSCALL3_NORET(sigprocmask, int, how, linux_old_sigset_t*, nset, linux_old_sigset_t*, oset)
-inline LINUX_DEFINE_SYSCALL2_NORET(bdflush, int, func, long, data)
-inline LINUX_DEFINE_SYSCALL1_RET(setfsuid16, linux_old_uid_t, uid, long)
-inline LINUX_DEFINE_SYSCALL1_RET(setfsgid16, linux_old_gid_t, gid, long)
-inline LINUX_DEFINE_SYSCALL5_NORET(llseek, unsigned int, fd, unsigned long, offset_high, unsigned long, offset_low, linux_loff_t*, result, unsigned int, whence)
-inline LINUX_DEFINE_SYSCALL3_NORET(setresuid16, linux_old_uid_t, ruid, linux_old_uid_t, euid, linux_old_uid_t, suid)
-inline LINUX_DEFINE_SYSCALL3_NORET(getresuid16, linux_old_uid_t*, ruidp, linux_old_uid_t*, euidp, linux_old_uid_t*, suidp)
-inline LINUX_DEFINE_SYSCALL3_NORET(setresgid16, linux_old_gid_t, rgid, linux_old_gid_t, egid, linux_old_gid_t, sgid)
-inline LINUX_DEFINE_SYSCALL3_NORET(getresgid16, linux_old_gid_t*, rgidp, linux_old_gid_t*, egidp, linux_old_gid_t*, sgidp)
-inline LINUX_DEFINE_SYSCALL3_NORET(chown16, char const*, filename, linux_old_uid_t, user, linux_old_gid_t, group)
-inline LINUX_DEFINE_SYSCALL4_RET(sendfile, int, out_fd, int, in_fd, linux_off_t*, offset, linux_size_t, count, linux_ssize_t)
-inline LINUX_DEFINE_SYSCALL6_RET(mmap_pgoff, unsigned long, addr, unsigned long, len, unsigned long, prot, unsigned long, flags, unsigned long, fd, unsigned long, pgoff, unsigned long)
+inline LINUX_DEFINE_SYSCALL3_RET(fcntl64, unsigned int, fd, unsigned int, cmd, unsigned long, arg, long)
+inline LINUX_DEFINE_SYSCALL3_NORET(statfs64, char const*, pathname, linux_size_t, sz, struct linux_statfs64*, buf)
+inline LINUX_DEFINE_SYSCALL3_NORET(fstatfs64, unsigned int, fd, linux_size_t, sz, struct linux_statfs64*, buf)
 inline enum linux_error_t linux_truncate64(char const* const path, linux_loff_t const length)
 {
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -1188,13 +1291,39 @@ inline enum linux_error_t linux_ftruncate64(unsigned int const fd, linux_loff_t 
 		return (enum linux_error_t)-ret;
 	return linux_error_none;
 }
+inline LINUX_DEFINE_SYSCALL5_NORET(llseek, unsigned int, fd, unsigned long, offset_high, unsigned long, offset_low, linux_loff_t*, result, unsigned int, whence)
+inline LINUX_DEFINE_SYSCALL4_RET(sendfile, int, out_fd, int, in_fd, linux_off_t*, offset, linux_size_t, count, linux_ssize_t)
+inline LINUX_DEFINE_SYSCALL2_NORET(fstat64, unsigned long, fd, struct linux_stat64*, statbuf)
+inline LINUX_DEFINE_SYSCALL4_NORET(fstatat64, int, dfd, char const*, filename, struct linux_stat64*, statbuf, int, flag)
+inline LINUX_DEFINE_SYSCALL3_NORET(lchown16, char const*, filename, linux_old_uid_t, user, linux_old_gid_t, group)
+inline LINUX_DEFINE_SYSCALL1_NORET(setuid16, linux_old_uid_t, uid)
+inline LINUX_DEFINE_SYSCALL0_RET(getuid16, linux_old_uid_t)
+inline LINUX_DEFINE_SYSCALL1_RET(nice, int, increment, long)
+inline LINUX_DEFINE_SYSCALL1_NORET(setgid16, linux_old_gid_t, gid)
+inline LINUX_DEFINE_SYSCALL0_RET(getgid16, linux_old_gid_t)
+inline LINUX_DEFINE_SYSCALL0_RET(geteuid16, linux_old_uid_t)
+inline LINUX_DEFINE_SYSCALL0_RET(getegid16, linux_old_gid_t)
+inline LINUX_DEFINE_SYSCALL3_NORET(sigaction, int, sig, struct linux_old_sigaction const*, act, struct linux_old_sigaction*, oact)
+inline LINUX_DEFINE_SYSCALL2_NORET(setreuid16, linux_old_uid_t, ruid, linux_old_uid_t, euid)
+inline LINUX_DEFINE_SYSCALL2_NORET(setregid16, linux_old_gid_t, rgid, linux_old_gid_t, egid)
+inline LINUX_DEFINE_SYSCALL3_NORET(sigsuspend, int, unused1, int, unused2, linux_old_sigset_t, mask)
+inline LINUX_DEFINE_SYSCALL1_NORET(sigpending, linux_old_sigset_t*, uset)
+inline LINUX_DEFINE_SYSCALL2_RET(getgroups16, int, gidsetsize, linux_old_gid_t*, grouplist, int)
+inline LINUX_DEFINE_SYSCALL2_NORET(setgroups16, int, gidsetsize, linux_old_gid_t*, grouplist)
+inline LINUX_DEFINE_SYSCALL1_NORET(uselib, char const*, library)
+inline LINUX_DEFINE_SYSCALL3_NORET(fchown16, unsigned int, fd, linux_old_uid_t, user, linux_old_gid_t, group)
+inline LINUX_DEFINE_SYSCALL3_NORET(sigprocmask, int, how, linux_old_sigset_t*, nset, linux_old_sigset_t*, oset)
+inline LINUX_DEFINE_SYSCALL2_NORET(bdflush, int, func, long, data)
+inline LINUX_DEFINE_SYSCALL1_RET(setfsuid16, linux_old_uid_t, uid, long)
+inline LINUX_DEFINE_SYSCALL1_RET(setfsgid16, linux_old_gid_t, gid, long)
+inline LINUX_DEFINE_SYSCALL3_NORET(setresuid16, linux_old_uid_t, ruid, linux_old_uid_t, euid, linux_old_uid_t, suid)
+inline LINUX_DEFINE_SYSCALL3_NORET(getresuid16, linux_old_uid_t*, ruidp, linux_old_uid_t*, euidp, linux_old_uid_t*, suidp)
+inline LINUX_DEFINE_SYSCALL3_NORET(setresgid16, linux_old_gid_t, rgid, linux_old_gid_t, egid, linux_old_gid_t, sgid)
+inline LINUX_DEFINE_SYSCALL3_NORET(getresgid16, linux_old_gid_t*, rgidp, linux_old_gid_t*, egidp, linux_old_gid_t*, sgidp)
+inline LINUX_DEFINE_SYSCALL3_NORET(chown16, char const*, filename, linux_old_uid_t, user, linux_old_gid_t, group)
+inline LINUX_DEFINE_SYSCALL6_RET(mmap_pgoff, unsigned long, addr, unsigned long, len, unsigned long, prot, unsigned long, flags, unsigned long, fd, unsigned long, pgoff, unsigned long)
 inline LINUX_DEFINE_SYSCALL2_NORET(stat64, char const*, filename, struct linux_stat64*, statbuf)
 inline LINUX_DEFINE_SYSCALL2_NORET(lstat64, char const*, filename, struct linux_stat64*, statbuf)
-inline LINUX_DEFINE_SYSCALL2_NORET(fstat64, unsigned long, fd, struct linux_stat64*, statbuf)
-inline LINUX_DEFINE_SYSCALL3_RET(fcntl64, unsigned int, fd, unsigned int, cmd, unsigned long, arg, long)
-inline LINUX_DEFINE_SYSCALL3_NORET(statfs64, char const*, pathname, linux_size_t, sz, struct linux_statfs64*, buf)
-inline LINUX_DEFINE_SYSCALL3_NORET(fstatfs64, unsigned int, fd, linux_size_t, sz, struct linux_statfs64*, buf)
-inline LINUX_DEFINE_SYSCALL4_NORET(fstatat64, int, dfd, char const*, filename, struct linux_stat64*, statbuf, int, flag)
 #endif
 
 #if defined(LINUX_ARCH_X86)
@@ -1224,6 +1353,9 @@ inline LINUX_DEFINE_SYSCALL1_NORET(get_thread_area, struct linux_user_desc*, u_i
 #if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline LINUX_DEFINE_SYSCALL5_NORET(kexec_file_load, int, kernel_fd, int, initrd_fd, unsigned long, cmdline_len, char const*, cmdline_ptr, unsigned long, flags)
 #endif
+
+//=============================================================================
+// X86 vsyscalls
 
 #if defined(LINUX_ARCH_X86)
 // TODO: Add vsyscalls for x86.
