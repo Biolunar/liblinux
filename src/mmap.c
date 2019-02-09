@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL6_RET(mmap, unsigned long, addr, unsigned long, len, unsigned long, prot, unsigned long, flags, unsigned long, fd, unsigned long, off, unsigned long);
+extern inline LINUX_DECLARE_SYSCALL6_RET(mmap, linux_uword_t, addr, linux_uword_t, len, linux_uword_t, prot, linux_uword_t, flags, linux_uword_t, fd, linux_uword_t, off, linux_uword_t);

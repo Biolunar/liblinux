@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL5_RET(pwritev, unsigned long, fd, struct linux_iovec const*, vec, unsigned long, vlen, unsigned long, pos_l, unsigned long, pos_h, linux_ssize_t);
+extern inline LINUX_DECLARE_SYSCALL5_RET(pwritev, linux_uword_t, fd, struct linux_iovec const*, vec, linux_uword_t, vlen, linux_uword_t, pos_l, linux_uword_t, pos_h, linux_ssize_t);
