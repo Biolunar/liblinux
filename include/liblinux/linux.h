@@ -22,6 +22,7 @@
 #include "endian.h"
 #include "syscall.h"
 #include "names.h"
+#include "constants.h"
 
 #include <stdint.h>
 #include <stdalign.h>

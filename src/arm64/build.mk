@@ -275,7 +275,13 @@ csrc = \
        src/rseq.c
 
 testsrc = \
-          tests/compile.c\
-          tests/error.c\
+	  tests/compile.c\
+	  tests/error.c\
           tests/syscalls/sched_yield.c\
-          tests/syscalls/getpid.c
+          tests/syscalls/getpid.c\
+          tests/syscalls/close.c\
+          tests/syscalls/pipe2.c\
+          tests/syscalls/dup3.c\
+          tests/syscalls/clock_nanosleep.c\
+          tests/syscalls/clone.c\
+          tests/syscalls/mmap.c
