@@ -98,7 +98,7 @@ struct linux_io_event
 struct linux_iocb
 {
 	uint64_t aio_data;
-#ifdef LINUX_ENDIAN_LITTE
+#ifdef LINUX_ENDIAN_LITTLE
 	uint32_t aio_key;
 	linux_kernel_rwf_t aio_rw_flags;
 #else

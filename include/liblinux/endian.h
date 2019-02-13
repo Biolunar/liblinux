@@ -20,7 +20,7 @@
 #include "version.h"
 
 // If no endianness was selected, autodetect it.
-#if !defined(LINUX_ENDIAN_LITTE) && \
+#if !defined(LINUX_ENDIAN_LITTLE) && \
     !defined(LINUX_ENDIAN_BIG)
 
 // GCC macros
@@ -29,7 +29,7 @@
     defined(__ORDER_BIG_ENDIAN__)
 
 #if   __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-#define LINUX_ENDIAN_LITTE
+#define LINUX_ENDIAN_LITTLE
 #elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 #define LINUX_ENDIAN_BIG
 #endif
@@ -39,7 +39,7 @@
 // ARM macros
 #if defined(__ARMEL__)   || \
     defined(__THUMBEL__)
-#define LINUX_ENDIAN_LITTE
+#define LINUX_ENDIAN_LITTLE
 #elif defined(__ARMEB__)   || \
       defined(__THUMBEB__)
 #define LINUX_ENDIAN_BIG
@@ -47,19 +47,19 @@
 
 // ARM64 macros
 #if defined(__AARCH64EL__)
-#define LINUX_ENDIAN_LITTE
+#define LINUX_ENDIAN_LITTLE
 #elif defined(__AARCH64BL__)
 #define LINUX_ENDIAN_BIG
 #endif
 
 #endif // End autodetect
 
-#if !defined(LINUX_ENDIAN_LITTE) && \
+#if !defined(LINUX_ENDIAN_LITTLE) && \
     !defined(LINUX_ENDIAN_BIG)
 #error "Endianness could not be autodetected."
 #endif
 
-#if defined(LINUX_ENDIAN_LITTE) && \
+#if defined(LINUX_ENDIAN_LITTLE) && \
     defined(LINUX_ENDIAN_BIG)
 #error "Cannot select both little and big endian at the same time."
 #endif
