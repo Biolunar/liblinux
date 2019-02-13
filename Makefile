@@ -29,8 +29,6 @@ include src/$(ARCH)/build.mk
 
 asmobj  = $(asmsrc:.asm=.o)
 cobj    = $(csrc:.c=.o)
-testobj = $(testsrc:.c=.o)
-testapp = $(testsrc:.c=)
 
 ###############################################################################
 # Public targets
@@ -38,9 +36,9 @@ testapp = $(testsrc:.c=)
 all: $(TARGET)
 
 clean:
-	rm -f $(TARGET) $(asmobj) $(cobj) $(testobj) $(testapp)
+	rm -f $(TARGET) $(asmobj) $(cobj) $(tests)
 
-test: $(testapp)
+test: $(tests)
 
 ###############################################################################
 # Private targets
@@ -56,5 +54,7 @@ test: $(testapp)
 $(TARGET): $(asmobj) $(cobj)
 	$(AR) $(ARFLAGS) $@ $(asmobj) $(cobj)
 
-$(testapp): $(TARGET) $(testobj)
-	$(CC) $(CFLAGS) -I include -o $@ $@.o $(TARGET)
+$(tests): $(TARGET)
+
+.c:
+	$(CC) $(CFLAGS) -I include -o $@ $< $(TARGET)

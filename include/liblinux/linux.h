@@ -379,7 +379,41 @@ union linux_bpf_attr
 		uint64_t probe_addr;
 	} task_fd_query;
 };
-_Static_assert(alignof(union linux_bpf_attr) == 8, "struct linux_bpf_attr is misaligned");
+_Static_assert(alignof(union linux_bpf_attr) == 8, "union linux_bpf_attr is misaligned");
+struct linux_rseq_cs
+{
+	alignas(4 * sizeof(uint64_t)) uint32_t version;
+	uint32_t flags;
+	uint64_t start_ip;
+	uint64_t post_commit_offset;
+	uint64_t abort_ip;
+};
+_Static_assert(alignof(struct linux_rseq_cs) == (4 * sizeof(uint64_t)), "struct linux_rseq_cs is misaligned");
+struct linux_rseq
+{
+	alignas(4 * sizeof(uint64_t)) uint32_t cpu_id_start;
+	uint32_t cpu_id;
+	union
+	{
+		uint64_t ptr64;
+#if (LINUX_BITS_PER_LONG == 64)
+		uint64_t ptr;
+#else
+		struct
+		{
+#ifdef LINUX_ENDIAN_BIG
+			uint32_t padding;
+			uint32_t ptr32;
+#else
+			uint32_t ptr32;
+			uint32_t padding;
+#endif
+		} ptr;
+#endif
+	} rseq_cs;
+	uint32_t flags;
+};
+_Static_assert(alignof(struct linux_rseq) == (4 * sizeof(uint64_t)), "struct linux_rseq is misaligned");
 
 #if defined(LINUX_ARCH_X86)
 struct linux_oldold_utsname

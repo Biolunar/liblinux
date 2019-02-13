@@ -113,6 +113,34 @@
 #define linux_TIMER_ABSTIME 0x01
 
 //=============================================================================
+// rseq
+
+enum linux_rseq_cpu_id_state
+{
+	linux_RSEQ_CPU_ID_UNINITIALIZED       = -1,
+	linux_RSEQ_CPU_ID_REGISTRATION_FAILED = -2,
+};
+
+enum linux_rseq_flags
+{
+	linux_RSEQ_FLAG_UNREGISTER = (1 << 0),
+};
+
+enum linux_rseq_cs_flags_bit
+{
+	linux_RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT = 0,
+	linux_RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT  = 1,
+	linux_RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT = 2,
+};
+
+enum linux_rseq_cs_flags
+{
+	linux_RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT = (1U << linux_RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT),
+	linux_RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL  = (1U << linux_RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT),
+	linux_RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE = (1U << linux_RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
+};
+
+//=============================================================================
 // architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)

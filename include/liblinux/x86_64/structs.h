@@ -211,17 +211,5 @@ struct linux_epoll_event
 	uint32_t data_hi;
 };
 _Static_assert(alignof(struct linux_epoll_event) == 4, "struct linux_epoll_event is misaligned");
-struct linux_rseq
-{
-	alignas(4 * sizeof(uint64_t)) uint32_t cpu_id_start;
-	uint32_t cpu_id;
-	union
-	{
-		uint64_t ptr64;
-		uint64_t ptr;
-	} rseq_cs;
-	uint32_t flags;
-};
-_Static_assert(alignof(struct linux_rseq) == (4 * sizeof(uint64_t)), "struct linux_rseq is misaligned");
 
 #endif // !HEADER_LIBLINUX_X86_64_STRUCTS_H_INCLUDED

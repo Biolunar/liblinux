@@ -219,22 +219,6 @@ struct linux_epoll_event
 	linux_poll_t events;
 	uint64_t data;
 };
-struct linux_rseq
-{
-	alignas(4 * sizeof(uint64_t)) uint32_t cpu_id_start;
-	uint32_t cpu_id;
-	union
-	{
-		uint64_t ptr64;
-		struct
-		{
-			uint32_t ptr32;
-			uint32_t padding;
-		} ptr;
-	} rseq_cs;
-	uint32_t flags;
-};
-_Static_assert(alignof(struct linux_rseq) == (4 * sizeof(uint64_t)), "struct linux_rseq is misaligned");
 
 struct linux_old_kernel_stat
 {

@@ -355,14 +355,15 @@ csrc = \
        src/set_tls.c\
        src/get_tls.c
 
-testsrc = \
-	  tests/compile.c\
-	  tests/error.c\
-          tests/syscalls/sched_yield.c\
-          tests/syscalls/getpid.c\
-          tests/syscalls/close.c\
-          tests/syscalls/pipe2.c\
-          tests/syscalls/dup3.c\
-          tests/syscalls/clock_nanosleep.c\
-          tests/syscalls/clone.c\
-          tests/syscalls/mmap.c
+tests = \
+	tests/compile\
+	tests/error\
+        tests/syscalls/sched_yield\
+        tests/syscalls/getpid\
+        tests/syscalls/close\
+        tests/syscalls/pipe2\
+        tests/syscalls/dup3\
+        tests/syscalls/clock_nanosleep\
+        tests/syscalls/clone\
+        tests/syscalls/mmap\
+        tests/syscalls/rseq
