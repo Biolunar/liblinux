@@ -26,19 +26,21 @@
 
 ARCH     = $(shell uname -m)
 TOOL     = gas
+include src/$(ARCH)/$(TOOL)/build.mk
 
 # Output
 # ======
 
 TARGET   = liblinux.a
+DESTDIR  =
+PREFIX   = /usr/local
 
 # Toolchain
 # =========
 
-include src/$(ARCH)/$(TOOL)/build.mk # Sets following variables: ASM, ASMFLAGS
-#ASM      = # Overwrite value here
-#ASMFLAGS = # Overwrite value here
+ASM      = as
+ASMFLAGS =
 AR       = ar
-ARFLAGS  = rc
+ARFLAGS  = -rv
 CC       = cc
 CFLAGS   = -std=c11 -pedantic-errors -nostdlib -ffreestanding -static -fno-stack-protector -Wno-pointer-to-int-cast

@@ -40,6 +40,14 @@ clean:
 
 test: $(tests)
 
+install: all
+	cp -r include/liblinux $(DSTDIR)$(PREFIX)/include
+	cp $(TARGET) $(DSTDIR)$(PREFIX)/lib
+
+uninstall:
+	rm -rf $(DSTDIR)$(PREFIX)/include/liblinux
+	rm -f $(DSTDIR)$(PREFIX)/lib/$(TARGET)
+
 ###############################################################################
 # Private targets
 
