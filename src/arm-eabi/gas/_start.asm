@@ -24,9 +24,6 @@ _start:
 
 	ldr r0, [sp] /* argc */
 	add r1, sp, #4 /* argv */
-
-	/* envp */
-	add r2, r1, r0, lsl #3
-	add r2, r2, #8
+	add r2, r1, r0, lsl #3 /* envp */
 
 	b linux_start
