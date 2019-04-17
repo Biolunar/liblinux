@@ -1,5 +1,20 @@
-#include <liblinux/start.h>
-#include <liblinux/linux.h>
+#include "test.h"
+
+enum TestResult test_available(void)
+{
+	if (linux_sched_yield() == linux_ENOSYS)
+		return TEST_FAILURE;
+
+	return TEST_SUCCESS;
+}
+
+enum TestResult test_correct_usage(void)
+{
+	if (linux_sched_yield())
+		return TEST_FAILURE;
+
+	return TEST_SUCCESS;
+}
 
 noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 {
@@ -7,8 +22,8 @@ noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 	(void)argv;
 	(void)envp;
 
-	if (linux_sched_yield())
-		linux_exit_group(1);
+	DO_TEST(test_available);
+	DO_TEST(test_correct_usage);
 
 	linux_exit_group(0);
 }

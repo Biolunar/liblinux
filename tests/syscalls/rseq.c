@@ -1,30 +1,23 @@
-#include <liblinux/start.h>
-#include <liblinux/linux.h>
+#include "test.h"
 
-#include "memset.h"
-
-enum TestResult
+enum TestResult test_available(void)
 {
-	TEST_SUCCESS,
-	TEST_FAILURE,
-	TEST_EXPECTED_FAILURE,
-	TEST_OTHER_FAILURE,
-};
+	if (linux_rseq(0, 0, 0, 0) == linux_ENOSYS)
+		return TEST_FAILURE;
+
+	return TEST_SUCCESS;
+}
 
 enum TestResult test_correct_usage(void)
 {
-	enum linux_error_t err = linux_error_none;
-
 	struct linux_rseq rseq;
 	memset(&rseq, 0, sizeof rseq);
 	uint32_t const sig = 0x12341234;
 
-	err = linux_rseq(&rseq, sizeof rseq, 0, sig);
-	if (err)
+	if (linux_rseq(&rseq, sizeof rseq, 0, sig))
 		return TEST_FAILURE;
 
-	err = linux_rseq(&rseq, sizeof rseq, linux_RSEQ_FLAG_UNREGISTER, sig);
-	if (err)
+	if (linux_rseq(&rseq, sizeof rseq, linux_RSEQ_FLAG_UNREGISTER, sig))
 		return TEST_FAILURE;
 
 	return TEST_SUCCESS;
@@ -32,14 +25,11 @@ enum TestResult test_correct_usage(void)
 
 enum TestResult test_faulty_unregister(void)
 {
-	enum linux_error_t err = linux_error_none;
-
 	struct linux_rseq rseq;
 	memset(&rseq, 0, sizeof rseq);
 	uint32_t const sig = 0x12341234;
 
-	err = linux_rseq(&rseq, sizeof rseq, linux_RSEQ_FLAG_UNREGISTER, sig);
-	if (err != linux_EINVAL)
+	if (linux_rseq(&rseq, sizeof rseq, linux_RSEQ_FLAG_UNREGISTER, sig) != linux_EINVAL)
 		return TEST_FAILURE;
 
 	return TEST_SUCCESS;
@@ -47,23 +37,18 @@ enum TestResult test_faulty_unregister(void)
 
 enum TestResult test_double_register(void)
 {
-	enum linux_error_t err = linux_error_none;
-
 	struct linux_rseq rseq;
 	memset(&rseq, 0, sizeof rseq);
 	uint32_t const sig = 0x12341234;
 
-	err = linux_rseq(&rseq, sizeof rseq, 0, sig);
-	if (err)
-		return TEST_OTHER_FAILURE;
-
-	err = linux_rseq(&rseq, sizeof rseq, 0, sig);
-	if (err != linux_EBUSY)
+	if (linux_rseq(&rseq, sizeof rseq, 0, sig))
 		return TEST_FAILURE;
 
-	err = linux_rseq(&rseq, sizeof rseq, linux_RSEQ_FLAG_UNREGISTER, sig);
-	if (err)
-		return TEST_OTHER_FAILURE;
+	if (linux_rseq(&rseq, sizeof rseq, 0, sig) != linux_EBUSY)
+		return TEST_FAILURE;
+
+	if (linux_rseq(&rseq, sizeof rseq, linux_RSEQ_FLAG_UNREGISTER, sig))
+		return TEST_FAILURE;
 
 	return TEST_SUCCESS;
 }
@@ -74,12 +59,10 @@ noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 	(void)argv;
 	(void)envp;
 
-	if (test_correct_usage() != TEST_SUCCESS)
-		linux_exit_group(1);
-	if (test_faulty_unregister() != TEST_SUCCESS)
-		linux_exit_group(2);
-	if (test_double_register() != TEST_SUCCESS)
-		linux_exit_group(3);
+	DO_TEST(test_available);
+	DO_TEST(test_correct_usage);
+	DO_TEST(test_faulty_unregister);
+	DO_TEST(test_double_register);
 
 	linux_exit_group(0);
 }

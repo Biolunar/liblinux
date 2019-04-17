@@ -1,7 +1,31 @@
-#include <liblinux/start.h>
-#include <liblinux/linux.h>
+#include "test.h"
 
-#include "memset.h"
+enum TestResult test_available(void)
+{
+	if (linux_dup3(0, 0, 0, 0) == linux_ENOSYS)
+		return TEST_FAILURE;
+
+	return TEST_SUCCESS;
+}
+
+enum TestResult test_correct_usage(void)
+{
+	int fds[2] = {0, 0};
+	if (linux_pipe2(fds, linux_O_CLOEXEC))
+		return TEST_OTHER_FAILURE;
+
+	int fd = 0;
+	if (linux_dup3(fds[0], fds[1], linux_O_CLOEXEC, &fd))
+		return TEST_FAILURE;
+
+	if (linux_close(fds[0]))
+		return TEST_OTHER_FAILURE;
+
+	if (linux_close(fds[1]))
+		return TEST_OTHER_FAILURE;
+
+	return TEST_SUCCESS;
+}
 
 noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 {
@@ -9,22 +33,8 @@ noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 	(void)argv;
 	(void)envp;
 
-	int fds[2] = {0, 0};
-	if (linux_pipe2(fds, linux_O_CLOEXEC))
-		linux_exit_group(1);
-
-	int fd = 0;
-	if (linux_dup3(fds[0], fds[1], linux_O_CLOEXEC, &fd))
-		linux_exit_group(2);
-
-	if (fd != fds[1])
-		linux_exit_group(3);
-
-	if (linux_close(fds[0]))
-		linux_exit_group(4);
-
-	if (linux_close(fds[1]))
-		linux_exit_group(5);
+	DO_TEST(test_available);
+	DO_TEST(test_correct_usage);
 
 	linux_exit_group(0);
 }
