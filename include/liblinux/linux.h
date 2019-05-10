@@ -2330,6 +2330,15 @@ inline enum linux_error_t linux_set_mempolicy(int const mode, linux_uword_t cons
 		return (enum linux_error_t)-ret;
 	return linux_error_none;
 }
+inline enum linux_error_t linux_migrate_pages(linux_pid_t const pid, linux_uword_t const maxnode, linux_uword_t const* const old_nodes, linux_uword_t const* const new_nodes, int* const result)
+{
+	linux_word_t const ret = linux_syscall4((unsigned int)pid, maxnode, (uintptr_t)old_nodes, (uintptr_t)new_nodes, linux_syscall_name_migrate_pages);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
 inline enum linux_error_t linux_move_pages(linux_pid_t const pid, linux_uword_t const nr_pages, void const** const pages, int const* const nodes, int* const status, int const flags)
 {
 	linux_word_t const ret = linux_syscall6((unsigned int)pid, nr_pages, (uintptr_t)pages, (uintptr_t)nodes, (uintptr_t)status, (unsigned int)flags, linux_syscall_name_move_pages);
@@ -2881,15 +2890,6 @@ inline enum linux_error_t linux_sync_file_range(int const fd, linux_loff_t const
 		return (enum linux_error_t)-ret;
 	return linux_error_none;
 }
-inline enum linux_error_t linux_migrate_pages(linux_pid_t const pid, linux_uword_t const maxnode, linux_uword_t const* const old_nodes, linux_uword_t const* const new_nodes, int* const result)
-{
-	linux_word_t const ret = linux_syscall4((unsigned int)pid, maxnode, (uintptr_t)old_nodes, (uintptr_t)new_nodes, linux_syscall_name_migrate_pages);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -3116,6 +3116,13 @@ inline enum linux_error_t linux_accept(int const fd, struct linux_sockaddr* cons
 		return (enum linux_error_t)-ret;
 	if (result)
 		*result = (int)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_kexec_file_load(int const kernel_fd, int const initrd_fd, linux_uword_t const cmdline_len, char const* const cmdline_ptr, linux_uword_t const flags)
+{
+	linux_word_t const ret = linux_syscall5((unsigned int)kernel_fd, (unsigned int)initrd_fd, cmdline_len, (uintptr_t)cmdline_ptr, flags, linux_syscall_name_kexec_file_load);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
 	return linux_error_none;
 }
 #endif
@@ -3951,16 +3958,6 @@ inline enum linux_error_t linux_set_thread_area(struct linux_user_desc* const u_
 inline enum linux_error_t linux_get_thread_area(struct linux_user_desc* const u_info)
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)u_info, linux_syscall_name_get_thread_area);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error_t linux_kexec_file_load(int const kernel_fd, int const initrd_fd, linux_uword_t const cmdline_len, char const* const cmdline_ptr, linux_uword_t const flags)
-{
-	linux_word_t const ret = linux_syscall5((unsigned int)kernel_fd, (unsigned int)initrd_fd, cmdline_len, (uintptr_t)cmdline_ptr, flags, linux_syscall_name_kexec_file_load);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error_t)-ret;
 	return linux_error_none;

@@ -468,6 +468,8 @@ enum
 	linux_syscall_name_statx                  = 397,
 	linux_syscall_name_rseq                   = 398,
 	linux_syscall_name_io_pgetevents          = 399,
+	linux_syscall_name_migrate_pages          = 400,
+	linux_syscall_name_kexec_file_load        = 401,
 
 	linux_syscall_name_breakpoint             = 0x0f0000 + 1,
 	linux_syscall_name_cacheflush             = 0x0f0000 + 2,
