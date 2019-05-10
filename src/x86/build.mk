@@ -359,7 +359,17 @@ csrc = \
        src/statx.c\
        src/arch_prctl.c\
        src/io_pgetevents.c\
-       src/rseq.c
+       src/rseq.c\
+       src/semget.c\
+       src/semctl.c\
+       src/shmget.c\
+       src/shmctl.c\
+       src/shmat.c\
+       src/shmdt.c\
+       src/msgget.c\
+       src/msgsnd.c\
+       src/msgrcv.c\
+       src/msgctl.c
 
 tests = \
 	tests/compile\

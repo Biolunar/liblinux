@@ -348,6 +348,8 @@ csrc = \
        src/statx.c\
        src/rseq.c\
        src/io_pgetevents.c\
+       src/migrate_pages.c\
+       src/kexec_file_load.c\
        src/breakpoint.c\
        src/cacheflush.c\
        src/usr26.c\
