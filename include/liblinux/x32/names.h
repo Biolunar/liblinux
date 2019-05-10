@@ -17,14 +17,14 @@
 #ifndef HEADER_LIBLINUX_X32_NAMES_H_INCLUDED
 #define HEADER_LIBLINUX_X32_NAMES_H_INCLUDED
 
-// Different names:
-// ----------------
-// stat newstat
-// fstat newfstat
-// lstat newlstat
-// sendfile sendfile64
-// uname newuname
-// umount2 umount
+// Differences (name/function/number):
+// -----------------------------------
+// stat newstat 4
+// fstat newfstat 5
+// lstat newlstat 6
+// sendfile sendfile64 40
+// uname newuname 63
+// umount2 umount 166
 
 enum
 {

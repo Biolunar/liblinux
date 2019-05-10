@@ -17,54 +17,54 @@
 #ifndef HEADER_LIBLINUX_ARM_EABI_NAMES_H_INCLUDED
 #define HEADER_LIBLINUX_ARM_EABI_NAMES_H_INCLUDED
 
-// Different names:
-// ----------------
-//lchown lchown16
-//setuid setuid16
-//getuid getuid16
-//setgid setgid16
-//getgid getgid16
-//geteuid geteuid16
-//getegid getegid16
-//umount2 umount
-//setreuid setreuid16
-//setregid setregid16
-//getgroups getgroups16
-//setgroups setgroups16
-//fchown fchown16
-//stat newstat
-//lstat newlstat
-//fstat newfstat
-//uname newuname
-//setfsuid setfsuid16
-//setfsgid setfsgid16
-//newselect select
-//setresuid setresuid16
-//getresuid getresuid16
-//setresgid setresgid16
-//getresgid getresgid16
-//chown chown16
-//ugetrlimit getrlimit
-//lchown32 lchown
-//getuid32 getuid
-//getgid32 getgid
-//geteuid32 geteuid
-//getegid32 getegid
-//setreuid32 setreuid
-//setregid32 setregid
-//getgroups32 getgroups
-//setgroups32 setgroups
-//fchown32 fchown
-//setresuid32 setresuid
-//getresuid32 getresuid
-//setresgid32 setresgid
-//getresgid32 getresgid
-//chown32 chown
-//setuid32 setuid
-//setgid32 setgid
-//setfsuid32 setfsuid
-//setfsgid32 setfsgid
-//arm_sync_file_range sync_file_range2
+// Differences (name/function/number):
+// -----------------------------------
+//lchown lchown16 16
+//setuid setuid16 23
+//getuid getuid16 24
+//setgid setgid16 46
+//getgid getgid16 47
+//geteuid geteuid16 49
+//getegid getegid16 50
+//umount2 umount 52
+//setreuid setreuid16 70
+//setregid setregid16 71
+//getgroups getgroups16 80
+//setgroups setgroups16 81
+//fchown fchown16 95
+//stat newstat 106
+//lstat newlstat 107
+//fstat newfstat 108
+//uname newuname 122
+//setfsuid setfsuid16 138
+//setfsgid setfsgid16 139
+//newselect select 142
+//setresuid setresuid16 164
+//getresuid getresuid16 165
+//setresgid setresgid16 170
+//getresgid getresgid16 171
+//chown chown16 182
+//ugetrlimit getrlimit 191
+//lchown32 lchown 198
+//getuid32 getuid 199
+//getgid32 getgid 200
+//geteuid32 geteuid 201
+//getegid32 getegid 202
+//setreuid32 setreuid 203
+//setregid32 setregid 204
+//getgroups32 getgroups 205
+//setgroups32 setgroups 206
+//fchown32 fchown 207
+//setresuid32 setresuid 208
+//getresuid32 getresuid 209
+//setresgid32 setresgid 210
+//getresgid32 getresgid 211
+//chown32 chown 212
+//setuid32 setuid 213
+//setgid32 setgid 214
+//setfsuid32 setfsuid 215
+//setfsgid32 setfsgid 216
+//arm_sync_file_range sync_file_range2 341
 
 enum
 {
