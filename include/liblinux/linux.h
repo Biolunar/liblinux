@@ -2080,6 +2080,104 @@ inline enum linux_error_t linux_mq_getsetattr(linux_mqd_t const mqdes, struct li
 }
 
 //-----------------------------------------------------------------------------
+// System V IPC - message
+
+inline enum linux_error_t linux_msgget(linux_key_t const key, int const msgflg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall2((unsigned int)key, (unsigned int)msgflg, linux_syscall_name_msgget);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_msgctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_msgrcv(int const msqid, struct linux_msgbuf* const msgp, linux_size_t const msgsz, linux_word_t const msgtyp, int const msgflg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall5((unsigned int)msqid, (uintptr_t)msgp, msgsz, (linux_uword_t)msgtyp, (unsigned int)msgflg, linux_syscall_name_msgrcv);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_msgsnd(int const msqid, struct linux_msgbuf* const msgp, linux_size_t const msgsz, int const msgflg)
+{
+	linux_word_t const ret = linux_syscall4((unsigned int)msqid, (uintptr_t)msgp, msgsz, (unsigned int)msgflg, linux_syscall_name_msgsnd);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	return linux_error_none;
+}
+
+//-----------------------------------------------------------------------------
+// System V IPC - semaphore
+
+inline enum linux_error_t linux_semget(linux_key_t const key, int const nsems, int const semflg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)key, (unsigned int)nsems, (unsigned int)semflg, linux_syscall_name_semget);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_semctl(int const semid, int const semnum, int const cmd, linux_uword_t const arg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall4((unsigned int)semid, (unsigned int)semnum, (unsigned int)cmd, arg, linux_syscall_name_semctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+
+//-----------------------------------------------------------------------------
+// System V IPC - memory
+
+inline enum linux_error_t linux_shmget(linux_key_t const key, linux_size_t const size, int const shmflg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)key, size, (unsigned int)shmflg, linux_syscall_name_shmget);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_shmctl(int const shmid, int const cmd, struct linux_shmid64_ds* const buf, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_shmctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_shmat(int const shmid, char* const shmaddr, int const shmflg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (uintptr_t)shmaddr, (unsigned int)shmflg, linux_syscall_name_shmat);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error_t linux_shmdt(char* const shmaddr)
+{
+	linux_word_t const ret = linux_syscall1((uintptr_t)shmaddr, linux_syscall_name_shmdt);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error_t)-ret;
+	return linux_error_none;
+}
+
+//-----------------------------------------------------------------------------
 // socket
 
 inline enum linux_error_t linux_socket(int const family, int const type, int const protocol, int* const result)
@@ -2387,7 +2485,7 @@ inline enum linux_error_t linux_pkey_free(int const pkey)
 }
 
 //-----------------------------------------------------------------------------
-// keys management
+// key management
 
 inline enum linux_error_t linux_add_key(char const* const type, char const* const description, void const* const payload, linux_size_t const plen, linux_key_serial_t const ringid, linux_word_t* const result)
 {
@@ -3009,58 +3107,6 @@ inline enum linux_error_t linux_fadvise64_64(int const fd, linux_loff_t const of
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error_t linux_msgget(linux_key_t const key, int const msgflg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall2((unsigned int)key, (unsigned int)msgflg, linux_syscall_name_msgget);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_msgctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_msgrcv(int const msqid, struct linux_msgbuf* const msgp, linux_size_t const msgsz, linux_word_t const msgtyp, int const msgflg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall5((unsigned int)msqid, (uintptr_t)msgp, msgsz, (linux_uword_t)msgtyp, (unsigned int)msgflg, linux_syscall_name_msgrcv);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_msgsnd(int const msqid, struct linux_msgbuf* const msgp, linux_size_t const msgsz, int const msgflg)
-{
-	linux_word_t const ret = linux_syscall4((unsigned int)msqid, (uintptr_t)msgp, msgsz, (unsigned int)msgflg, linux_syscall_name_msgsnd);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_semget(linux_key_t const key, int const nsems, int const semflg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)key, (unsigned int)nsems, (unsigned int)semflg, linux_syscall_name_semget);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_semctl(int const semid, int const semnum, int const cmd, linux_uword_t const arg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall4((unsigned int)semid, (unsigned int)semnum, (unsigned int)cmd, arg, linux_syscall_name_semctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
 inline enum linux_error_t linux_semtimedop(int const semid, struct linux_sembuf* const tsops, unsigned int const nsops, struct linux_kernel_timespec const* const timeout)
 {
 	linux_word_t const ret = linux_syscall4((unsigned int)semid, (uintptr_t)tsops, nsops, (uintptr_t)timeout, linux_syscall_name_semtimedop);
@@ -3071,40 +3117,6 @@ inline enum linux_error_t linux_semtimedop(int const semid, struct linux_sembuf*
 inline enum linux_error_t linux_semop(int const semid, struct linux_sembuf* const tsops, unsigned int const nsops)
 {
 	linux_word_t const ret = linux_syscall3((unsigned int)semid, (uintptr_t)tsops, nsops, linux_syscall_name_semop);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_shmget(linux_key_t const key, linux_size_t const size, int const shmflg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)key, size, (unsigned int)shmflg, linux_syscall_name_shmget);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_shmctl(int const shmid, int const cmd, struct linux_shmid64_ds* const buf, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_shmctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_shmat(int const shmid, char* const shmaddr, int const shmflg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (uintptr_t)shmaddr, (unsigned int)shmflg, linux_syscall_name_shmat);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error_t)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error_t linux_shmdt(char* const shmaddr)
-{
-	linux_word_t const ret = linux_syscall1((uintptr_t)shmaddr, linux_syscall_name_shmdt);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error_t)-ret;
 	return linux_error_none;

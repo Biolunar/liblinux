@@ -465,6 +465,22 @@ enum
 	linux_syscall_name_arch_prctl             = 384,
 	linux_syscall_name_io_pgetevents          = 385,
 	linux_syscall_name_rseq                   = 386,
+	// (unused)
+	// (unused)
+	// (unused)
+	// (unused)
+	// (unused)
+	// (unused)
+	linux_syscall_name_semget                 = 393,
+	linux_syscall_name_semctl                 = 394,
+	linux_syscall_name_shmget                 = 395,
+	linux_syscall_name_shmctl                 = 396,
+	linux_syscall_name_shmat                  = 397,
+	linux_syscall_name_shmdt                  = 398,
+	linux_syscall_name_msgget                 = 399,
+	linux_syscall_name_msgsnd                 = 400,
+	linux_syscall_name_msgrcv                 = 401,
+	linux_syscall_name_msgctl                 = 402,
 };
 
 #endif // !HEADER_LIBLINUX_X86_NAMES_H_INCLUDED
