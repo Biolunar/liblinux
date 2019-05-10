@@ -43,4 +43,4 @@ ASMFLAGS =
 AR       = ar
 ARFLAGS  = -rv
 CC       = cc
-CFLAGS   = -std=c11 -pedantic-errors -nostdlib -ffreestanding -static -fno-stack-protector -Wno-pointer-to-int-cast
+CFLAGS   = -std=c11 -pedantic-errors -nostdlib -ffreestanding -static -fno-stack-protector -O3 -Wall -Wextra

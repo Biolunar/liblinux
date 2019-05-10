@@ -1,2 +1,2 @@
 - Support ARM Thumb mode
-- Clean up the types in linux.h
+- Clean up the types in linux.h (i.e. use stdint.h types instead of int/long/etc)

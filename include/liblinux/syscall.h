@@ -25,31 +25,14 @@
 #include <stdnoreturn.h>
 
 /*
- * Macro to avoid sign-extension.
- */
-#define LINUX_PARAM(x) _Generic((x), _Bool:              (linux_word_t)(x),\
-                                     char:               (linux_word_t)(unsigned char)(x),\
-                                     signed char:        (linux_word_t)(unsigned char)(x),\
-                                     unsigned char:      (linux_word_t)(x),\
-                                     short:              (linux_word_t)(unsigned short)(x),\
-                                     unsigned short:     (linux_word_t)(x),\
-                                     int:                (linux_word_t)(unsigned int)(x),\
-                                     unsigned int:       (linux_word_t)(x),\
-                                     long:               (linux_word_t)(unsigned long)(x),\
-                                     unsigned long:      (linux_word_t)(x),\
-                                     long long:          (linux_word_t)(unsigned long long)(x),\
-                                     unsigned long long: (linux_word_t)(x),\
-				     default:            (linux_word_t)(uintptr_t)(x))
-
-/*
  * Architectures with 32 bit word sizes require you to split 64 bit arguments
  * into two 32 bit arguments.
  */
 #if defined(LINUX_ARCH_ARM_EABI) || \
     defined(LINUX_ARCH_X86)
 #define LINUX_EXPAND(x) \
-        LINUX_PARAM((union{int64_t ll; int32_t l[2];}){.ll = (int64_t)(x)}.l[0]), \
-        LINUX_PARAM((union{int64_t ll; int32_t l[2];}){.ll = (int64_t)(x)}.l[1])
+        (union{uint64_t ll; uint32_t l[2];}){.ll = (uint64_t)(x)}.l[0], \
+        (union{uint64_t ll; uint32_t l[2];}){.ll = (uint64_t)(x)}.l[1]
 #endif
 
 //------------------------------------------------------------------------------
@@ -62,13 +45,13 @@
  * in the header names.h.
  */
 
-linux_word_t linux_syscall0(linux_word_t num);
-linux_word_t linux_syscall1(linux_word_t arg1, linux_word_t num);
-linux_word_t linux_syscall2(linux_word_t arg1, linux_word_t arg2, linux_word_t num);
-linux_word_t linux_syscall3(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t num);
-linux_word_t linux_syscall4(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t arg4, linux_word_t num);
-linux_word_t linux_syscall5(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t arg4, linux_word_t arg5, linux_word_t num);
-linux_word_t linux_syscall6(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t arg4, linux_word_t arg5, linux_word_t arg6, linux_word_t num);
+linux_word_t linux_syscall0(linux_uword_t num);
+linux_word_t linux_syscall1(linux_uword_t arg1, linux_uword_t num);
+linux_word_t linux_syscall2(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t num);
+linux_word_t linux_syscall3(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t num);
+linux_word_t linux_syscall4(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t arg4, linux_uword_t num);
+linux_word_t linux_syscall5(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t arg4, linux_uword_t arg5, linux_uword_t num);
+linux_word_t linux_syscall6(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t arg4, linux_uword_t arg5, linux_uword_t arg6, linux_uword_t num);
 
 #ifdef LINUX_ARCH_X86
 
@@ -84,13 +67,13 @@ linux_word_t linux_syscall6(linux_word_t arg1, linux_word_t arg2, linux_word_t a
 
 extern void const* linux_vsyscall_ptr; // Set this to the __kernel_vsyscall symbol exported by the vDSO or the following functions will segfault.
 
-linux_word_t linux_vsyscall0(linux_word_t num);
-linux_word_t linux_vsyscall1(linux_word_t arg1, linux_word_t num);
-linux_word_t linux_vsyscall2(linux_word_t arg1, linux_word_t arg2, linux_word_t num);
-linux_word_t linux_vsyscall3(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t num);
-linux_word_t linux_vsyscall4(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t arg4, linux_word_t num);
-linux_word_t linux_vsyscall5(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t arg4, linux_word_t arg5, linux_word_t num);
-linux_word_t linux_vsyscall6(linux_word_t arg1, linux_word_t arg2, linux_word_t arg3, linux_word_t arg4, linux_word_t arg5, linux_word_t arg6, linux_word_t num);
+linux_word_t linux_vsyscall0(linux_uword_t num);
+linux_word_t linux_vsyscall1(linux_uword_t arg1, linux_uword_t num);
+linux_word_t linux_vsyscall2(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t num);
+linux_word_t linux_vsyscall3(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t num);
+linux_word_t linux_vsyscall4(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t arg4, linux_uword_t num);
+linux_word_t linux_vsyscall5(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t arg4, linux_uword_t arg5, linux_uword_t num);
+linux_word_t linux_vsyscall6(linux_uword_t arg1, linux_uword_t arg2, linux_uword_t arg3, linux_uword_t arg4, linux_uword_t arg5, linux_uword_t arg6, linux_uword_t num);
 
 #endif // LINUX_ARCH_X86
 
@@ -232,282 +215,6 @@ noreturn void linux_sigreturn(void);
 #endif // LINUX_ARCH_X86
 
 // Declaration without return value
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Definition with return value
-
-#define LINUX_DEFINE_SYSCALL0_RET(name, ret_t)                                        \
-	enum linux_error_t linux_ ## name(ret_t* const result)                        \
-	{                                                                             \
-		linux_word_t const ret = linux_syscall0(linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                \
-			return (enum linux_error_t)-ret;                              \
-		if (result)                                                           \
-			*result = (ret_t)ret;                                         \
-		return linux_error_none;                                              \
-	}
-#define LINUX_DEFINE_SYSCALL1_RET(name, arg1_t, arg1, ret_t)                                             \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, ret_t* const result)                        \
-	{                                                                                                \
-		linux_word_t const ret = linux_syscall1(LINUX_PARAM(arg1), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                   \
-			return (enum linux_error_t)-ret;                                                 \
-		if (result)                                                                              \
-			*result = (ret_t)ret;                                                            \
-		return linux_error_none;                                                                 \
-	}
-#define LINUX_DEFINE_SYSCALL2_RET(name, arg1_t, arg1, arg2_t, arg2, ret_t)                                                  \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, ret_t* const result)                        \
-	{                                                                                                                   \
-		linux_word_t const ret = linux_syscall2(LINUX_PARAM(arg1), LINUX_PARAM(arg2), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                      \
-			return (enum linux_error_t)-ret;                                                                    \
-		if (result)                                                                                                 \
-			*result = (ret_t)ret;                                                                               \
-		return linux_error_none;                                                                                    \
-	}
-#define LINUX_DEFINE_SYSCALL3_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, ret_t)                                                       \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, ret_t* const result)                        \
-	{                                                                                                                                      \
-		linux_word_t const ret = linux_syscall3(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                         \
-			return (enum linux_error_t)-ret;                                                                                       \
-		if (result)                                                                                                                    \
-			*result = (ret_t)ret;                                                                                                  \
-		return linux_error_none;                                                                                                       \
-	}
-#define LINUX_DEFINE_SYSCALL4_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, ret_t)                                                            \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, ret_t* const result)                        \
-	{                                                                                                                                                         \
-		linux_word_t const ret = linux_syscall4(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                            \
-			return (enum linux_error_t)-ret;                                                                                                          \
-		if (result)                                                                                                                                       \
-			*result = (ret_t)ret;                                                                                                                     \
-		return linux_error_none;                                                                                                                          \
-	}
-#define LINUX_DEFINE_SYSCALL5_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, ret_t)                                                                 \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, ret_t* const result)                        \
-	{                                                                                                                                                                            \
-		linux_word_t const ret = linux_syscall5(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                                               \
-			return (enum linux_error_t)-ret;                                                                                                                             \
-		if (result)                                                                                                                                                          \
-			*result = (ret_t)ret;                                                                                                                                        \
-		return linux_error_none;                                                                                                                                             \
-	}
-#define LINUX_DEFINE_SYSCALL6_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6, ret_t)                                                                      \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, arg6_t const arg6, ret_t* const result)                        \
-	{                                                                                                                                                                                               \
-		linux_word_t const ret = linux_syscall6(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), LINUX_PARAM(arg6), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                                                                  \
-			return (enum linux_error_t)-ret;                                                                                                                                                \
-		if (result)                                                                                                                                                                             \
-			*result = (ret_t)ret;                                                                                                                                                           \
-		return linux_error_none;                                                                                                                                                                \
-	}
-
-#ifdef LINUX_ARCH_X86
-
-#define LINUX_DEFINE_VSYSCALL0_RET(name, ret_t)                                        \
-	enum linux_error_t linux_ ## name ## _v(ret_t* const result)                   \
-	{                                                                              \
-		linux_word_t const ret = linux_vsyscall0(linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                 \
-			return (enum linux_error_t)-ret;                               \
-		if (result)                                                            \
-			*result = (ret_t)ret;                                          \
-		return linux_error_none;                                               \
-	}
-#define LINUX_DEFINE_VSYSCALL1_RET(name, arg1_t, arg1, ret_t)                                             \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, ret_t* const result)                   \
-	{                                                                                                 \
-		linux_word_t const ret = linux_vsyscall1(LINUX_PARAM(arg1), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                    \
-			return (enum linux_error_t)-ret;                                                  \
-		if (result)                                                                               \
-			*result = (ret_t)ret;                                                             \
-		return linux_error_none;                                                                  \
-	}
-#define LINUX_DEFINE_VSYSCALL2_RET(name, arg1_t, arg1, arg2_t, arg2, ret_t)                                                  \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, ret_t* const result)                   \
-	{                                                                                                                    \
-		linux_word_t const ret = linux_vsyscall2(LINUX_PARAM(arg1), LINUX_PARAM(arg2), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                       \
-			return (enum linux_error_t)-ret;                                                                     \
-		if (result)                                                                                                  \
-			*result = (ret_t)ret;                                                                                \
-		return linux_error_none;                                                                                     \
-	}
-#define LINUX_DEFINE_VSYSCALL3_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, ret_t)                                                       \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, ret_t* const result)                   \
-	{                                                                                                                                       \
-		linux_word_t const ret = linux_vsyscall3(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                          \
-			return (enum linux_error_t)-ret;                                                                                        \
-		if (result)                                                                                                                     \
-			*result = (ret_t)ret;                                                                                                   \
-		return linux_error_none;                                                                                                        \
-	}
-#define LINUX_DEFINE_VSYSCALL4_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, ret_t)                                                            \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, ret_t* const result)                   \
-	{                                                                                                                                                          \
-		linux_word_t const ret = linux_vsyscall4(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                             \
-			return (enum linux_error_t)-ret;                                                                                                           \
-		if (result)                                                                                                                                        \
-			*result = (ret_t)ret;                                                                                                                      \
-		return linux_error_none;                                                                                                                           \
-	}
-#define LINUX_DEFINE_VSYSCALL5_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, ret_t)                                                                  \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, ret_t* const result)                    \
-	{                                                                                                                                                                              \
-		linux_word_t const ret = linux_vsyscall5(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), linux_syscall_name_ ## name);  \
-		if (linux_syscall_returned_error(ret))                                                                                                                                 \
-			return (enum linux_error_t)-ret;                                                                                                                               \
-		if (result)                                                                                                                                                            \
-			*result = (ret_t)ret;                                                                                                                                          \
-		return linux_error_none;                                                                                                                                               \
-	}
-#define LINUX_DEFINE_VSYSCALL6_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6, ret_t)                                                                      \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, arg6_t const arg6, ret_t* const result)                   \
-	{                                                                                                                                                                                                \
-		linux_word_t const ret = linux_vsyscall6(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), LINUX_PARAM(arg6), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                                                                   \
-			return (enum linux_error_t)-ret;                                                                                                                                                 \
-		if (result)                                                                                                                                                                              \
-			*result = (ret_t)ret;                                                                                                                                                            \
-		return linux_error_none;                                                                                                                                                                 \
-	}
-
-#endif // LINUX_ARCH_X86
-
-// Definition with return value
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Definition without return value
-
-#define LINUX_DEFINE_SYSCALL0_NORET(name)                                             \
-	enum linux_error_t linux_ ## name(void)                                       \
-	{                                                                             \
-		linux_word_t const ret = linux_syscall0(linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                \
-			return (enum linux_error_t)-ret;                              \
-		return linux_error_none;                                              \
-	}
-#define LINUX_DEFINE_SYSCALL1_NORET(name, arg1_t, arg1)                                                  \
-	enum linux_error_t linux_ ## name(arg1_t const arg1)                                             \
-	{                                                                                                \
-		linux_word_t const ret = linux_syscall1(LINUX_PARAM(arg1), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                   \
-			return (enum linux_error_t)-ret;                                                 \
-		return linux_error_none;                                                                 \
-	}
-#define LINUX_DEFINE_SYSCALL2_NORET(name, arg1_t, arg1, arg2_t, arg2)                                                       \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2)                                             \
-	{                                                                                                                   \
-		linux_word_t const ret = linux_syscall2(LINUX_PARAM(arg1), LINUX_PARAM(arg2), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                      \
-			return (enum linux_error_t)-ret;                                                                    \
-		return linux_error_none;                                                                                    \
-	}
-#define LINUX_DEFINE_SYSCALL3_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3)                                                            \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3)                                             \
-	{                                                                                                                                      \
-		linux_word_t const ret = linux_syscall3(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                         \
-			return (enum linux_error_t)-ret;                                                                                       \
-		return linux_error_none;                                                                                                       \
-	}
-#define LINUX_DEFINE_SYSCALL4_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4)                                                                 \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4)                                             \
-	{                                                                                                                                                         \
-		linux_word_t const ret = linux_syscall4(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                            \
-			return (enum linux_error_t)-ret;                                                                                                          \
-		return linux_error_none;                                                                                                                          \
-	}
-#define LINUX_DEFINE_SYSCALL5_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5)                                                                      \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5)                                             \
-	{                                                                                                                                                                            \
-		linux_word_t const ret = linux_syscall5(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                                               \
-			return (enum linux_error_t)-ret;                                                                                                                             \
-		return linux_error_none;                                                                                                                                             \
-	}
-#define LINUX_DEFINE_SYSCALL6_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6)                                                                           \
-	enum linux_error_t linux_ ## name(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, arg6_t const arg6)                                             \
-	{                                                                                                                                                                                               \
-		linux_word_t const ret = linux_syscall6(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), LINUX_PARAM(arg6), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                                                                  \
-			return (enum linux_error_t)-ret;                                                                                                                                                \
-		return linux_error_none;                                                                                                                                                                \
-	}
-
-#ifdef LINUX_ARCH_X86
-
-#define LINUX_DEFINE_VSYSCALL0_NORET(name)                                             \
-	enum linux_error_t linux_ ## name ## _v(void)                                  \
-	{                                                                              \
-		linux_word_t const ret = linux_vsyscall0(linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                 \
-			return (enum linux_error_t)-ret;                               \
-		return linux_error_none;                                               \
-	}
-#define LINUX_DEFINE_VSYSCALL1_NORET(name, arg1_t, arg1)                                                  \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1)                                        \
-	{                                                                                                 \
-		linux_word_t const ret = linux_vsyscall1(LINUX_PARAM(arg1), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                    \
-			return (enum linux_error_t)-ret;                                                  \
-		return linux_error_none;                                                                  \
-	}
-#define LINUX_DEFINE_VSYSCALL2_NORET(name, arg1_t, arg1, arg2_t, arg2)                                                       \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2)                                        \
-	{                                                                                                                    \
-		linux_word_t const ret = linux_vsyscall2(LINUX_PARAM(arg1), LINUX_PARAM(arg2), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                       \
-			return (enum linux_error_t)-ret;                                                                     \
-		return linux_error_none;                                                                                     \
-	}
-#define LINUX_DEFINE_VSYSCALL3_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3)                                                            \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3)                                        \
-	{                                                                                                                                       \
-		linux_word_t const ret = linux_vsyscall3(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                          \
-			return (enum linux_error_t)-ret;                                                                                        \
-		return linux_error_none;                                                                                                        \
-	}
-#define LINUX_DEFINE_VSYSCALL4_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4)                                                                 \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4)                                        \
-	{                                                                                                                                                          \
-		linux_word_t const ret = linux_vsyscall4(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                             \
-			return (enum linux_error_t)-ret;                                                                                                           \
-		return linux_error_none;                                                                                                                           \
-	}
-#define LINUX_DEFINE_VSYSCALL5_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5)                                                                      \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5)                                        \
-	{                                                                                                                                                                             \
-		linux_word_t const ret = linux_vsyscall5(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                                                \
-			return (enum linux_error_t)-ret;                                                                                                                              \
-		return linux_error_none;                                                                                                                                              \
-	}
-#define LINUX_DEFINE_VSYSCALL6_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6)                                                                           \
-	enum linux_error_t linux_ ## name ## _v(arg1_t const arg1, arg2_t const arg2, arg3_t const arg3, arg4_t const arg4, arg5_t const arg5, arg6_t const arg6)                                        \
-	{                                                                                                                                                                                                \
-		linux_word_t const ret = linux_vsyscall6(LINUX_PARAM(arg1), LINUX_PARAM(arg2), LINUX_PARAM(arg3), LINUX_PARAM(arg4), LINUX_PARAM(arg5), LINUX_PARAM(arg6), linux_syscall_name_ ## name); \
-		if (linux_syscall_returned_error(ret))                                                                                                                                                   \
-			return (enum linux_error_t)-ret;                                                                                                                                                 \
-		return linux_error_none;                                                                                                                                                                 \
-	}
-
-#endif // LINUX_ARCH_X86
-
-// Definition without return value
 //------------------------------------------------------------------------------
 
 #endif // !HEADER_LIBLINUX_SYSCALL_H_INCLUDED
