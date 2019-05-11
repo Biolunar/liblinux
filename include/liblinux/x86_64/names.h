@@ -363,6 +363,13 @@ enum
 	linux_syscall_name_statx                  = 332,
 	linux_syscall_name_io_pgetevents          = 333,
 	linux_syscall_name_rseq                   = 334,
+	// ...
+	// (335 to 423 are unused)
+	// ...
+	linux_syscall_name_pidfd_send_signal      = 424,
+	linux_syscall_name_io_uring_setup         = 425,
+	linux_syscall_name_io_uring_enter         = 426,
+	linux_syscall_name_io_uring_register      = 427,
 };
 
 #endif // !HEADER_LIBLINUX_X86_64_NAMES_H_INCLUDED

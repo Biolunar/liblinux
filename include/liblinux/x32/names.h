@@ -363,6 +363,13 @@ enum
 	linux_syscall_name_statx                  = 0x40000000 + 332,
 	linux_syscall_name_io_pgetevents          = 0x40000000 + 333,
 	linux_syscall_name_rseq                   = 0x40000000 + 334,
+	// ...
+	// (335 to 423 are unused)
+	// ...
+	linux_syscall_name_pidfd_send_signal      = 0x40000000 + 424,
+	linux_syscall_name_io_uring_setup         = 0x40000000 + 425,
+	linux_syscall_name_io_uring_enter         = 0x40000000 + 426,
+	linux_syscall_name_io_uring_register      = 0x40000000 + 427,
 
 	linux_syscall_name_rt_sigaction           = 0x40000000 + 512,
 	linux_syscall_name_rt_sigreturn           = 0x40000000 + 513,

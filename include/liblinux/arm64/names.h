@@ -272,7 +272,7 @@ enum
 	linux_syscall_name_perf_event_open        = 241,
 	linux_syscall_name_accept4                = 242,
 	linux_syscall_name_recvmmsg               = 243,
-	// 244 to 259 are unimplemented.
+	// (244 to 259 are unimplemented)
 	linux_syscall_name_wait4                  = 260,
 	linux_syscall_name_prlimit64              = 261,
 	linux_syscall_name_fanotify_init          = 262,
@@ -308,6 +308,11 @@ enum
 	linux_syscall_name_io_pgetevents          = 292,
 	linux_syscall_name_rseq                   = 293,
 	linux_syscall_name_kexec_file_load        = 294,
+	// (295 to 423 are unused)
+	linux_syscall_name_pidfd_send_signal      = 424,
+	linux_syscall_name_io_uring_setup         = 425,
+	linux_syscall_name_io_uring_enter         = 426,
+	linux_syscall_name_io_uring_register      = 427,
 };
 
 #endif // !HEADER_LIBLINUX_ARM64_NAMES_H_INCLUDED

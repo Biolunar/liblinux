@@ -272,7 +272,12 @@ csrc = \
        src/pkey_free.c\
        src/statx.c\
        src/io_pgetevents.c\
-       src/rseq.c
+       src/rseq.c\
+       src/kexec_file_load.c\
+       src/pidfd_send_signal.c\
+       src/io_uring_setup.c\
+       src/io_uring_enter.c\
+       src/io_uring_register.c
 
 tests = \
 	tests/compile\

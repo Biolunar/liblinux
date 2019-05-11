@@ -87,7 +87,7 @@ csrc = \
        src/clone.c\
        src/setdomainname.c\
        src/newuname.c\
-       src/adjtimex.c\
+       src/adjtimex_time32.c\
        src/mprotect.c\
        src/sigprocmask.c\
        src/init_module.c\
@@ -121,8 +121,8 @@ csrc = \
        src/sched_yield.c\
        src/sched_get_priority_max.c\
        src/sched_get_priority_min.c\
-       src/sched_rr_get_interval.c\
-       src/nanosleep.c\
+       src/sched_rr_get_interval_time32.c\
+       src/nanosleep_time32.c\
        src/mremap.c\
        src/setresuid16.c\
        src/getresuid16.c\
@@ -133,7 +133,7 @@ csrc = \
        src/rt_sigaction.c\
        src/rt_sigprocmask.c\
        src/rt_sigpending.c\
-       src/rt_sigtimedwait.c\
+       src/rt_sigtimedwait_time32.c\
        src/rt_sigqueueinfo.c\
        src/rt_sigsuspend.c\
        src/pread64.c\
@@ -192,12 +192,12 @@ csrc = \
        src/fremovexattr.c\
        src/tkill.c\
        src/sendfile64.c\
-       src/futex.c\
+       src/futex_time32.c\
        src/sched_setaffinity.c\
        src/sched_getaffinity.c\
        src/io_setup.c\
        src/io_destroy.c\
-       src/io_getevents.c\
+       src/io_getevents_time32.c\
        src/io_submit.c\
        src/io_cancel.c\
        src/lookup_dcookie.c\
@@ -207,26 +207,26 @@ csrc = \
        src/remap_file_pages.c\
        src/set_tid_address.c\
        src/timer_create.c\
-       src/timer_settime.c\
-       src/timer_gettime.c\
+       src/timer_settime32.c\
+       src/timer_gettime32.c\
        src/timer_getoverrun.c\
        src/timer_delete.c\
-       src/clock_settime.c\
-       src/clock_gettime.c\
-       src/clock_getres.c\
-       src/clock_nanosleep.c\
+       src/clock_settime32.c\
+       src/clock_gettime32.c\
+       src/clock_getres_time32.c\
+       src/clock_nanosleep_time32.c\
        src/statfs64.c\
        src/fstatfs64.c\
        src/tgkill.c\
-       src/utimes.c\
+       src/utimes_time32.c\
        src/arm_fadvise64_64.c\
        src/pciconfig_iobase.c\
        src/pciconfig_read.c\
        src/pciconfig_write.c\
        src/mq_open.c\
        src/mq_unlink.c\
-       src/mq_timedsend.c\
-       src/mq_timedreceive.c\
+       src/mq_timedsend_time32.c\
+       src/mq_timedreceive_time32.c\
        src/mq_notify.c\
        src/mq_getsetattr.c\
        src/waitid.c\
@@ -249,19 +249,19 @@ csrc = \
        src/recvmsg.c\
        src/semop.c\
        src/semget.c\
-       src/semctl.c\
+       src/old_semctl.c\
        src/msgsnd.c\
        src/msgrcv.c\
        src/msgget.c\
-       src/msgctl.c\
+       src/old_msgctl.c\
        src/shmat.c\
        src/shmdt.c\
        src/shmget.c\
-       src/shmctl.c\
+       src/old_shmctl.c\
        src/add_key.c\
        src/request_key.c\
        src/keyctl.c\
-       src/semtimedop.c\
+       src/semtimedop_time32.c\
        src/ioprio_set.c\
        src/ioprio_get.c\
        src/inotify_init.c\
@@ -274,7 +274,7 @@ csrc = \
        src/mkdirat.c\
        src/mknodat.c\
        src/fchownat.c\
-       src/futimesat.c\
+       src/futimesat_time32.c\
        src/fstatat64.c\
        src/unlinkat.c\
        src/renameat.c\
@@ -283,8 +283,8 @@ csrc = \
        src/readlinkat.c\
        src/fchmodat.c\
        src/faccessat.c\
-       src/pselect6.c\
-       src/ppoll.c\
+       src/pselect6_time32.c\
+       src/ppoll_time32.c\
        src/unshare.c\
        src/set_robust_list.c\
        src/get_robust_list.c\
@@ -296,13 +296,13 @@ csrc = \
        src/getcpu.c\
        src/epoll_pwait.c\
        src/kexec_load.c\
-       src/utimensat.c\
+       src/utimensat_time32.c\
        src/signalfd.c\
        src/timerfd_create.c\
        src/eventfd.c\
        src/fallocate.c\
-       src/timerfd_settime.c\
-       src/timerfd_gettime.c\
+       src/timerfd_settime32.c\
+       src/timerfd_gettime32.c\
        src/signalfd4.c\
        src/eventfd2.c\
        src/epoll_create1.c\
@@ -313,14 +313,14 @@ csrc = \
        src/pwritev.c\
        src/rt_tgsigqueueinfo.c\
        src/perf_event_open.c\
-       src/recvmmsg.c\
+       src/recvmmsg_time32.c\
        src/accept4.c\
        src/fanotify_init.c\
        src/fanotify_mark.c\
        src/prlimit64.c\
        src/name_to_handle_at.c\
        src/open_by_handle_at.c\
-       src/clock_adjtime.c\
+       src/clock_adjtime32.c\
        src/syncfs.c\
        src/sendmmsg.c\
        src/setns.c\
@@ -347,9 +347,33 @@ csrc = \
        src/pkey_free.c\
        src/statx.c\
        src/rseq.c\
-       src/io_pgetevents.c\
+       src/io_pgetevents_time32.c\
        src/migrate_pages.c\
        src/kexec_file_load.c\
+       src/clock_gettime.c\
+       src/clock_settime.c\
+       src/clock_adjtime.c\
+       src/clock_getres.c\
+       src/clock_nanosleep.c\
+       src/timer_gettime.c\
+       src/timer_settime.c\
+       src/timerfd_gettime.c\
+       src/timerfd_settime.c\
+       src/utimensat.c\
+       src/pselect6.c\
+       src/ppoll.c\
+       src/io_pgetevents.c\
+       src/recvmmsg.c\
+       src/mq_timedsend.c\
+       src/mq_timedreceive.c\
+       src/semtimedop.c\
+       src/rt_sigtimedwait.c\
+       src/futex.c\
+       src/sched_rr_get_interval.c\
+       src/pidfd_send_signal.c\
+       src/io_uring_setup.c\
+       src/io_uring_enter.c\
+       src/io_uring_register.c\
        src/breakpoint.c\
        src/cacheflush.c\
        src/usr26.c\
