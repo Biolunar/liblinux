@@ -815,6 +815,416 @@ struct linux_sel_arg_struct
 #endif
 
 //=============================================================================
+// More types
+
+//-----------------------------------------------------------------------------
+// unix
+
+struct linux_sockaddr_un
+{
+	linux_kernel_sa_family_t sun_family;
+	char sun_path[108];
+};
+
+//-----------------------------------------------------------------------------
+// IPv4
+
+struct linux_in_addr
+{
+	uint32_t s_addr;
+};
+struct linux_ip_mreq
+{
+	struct linux_in_addr imr_multiaddr;
+	struct linux_in_addr imr_interface;
+};
+struct linux_ip_mreqn
+{
+	struct linux_in_addr imr_multiaddr;
+	struct linux_in_addr imr_address;
+	int imr_ifindex;
+};
+struct linux_ip_mreq_source
+{
+	uint32_t imr_multiaddr;
+	uint32_t imr_interface;
+	uint32_t imr_sourceaddr;
+};
+struct linux_ip_msfilter
+{
+	uint32_t imsf_multiaddr;
+	uint32_t imsf_interface;
+	uint32_t imsf_fmode;
+	uint32_t imsf_numsrc;
+	uint32_t imsf_slist[];
+};
+struct linux_kernel_sockaddr_storage
+{
+	alignas(struct linux_sockaddr*) linux_kernel_sa_family_t ss_family;
+	char _data[128 - sizeof(linux_kernel_sa_family_t)];
+};
+_Static_assert(alignof(struct linux_kernel_sockaddr_storage) == alignof(struct linux_sockaddr*), "struct linux_kernel_sockaddr_storage is misaligned");
+struct linux_group_req
+{
+	uint32_t gr_interface;
+	struct linux_kernel_sockaddr_storage gr_group;
+};
+struct linux_group_source_req
+{
+	uint32_t gsr_interface;
+	struct linux_kernel_sockaddr_storage gsr_group;
+	struct linux_kernel_sockaddr_storage gsr_source;
+};
+struct linux_group_filter
+{
+	uint32_t gf_interface;
+	struct linux_kernel_sockaddr_storage gf_group;
+	uint32_t gf_fmode;
+	uint32_t gf_numsrc;
+	struct linux_kernel_sockaddr_storage gf_slist[];
+};
+struct linux_in_pktinfo
+{
+	int ipi_ifindex;
+	struct linux_in_addr ipi_spec_dst;
+	struct linux_in_addr ipi_addr;
+};
+struct linux_sockaddr_in
+{
+	linux_kernel_sa_family_t sin_family;
+	uint16_t sin_port;
+	struct linux_in_addr sin_addr;
+	unsigned char _pad[sizeof(struct linux_sockaddr) - sizeof(linux_kernel_sa_family_t) - sizeof(uint16_t) - sizeof(struct linux_in_addr)];
+};
+_Static_assert(sizeof(struct linux_sockaddr_in) == sizeof(struct linux_sockaddr), "struct linux_sockaddr_in has wrong size");
+
+//-----------------------------------------------------------------------------
+// IPv6
+
+struct linux_in6_addr
+{
+	union
+	{
+		uint8_t u6_addr8[16];
+		uint16_t u6_addr16[8];
+		uint32_t u6_addr32[4];
+	} in6_u;
+};
+struct linux_sockaddr_in6
+{
+	unsigned short int sin6_family;
+	uint16_t sin6_port;
+	uint32_t sin6_flowinfo;
+	struct linux_in6_addr sin6_addr;
+	uint32_t sin6_scope_id;
+};
+struct linux_ipv6_mreq
+{
+	struct linux_in6_addr ipv6mr_multiaddr;
+	int ipv6mr_ifindex;
+};
+struct linux_in6_flowlabel_req
+{
+	struct linux_in6_addr flr_dst;
+	uint32_t flr_label;
+	uint8_t flr_action;
+	uint8_t flr_share;
+	uint16_t flr_flags;
+	uint16_t flr_expires;
+	uint16_t flr_linger;
+	uint32_t _flr_pad;
+};
+
+//-----------------------------------------------------------------------------
+// AppleTalk
+
+struct linux_atalk_addr
+{
+	uint16_t s_net;
+	uint8_t s_node;
+};
+struct linux_sockaddr_at
+{
+	linux_kernel_sa_family_t sat_family;
+	uint8_t sat_port;
+	struct linux_atalk_addr sat_addr;
+	char sat_zero[8];
+};
+struct linux_atalk_netrange
+{
+	uint8_t nr_phase;
+	uint16_t nr_firstnet;
+	uint16_t nr_lastnet;
+};
+
+//-----------------------------------------------------------------------------
+// packet
+
+struct linux_sockaddr_pkt
+{
+	unsigned short spkt_family;
+	unsigned char spkt_device[14];
+	uint16_t spkt_protocol;
+};
+struct linux_sockaddr_ll
+{
+	unsigned short sll_family;
+	uint16_t sll_protocol;
+	int sll_ifindex;
+	unsigned short sll_hatype;
+	unsigned char sll_pkttype;
+	unsigned char sll_halen;
+	unsigned char sll_addr[8];
+};
+struct linux_tpacket_stats
+{
+	unsigned int tp_packets;
+	unsigned int tp_drops;
+};
+struct linux_tpacket_stats_v3
+{
+	unsigned int tp_packets;
+	unsigned int tp_drops;
+	unsigned int tp_freeze_q_cnt;
+};
+struct linux_tpacket_rollover_stats
+{
+	alignas(8) uint64_t tp_all;
+	alignas(8) uint64_t tp_huge;
+	alignas(8) uint64_t tp_failed;
+};
+union linux_tpacket_stats_u
+{
+	struct linux_tpacket_stats stats1;
+	struct linux_tpacket_stats_v3 stats3;
+};
+struct linux_tpacket_auxdata
+{
+	uint32_t tp_status;
+	uint32_t tp_len;
+	uint32_t tp_snaplen;
+	uint16_t tp_mac;
+	uint16_t tp_net;
+	uint16_t tp_vlan_tci;
+	uint16_t tp_vlan_tpid;
+};
+struct linux_tpacket_hdr
+{
+	unsigned long tp_status;
+	unsigned int tp_len;
+	unsigned int tp_snaplen;
+	unsigned short tp_mac;
+	unsigned short tp_net;
+	unsigned int tp_sec;
+	unsigned int tp_usec;
+};
+struct linux_tpacket2_hdr
+{
+	uint32_t tp_status;
+	uint32_t tp_len;
+	uint32_t tp_snaplen;
+	uint16_t tp_mac;
+	uint16_t tp_net;
+	uint32_t tp_sec;
+	uint32_t tp_nsec;
+	uint16_t tp_vlan_tci;
+	uint16_t tp_vlan_tpid;
+	uint8_t tp_padding[4];
+};
+struct linux_tpacket_hdr_variant1
+{
+	uint32_t tp_rxhash;
+	uint32_t tp_vlan_tci;
+	uint16_t tp_vlan_tpid;
+	uint16_t tp_padding;
+};
+struct linux_tpacket3_hdr
+{
+	uint32_t tp_next_offset;
+	uint32_t tp_sec;
+	uint32_t tp_nsec;
+	uint32_t tp_snaplen;
+	uint32_t tp_len;
+	uint32_t tp_status;
+	uint16_t tp_mac;
+	uint16_t tp_net;
+	union
+	{
+		struct linux_tpacket_hdr_variant1 hv1;
+	};
+	uint8_t tp_padding[8];
+};
+struct linux_tpacket_bd_ts
+{
+	unsigned int ts_sec;
+	union
+	{
+		unsigned int ts_usec;
+		unsigned int ts_nsec;
+	};
+};
+struct linux_tpacket_hdr_v1
+{
+	uint32_t block_status;
+	uint32_t num_pkts;
+	uint32_t offset_to_first_pkt;
+	uint32_t blk_len;
+	alignas(8) uint64_t seq_num;
+	struct linux_tpacket_bd_ts ts_first_pkt, ts_last_pkt;
+};
+union linux_tpacket_bd_header_u
+{
+	struct linux_tpacket_hdr_v1 bh1;
+};
+struct linux_tpacket_block_desc
+{
+	uint32_t version;
+	uint32_t offset_to_priv;
+	union linux_tpacket_bd_header_u hdr;
+};
+struct linux_tpacket_req
+{
+	unsigned int tp_block_size;
+	unsigned int tp_block_nr;
+	unsigned int tp_frame_size;
+	unsigned int tp_frame_nr;
+};
+struct linux_tpacket_req3
+{
+	unsigned int tp_block_size;
+	unsigned int tp_block_nr;
+	unsigned int tp_frame_size;
+	unsigned int tp_frame_nr;
+	unsigned int tp_retire_blk_tov;
+	unsigned int tp_sizeof_priv;
+	unsigned int tp_feature_req_word;
+};
+union linux_tpacket_req_u
+{
+	struct linux_tpacket_req req;
+	struct linux_tpacket_req3 req3;
+};
+struct linux_packet_mreq
+{
+	int mr_ifindex;
+	unsigned short mr_type;
+	unsigned short mr_alen;
+	unsigned char mr_address[8];
+};
+
+//-----------------------------------------------------------------------------
+// x25
+
+struct linux_x25_address
+{
+	char x25_addr[16];
+};
+struct linux_sockaddr_x25
+{
+	linux_kernel_sa_family_t sx25_family;
+	struct linux_x25_address sx25_addr;
+};
+struct linux_x25_subscrip_struct
+{
+	char device[200-sizeof(unsigned long)];
+	unsigned long global_facil_mask;
+	unsigned int extended;
+};
+struct linux_x25_route_struct
+{
+	struct linux_x25_address address;
+	unsigned int sigdigits;
+	char device[200];
+};
+struct linux_x25_facilities
+{
+	unsigned int winsize_in, winsize_out;
+	unsigned int pacsize_in, pacsize_out;
+	unsigned int throughput;
+	unsigned int reverse;
+};
+struct linux_x25_dte_facilities
+{
+	uint16_t delay_cumul;
+	uint16_t delay_target;
+	uint16_t delay_max;
+	uint8_t min_throughput;
+	uint8_t expedited;
+	uint8_t calling_len;
+	uint8_t called_len;
+	uint8_t calling_ae[20];
+	uint8_t called_ae[20];
+};
+struct linux_x25_calluserdata
+{
+	unsigned int cudlength;
+	unsigned char cuddata[128];
+};
+struct linux_x25_causediag
+{
+	unsigned char cause;
+	unsigned char diagnostic;
+};
+struct linux_x25_subaddr
+{
+	unsigned int cudmatchlength;
+};
+
+//-----------------------------------------------------------------------------
+// netlink
+
+struct linux_sockaddr_nl
+{
+	linux_kernel_sa_family_t nl_family;
+	unsigned short nl_pad;
+	uint32_t nl_pid;
+	uint32_t nl_groups;
+};
+struct linux_nlmsghdr
+{
+	uint32_t nlmsg_len;
+	uint16_t nlmsg_type;
+	uint16_t nlmsg_flags;
+	uint32_t nlmsg_seq;
+	uint32_t nlmsg_pid;
+};
+struct linux_nlmsgerr
+{
+	int error;
+	struct linux_nlmsghdr msg;
+};
+struct linux_nl_pktinfo
+{
+	uint32_t group;
+};
+struct linux_nl_mmap_req
+{
+	unsigned int nm_block_size;
+	unsigned int nm_block_nr;
+	unsigned int nm_frame_size;
+	unsigned int nm_frame_nr;
+};
+struct linux_nl_mmap_hdr
+{
+	unsigned int nm_status;
+	unsigned int nm_len;
+	uint32_t nm_group;
+	uint32_t nm_pid;
+	uint32_t nm_uid;
+	uint32_t nm_gid;
+};
+struct linux_nlattr
+{
+	uint16_t nla_len;
+	uint16_t nla_type;
+};
+struct linux_nla_bitfield32
+{
+	uint32_t value;
+	uint32_t selector;
+};
+
+//=============================================================================
 // Generic syscalls
 
 //-----------------------------------------------------------------------------

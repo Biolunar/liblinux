@@ -192,4 +192,30 @@
 #define linux_O_TMPFILE_MASK (020000000 | linux_O_DIRECTORY | linux_O_CREAT)      
 #define linux_O_NDELAY        linux_O_NONBLOCK
 
+//=============================================================================
+// socket
+
+enum linux_sock_type
+{
+	linux_SOCK_STREAM    =  1,
+	linux_SOCK_DGRAM     =  2,
+	linux_SOCK_RAW       =  3,
+	linux_SOCK_RDM       =  4,
+	linux_SOCK_SEQPACKET =  5,
+	linux_SOCK_DCCP      =  6,
+	linux_SOCK_PACKET    = 10,
+	linux_SOCK_MAX,
+};
+#define linux_SOCK_TYPE_MASK 0xf
+
+#define linux_SOCK_NONBLOCK linux_O_NONBLOCK
+
+#define linux_SOL_SOCKET 1
+
+#define linux_SO_TIMESTAMP    linux_SO_TIMESTAMP_OLD
+#define linux_SO_TIMESTAMPNS  linux_SO_TIMESTAMPNS_OLD
+#define linux_SO_TIMESTAMPING linux_SO_TIMESTAMPING_OLD
+#define linux_SO_RCVTIMEO     linux_SO_RCVTIMEO_OLD
+#define linux_SO_SNDTIMEO     linux_SO_SNDTIMEO_OLD
+
 #endif // !HEADER_LIBLINUX_X86_64_CONSTANTS_H_INCLUDED

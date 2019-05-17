@@ -192,4 +192,30 @@
 #define linux_O_TMPFILE_MASK (020000000 | linux_O_DIRECTORY | linux_O_CREAT)      
 #define linux_O_NDELAY        linux_O_NONBLOCK
 
+//=============================================================================
+// socket
+
+enum linux_sock_type
+{
+	linux_SOCK_STREAM    =  1,
+	linux_SOCK_DGRAM     =  2,
+	linux_SOCK_RAW       =  3,
+	linux_SOCK_RDM       =  4,
+	linux_SOCK_SEQPACKET =  5,
+	linux_SOCK_DCCP      =  6,
+	linux_SOCK_PACKET    = 10,
+	linux_SOCK_MAX,
+};
+#define linux_SOCK_TYPE_MASK 0xf
+
+#define linux_SOCK_NONBLOCK linux_O_NONBLOCK
+
+#define linux_SOL_SOCKET 1
+
+#define linux_SO_TIMESTAMP    (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_TIMESTAMP_OLD    : linux_SO_TIMESTAMP_NEW)
+#define linux_SO_TIMESTAMPNS  (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_TIMESTAMPNS_OLD  : linux_SO_TIMESTAMPNS_NEW)
+#define linux_SO_TIMESTAMPING (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_TIMESTAMPING_OLD : linux_SO_TIMESTAMPING_NEW)
+#define linux_SO_RCVTIMEO     (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_RCVTIMEO_OLD     : linux_SO_RCVTIMEO_NEW)
+#define linux_SO_SNDTIMEO     (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_SNDTIMEO_OLD     : linux_SO_SNDTIMEO_NEW)
+
 #endif // !HEADER_LIBLINUX_X86_CONSTANTS_H_INCLUDED
