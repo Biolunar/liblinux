@@ -1,12 +1,3 @@
-###############################################################################
-# Public variables
-
-ASM      = as
-ASMFLAGS =
-
-###############################################################################
-# Private variables
-
 asmsrc = \
          src/$(ARCH)/$(TOOL)/_start.asm\
          src/$(ARCH)/$(TOOL)/exit.asm\
@@ -18,6 +9,6 @@ asmsrc = \
          src/$(ARCH)/$(TOOL)/syscall3.asm\
          src/$(ARCH)/$(TOOL)/syscall4.asm\
          src/$(ARCH)/$(TOOL)/syscall5.asm\
-         src/$(ARCH)/$(TOOL)/syscall6.asm\
+         src/$(ARCH)/$(TOOL)/syscall6.asm
 
 asmflags =

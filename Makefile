@@ -29,6 +29,7 @@ include src/$(ARCH)/build.mk
 
 asmobj  = $(asmsrc:.asm=.o)
 cobj    = $(csrc:.c=.o)
+cdep    = $(csrc:.c=.d)
 
 ###############################################################################
 # Public targets
@@ -36,7 +37,7 @@ cobj    = $(csrc:.c=.o)
 all: $(TARGET)
 
 clean:
-	rm -f $(TARGET) $(asmobj) $(cobj) $(tests)
+	rm -f $(TARGET) $(asmobj) $(cobj) $(cdep) $(tests)
 
 test: $(tests)
 
@@ -55,9 +56,11 @@ uninstall:
 .asm.o:
 	$(ASM) $(ASMFLAGS) $(asmflags) -o $@ $<
 
+-include $(cdep)
+
 .SUFFIXES: .c .o
 .c.o:
-	$(CC) $(CFLAGS) -c -I include -o $@ $<
+	$(CC) $(CFLAGS) -MMD -c -I include -o $@ $<
 	
 $(TARGET): $(asmobj) $(cobj)
 	$(AR) $(ARFLAGS) $@ $(asmobj) $(cobj)

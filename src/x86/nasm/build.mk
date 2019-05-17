@@ -1,12 +1,3 @@
-###############################################################################
-# Public variables
-
-ASM      = nasm
-ASMFLAGS = -w+all -Ox
-
-###############################################################################
-# Private variables
-
 asmsrc = \
          src/$(ARCH)/$(TOOL)/_start.asm\
          src/$(ARCH)/$(TOOL)/exit.asm\
@@ -27,6 +18,6 @@ asmsrc = \
          src/$(ARCH)/$(TOOL)/vsyscall4.asm\
          src/$(ARCH)/$(TOOL)/vsyscall5.asm\
          src/$(ARCH)/$(TOOL)/vsyscall6.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall_ptr.asm\
+         src/$(ARCH)/$(TOOL)/vsyscall_ptr.asm
 
 asmflags = -f elf32
