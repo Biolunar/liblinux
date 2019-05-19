@@ -40,35 +40,33 @@
 //=============================================================================
 // Generic types
 
-typedef int                      linux_kernel_key_t;
-typedef int                      linux_kernel_mqd_t;
-typedef unsigned int             linux_kernel_uid32_t;
-typedef unsigned int             linux_kernel_gid32_t;
-typedef int                      linux_kernel_pid_t;
-typedef long long                linux_kernel_loff_t;
-typedef long long                linux_kernel_time64_t;
-typedef unsigned short           linux_kernel_sa_family_t;
-typedef int                      linux_kernel_timer_t;
-typedef int                      linux_kernel_rwf_t;
-typedef int                      linux_kernel_clockid_t;
-typedef unsigned short           linux_umode_t;
-typedef unsigned int             linux_poll_t;
-typedef int32_t                  linux_key_serial_t;
-typedef linux_kernel_key_t       linux_key_t;
-typedef linux_kernel_pid_t       linux_pid_t;
-typedef linux_kernel_loff_t      linux_loff_t;
-typedef linux_kernel_sa_family_t linux_sa_family_t;
-typedef linux_kernel_uid32_t     linux_uid_t;
-typedef linux_kernel_gid32_t     linux_gid_t;
-typedef linux_kernel_uid32_t     linux_qid_t;
-typedef linux_kernel_rwf_t       linux_rwf_t;
-typedef linux_kernel_clockid_t   linux_clockid_t;
-typedef linux_kernel_timer_t     linux_timer_t;
-typedef linux_kernel_mqd_t       linux_mqd_t;
-typedef void                     linux_signalfn_t(int);
-typedef void                     linux_restorefn_t(void);
-typedef linux_restorefn_t*       linux_sigrestore_t;
-typedef int32_t                  linux_old_time32_t;
+typedef int                    linux_kernel_key_t;
+typedef int                    linux_kernel_mqd_t;
+typedef unsigned int           linux_kernel_uid32_t;
+typedef unsigned int           linux_kernel_gid32_t;
+typedef int                    linux_kernel_pid_t;
+typedef long long              linux_kernel_loff_t;
+typedef long long              linux_kernel_time64_t;
+typedef int                    linux_kernel_timer_t;
+typedef int                    linux_kernel_rwf_t;
+typedef int                    linux_kernel_clockid_t;
+typedef unsigned short         linux_umode_t;
+typedef unsigned int           linux_poll_t;
+typedef int32_t                linux_key_serial_t;
+typedef linux_kernel_key_t     linux_key_t;
+typedef linux_kernel_pid_t     linux_pid_t;
+typedef linux_kernel_loff_t    linux_loff_t;
+typedef linux_kernel_uid32_t   linux_uid_t;
+typedef linux_kernel_gid32_t   linux_gid_t;
+typedef linux_kernel_uid32_t   linux_qid_t;
+typedef linux_kernel_rwf_t     linux_rwf_t;
+typedef linux_kernel_clockid_t linux_clockid_t;
+typedef linux_kernel_timer_t   linux_timer_t;
+typedef linux_kernel_mqd_t     linux_mqd_t;
+typedef void                   linux_signalfn_t(int);
+typedef void                   linux_restorefn_t(void);
+typedef linux_restorefn_t*     linux_sigrestore_t;
+typedef int32_t                linux_old_time32_t;
 
 typedef struct
 {
@@ -585,26 +583,6 @@ struct linux_itimerval
 	struct linux_timeval it_interval;
 	struct linux_timeval it_value;
 };
-struct linux_sockaddr
-{
-	linux_sa_family_t sa_family;
-	char sa_data[14];
-};
-struct linux_user_msghdr
-{
-	void* msg_name;
-	int msg_namelen;
-	struct linux_iovec* msg_iov;
-	linux_kernel_size_t msg_iovlen;
-	void* msg_control;
-	linux_kernel_size_t msg_controllen;
-	unsigned int msg_flags;
-};
-struct linux_mmsghdr
-{
-	struct linux_user_msghdr msg_hdr;
-	unsigned int msg_len;
-};
 struct linux_rusage
 {
 	struct linux_timeval ru_utime;
@@ -815,10 +793,34 @@ struct linux_sel_arg_struct
 #endif
 
 //=============================================================================
-// More types
+// Socket types
+
+typedef unsigned short           linux_kernel_sa_family_t;
+typedef linux_kernel_sa_family_t linux_sa_family_t;
+
+struct linux_sockaddr
+{
+	linux_sa_family_t sa_family;
+	char sa_data[14];
+};
+struct linux_user_msghdr
+{
+	void* msg_name;
+	int msg_namelen;
+	struct linux_iovec* msg_iov;
+	linux_kernel_size_t msg_iovlen;
+	void* msg_control;
+	linux_kernel_size_t msg_controllen;
+	unsigned int msg_flags;
+};
+struct linux_mmsghdr
+{
+	struct linux_user_msghdr msg_hdr;
+	unsigned int msg_len;
+};
 
 //-----------------------------------------------------------------------------
-// unix
+// Unix
 
 struct linux_sockaddr_un
 {
@@ -958,7 +960,7 @@ struct linux_atalk_netrange
 };
 
 //-----------------------------------------------------------------------------
-// packet
+// Packet
 
 struct linux_sockaddr_pkt
 {
@@ -1171,7 +1173,7 @@ struct linux_x25_subaddr
 };
 
 //-----------------------------------------------------------------------------
-// netlink
+// Netlink
 
 struct linux_sockaddr_nl
 {
@@ -1222,6 +1224,252 @@ struct linux_nla_bitfield32
 {
 	uint32_t value;
 	uint32_t selector;
+};
+
+//-----------------------------------------------------------------------------
+// Reliable datagram sockets
+
+typedef uint8_t  linux_rds_tos_t;
+typedef uint64_t linux_rds_rdma_cookie_t;
+
+struct linux_rds_info_counter
+{
+	uint8_t name[32];
+	uint64_t value;
+};
+_Static_assert(sizeof(struct linux_rds_info_counter) == sizeof(uint64_t)+32*sizeof(uint8_t), "struct linux_rds_info_counter has padding");
+struct linux_rds_info_connection
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	unsigned char next_tx_seq[sizeof(uint64_t)]; // uint64_t
+	unsigned char next_rx_seq[sizeof(uint64_t)]; // uint64_t
+	unsigned char laddr[sizeof(uint32_t)]; // uint32_t
+	unsigned char faddr[sizeof(uint32_t)]; // uint32_t
+	uint8_t transport[linux_TRANSNAMSIZ];
+	uint8_t flags;
+	uint8_t tos;
+};
+_Static_assert(sizeof(struct linux_rds_info_connection) == 2*sizeof(uint64_t)+2*sizeof(uint32_t)+(linux_TRANSNAMSIZ+2)*sizeof(uint8_t), "struct linux_rds_info_connection has padding");
+struct linux_rds6_info_connection
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	unsigned char next_tx_seq[sizeof(uint64_t)]; // uint64_t
+	unsigned char next_rx_seq[sizeof(uint64_t)]; // uint64_t
+	unsigned char laddr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	unsigned char faddr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	uint8_t transport[linux_TRANSNAMSIZ];
+	uint8_t flags;
+};
+_Static_assert(sizeof(struct linux_rds6_info_connection) == 2*sizeof(uint64_t)+(linux_TRANSNAMSIZ+1)*sizeof(uint8_t)+2*sizeof(struct linux_in6_addr), "struct linux_rds6_info_connection has padding");
+struct linux_rds_info_message
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	unsigned char seq[sizeof(uint64_t)]; // uint64_t
+	unsigned char len[sizeof(uint32_t)]; // uint32_t
+	unsigned char laddr[sizeof(uint32_t)]; // uint32_t
+	unsigned char faddr[sizeof(uint32_t)]; // uint32_t
+	unsigned char lport[sizeof(uint16_t)]; // uint16_t
+	unsigned char fport[sizeof(uint16_t)]; // uint16_t
+	uint8_t flags;
+	uint8_t tos;
+};
+_Static_assert(sizeof(struct linux_rds_info_message) == sizeof(uint64_t)+3*sizeof(uint32_t)+2*sizeof(uint16_t)+2*sizeof(uint8_t), "struct linux_rds_info_message has padding");
+struct linux_rds6_info_message
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	unsigned char seq[sizeof(uint64_t)]; // uint64_t
+	unsigned char len[sizeof(uint32_t)]; // uint32_t
+	unsigned char laddr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	unsigned char faddr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	unsigned char lport[sizeof(uint16_t)]; // uint16_t
+	unsigned char fport[sizeof(uint16_t)]; // uint16_t
+	uint8_t flags;
+	uint8_t tos;
+};
+_Static_assert(sizeof(struct linux_rds6_info_message) == sizeof(uint64_t)+sizeof(uint32_t)+2*sizeof(uint16_t)+2*sizeof(uint8_t)+2*sizeof(struct linux_in6_addr), "struct linux_rds6_info_message has padding");
+struct linux_rds_info_socket
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	unsigned char sndbuf[sizeof(uint32_t)]; // uint32_t
+	unsigned char bound_addr[sizeof(uint32_t)]; // uint32_t
+	unsigned char connected_addr[sizeof(uint32_t)]; // uint32_t
+	unsigned char bound_port[sizeof(uint32_t)]; // uint16_t
+	unsigned char connected_port[sizeof(uint32_t)]; // uint16_t
+	unsigned char rcvbuf[sizeof(uint32_t)]; // uint32_t
+	unsigned char inum[sizeof(uint32_t)]; // uint64_t
+};
+_Static_assert(sizeof(struct linux_rds_info_socket) == sizeof(uint64_t)+4*sizeof(uint32_t)+2*sizeof(uint16_t), "struct linux_rds_info_socket has padding");
+struct linux_rds6_info_socket
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	unsigned char sndbuf[sizeof(uint32_t)]; // uint32_t
+	unsigned char bound_addr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	unsigned char connected_addr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	unsigned char bound_port[sizeof(uint16_t)]; // uint16_t
+	unsigned char connected_port[sizeof(uint16_t)]; // uint16_t
+	unsigned char rcvbuf[sizeof(uint32_t)]; // uint32_t
+	unsigned char inum[sizeof(uint64_t)]; // uint64_t
+};
+_Static_assert(sizeof(struct linux_rds6_info_socket) == sizeof(uint64_t)+2*sizeof(uint32_t)+2*sizeof(uint16_t)+2*sizeof(struct linux_in6_addr), "struct linux_rds6_info_socket has padding");
+struct linux_rds_info_tcp_socket
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	unsigned char local_addr[sizeof(uint32_t)]; // uint32_t
+	unsigned char local_port[sizeof(uint16_t)]; // uint16_t
+	unsigned char peer_addr[sizeof(uint32_t)]; // uint32_t
+	unsigned char peer_port[sizeof(uint16_t)]; // uint16_t
+	unsigned char hdr_rem[sizeof(uint64_t)]; // uint64_t
+	unsigned char data_rem[sizeof(uint64_t)]; // uint64_t
+	unsigned char last_sent_nxt[sizeof(uint32_t)]; // uint32_t
+	unsigned char last_expected_una[sizeof(uint32_t)]; // uint32_t
+	unsigned char last_seen_una[sizeof(uint32_t)]; // uint32_t
+	uint8_t tos;
+};
+_Static_assert(sizeof(struct linux_rds_info_tcp_socket) == 2*sizeof(uint64_t)+5*sizeof(uint32_t)+2*sizeof(uint16_t)+sizeof(uint8_t), "struct linux_rds_info_tcp_socket has padding");
+struct linux_rds6_info_tcp_socket
+{
+	unsigned char local_addr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	unsigned char local_port[sizeof(uint16_t)]; // uint16_t
+	unsigned char peer_addr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+	unsigned char peer_port[sizeof(uint16_t)]; // uint16_t
+	unsigned char hdr_rem[sizeof(uint64_t)]; // uint64_t
+	unsigned char data_rem[sizeof(uint64_t)]; // uint64_t
+	unsigned char last_sent_nxt[sizeof(uint32_t)]; // uint32_t
+	unsigned char last_expected_una[sizeof(uint32_t)]; // uint32_t
+	unsigned char last_seen_una[sizeof(uint32_t)]; // uint32_t
+};
+_Static_assert(sizeof(struct linux_rds6_info_tcp_socket) == 2*sizeof(uint64_t)+3*sizeof(uint32_t)+2*sizeof(uint16_t)+2*sizeof(struct linux_in6_addr), "struct linux_rds6_info_tcp_socket has padding");
+struct linux_rds_info_rdma_connection
+{
+	uint32_t src_addr;
+	uint32_t dst_addr;
+	uint8_t src_gid[linux_RDS_IB_GID_LEN];
+	uint8_t dst_gid[linux_RDS_IB_GID_LEN];
+	uint32_t max_send_wr;
+	uint32_t max_recv_wr;
+	uint32_t max_send_sge;
+	uint32_t rdma_mr_max;
+	uint32_t rdma_mr_size;
+	uint8_t tos;
+};
+struct linux_rds6_info_rdma_connection
+{
+	struct linux_in6_addr src_addr;
+	struct linux_in6_addr dst_addr;
+	uint8_t src_gid[linux_RDS_IB_GID_LEN];
+	uint8_t dst_gid[linux_RDS_IB_GID_LEN];
+	uint32_t max_send_wr;
+	uint32_t max_recv_wr;
+	uint32_t max_send_sge;
+	uint32_t rdma_mr_max;
+	uint32_t rdma_mr_size;
+	uint8_t tos;
+};
+struct linux_rds_rx_trace_so
+{
+	uint8_t rx_traces;
+	uint8_t rx_trace_pos[linux_RDS_MSG_RX_DGRAM_TRACE_MAX];
+};
+struct linux_rds_cmsg_rx_trace
+{
+	uint8_t rx_traces;
+	uint8_t rx_trace_pos[linux_RDS_MSG_RX_DGRAM_TRACE_MAX];
+	uint64_t rx_trace[linux_RDS_MSG_RX_DGRAM_TRACE_MAX];
+};
+struct linux_rds_iovec
+{
+	uint64_t addr;
+	uint64_t bytes;
+};
+struct linux_rds_get_mr_args
+{
+	struct linux_rds_iovec vec;
+	uint64_t cookie_addr;
+	uint64_t flags;
+};
+struct linux_rds_get_mr_for_dest_args
+{
+	struct linux_kernel_sockaddr_storage dest_addr;
+	struct linux_rds_iovec vec;
+	uint64_t cookie_addr;
+	uint64_t flags;
+};
+struct linux_rds_free_mr_args
+{
+	linux_rds_rdma_cookie_t cookie;
+	uint64_t flags;
+};
+struct linux_rds_rdma_args
+{
+	linux_rds_rdma_cookie_t cookie;
+	struct linux_rds_iovec remote_vec;
+	uint64_t local_vec_addr;
+	uint64_t nr_local;
+	uint64_t flags;
+	uint64_t user_token;
+};
+struct linux_rds_atomic_args
+{
+	linux_rds_rdma_cookie_t cookie;
+	uint64_t local_addr;
+	uint64_t remote_addr;
+	union
+	{
+		struct
+		{
+			uint64_t compare;
+			uint64_t swap;
+		} cswp;
+		struct
+		{
+			uint64_t add;
+		} fadd;
+		struct
+		{
+			uint64_t compare;
+			uint64_t swap;
+			uint64_t compare_mask;
+			uint64_t swap_mask;
+		} m_cswp;
+		struct
+		{
+			uint64_t add;
+			uint64_t nocarry_mask;
+		} m_fadd;
+	};
+	uint64_t flags;
+	uint64_t user_token;
+};
+struct linux_rds_rdma_notify
+{
+	uint64_t user_token;
+	int32_t status;
+};
+struct linux_rds_zcopy_cookies
+{
+	uint32_t num;
+	uint32_t cookies[linux_RDS_MAX_ZCOOKIES];
 };
 
 //=============================================================================

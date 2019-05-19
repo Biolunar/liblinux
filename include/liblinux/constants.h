@@ -86,9 +86,9 @@
 //=============================================================================
 // interval timer
 
-#define	linux_ITIMER_REAL    0
-#define	linux_ITIMER_VIRTUAL 1
-#define	linux_ITIMER_PROF    2
+#define linux_ITIMER_REAL    0
+#define linux_ITIMER_VIRTUAL 1
+#define linux_ITIMER_PROF    2
 
 //=============================================================================
 // system clocks
@@ -931,6 +931,105 @@ enum linux_tpacket_versions
 #define linux_NLMSG_DONE             0x3
 #define linux_NLMSG_OVERRUN          0x4
 #define linux_NLMSG_MIN_TYPE         0x10
+
+//-----------------------------------------------------------------------------
+// Reliable datagram sockets
+
+#define linux_RDS_IB_ABI_VERSION 0x301
+
+#define linux_RDS_CANCEL_SENT_TO         1
+#define linux_RDS_GET_MR                 2
+#define linux_RDS_FREE_MR                3
+//#define linux_RDS_BARRIER              4
+#define linux_RDS_RECVERR                5
+#define linux_RDS_CONG_MONITOR           6
+#define linux_RDS_GET_MR_FOR_DEST        7
+#define linux_SO_RDS_TRANSPORT           8
+#define linux_SO_RDS_MSG_RXPATH_LATENCY 10
+
+#define linux_RDS_TRANS_IB    0
+#define linux_RDS_TRANS_IWARP 1
+#define linux_RDS_TRANS_TCP   2
+#define linux_RDS_TRANS_COUNT 3
+#define linux_RDS_TRANS_NONE  (~0)
+
+#define linux_SIOCRDSSETTOS (linux_SIOCPROTOPRIVATE)
+#define linux_SIOCRDSGETTOS (linux_SIOCPROTOPRIVATE + 1)
+
+#define linux_RDS_CMSG_RDMA_ARGS           1
+#define linux_RDS_CMSG_RDMA_DEST           2
+#define linux_RDS_CMSG_RDMA_MAP            3
+#define linux_RDS_CMSG_RDMA_STATUS         4
+#define linux_RDS_CMSG_CONG_UPDATE         5
+#define linux_RDS_CMSG_ATOMIC_FADD         6
+#define linux_RDS_CMSG_ATOMIC_CSWP         7
+#define linux_RDS_CMSG_MASKED_ATOMIC_FADD  8
+#define linux_RDS_CMSG_MASKED_ATOMIC_CSWP  9
+#define linux_RDS_CMSG_RXPATH_LATENCY     11
+#define linux_RDS_CMSG_ZCOPY_COOKIE       12
+#define linux_RDS_CMSG_ZCOPY_COMPLETION   13
+
+#define linux_RDS_INFO_FIRST             10000
+#define linux_RDS_INFO_COUNTERS          10000
+#define linux_RDS_INFO_CONNECTIONS       10001
+//#define linux_RDS_INFO_FLOWS           10002
+#define linux_RDS_INFO_SEND_MESSAGES     10003
+#define linux_RDS_INFO_RETRANS_MESSAGES  10004
+#define linux_RDS_INFO_RECV_MESSAGES     10005
+#define linux_RDS_INFO_SOCKETS           10006
+#define linux_RDS_INFO_TCP_SOCKETS       10007
+#define linux_RDS_INFO_IB_CONNECTIONS    10008
+#define linux_RDS_INFO_CONNECTION_STATS  10009
+#define linux_RDS_INFO_IWARP_CONNECTIONS 10010
+
+#define linux_RDS6_INFO_CONNECTIONS      10011
+#define linux_RDS6_INFO_SEND_MESSAGES    10012
+#define linux_RDS6_INFO_RETRANS_MESSAGES 10013
+#define linux_RDS6_INFO_RECV_MESSAGES    10014
+#define linux_RDS6_INFO_SOCKETS          10015
+#define linux_RDS6_INFO_TCP_SOCKETS      10016
+#define linux_RDS6_INFO_IB_CONNECTIONS   10017
+
+#define linux_RDS_INFO_LAST 10017
+
+#define linux_RDS_INFO_CONNECTION_FLAG_SENDING    0x01
+#define linux_RDS_INFO_CONNECTION_FLAG_CONNECTING 0x02
+#define linux_RDS_INFO_CONNECTION_FLAG_CONNECTED  0x04
+
+#define linux_TRANSNAMSIZ 16
+
+#define linux_RDS_INFO_MESSAGE_FLAG_ACK      0x01
+#define linux_RDS_INFO_MESSAGE_FLAG_FAST_ACK 0x02
+
+#define linux_RDS_IB_GID_LEN 16
+
+enum linux_rds_message_rxpath_latency
+{
+	linux_RDS_MSG_RX_HDR_TO_DGRAM_START = 0,
+	linux_RDS_MSG_RX_DGRAM_REASSEMBLE,
+	linux_RDS_MSG_RX_DGRAM_DELIVERED,
+	linux_RDS_MSG_RX_DGRAM_TRACE_MAX
+};
+
+#define linux_RDS_CONG_MONITOR_SIZE       64
+#define linux_RDS_CONG_MONITOR_BIT(port)  (((unsigned int) port) % linux_RDS_CONG_MONITOR_SIZE)
+#define linux_RDS_CONG_MONITOR_MASK(port) (1ULL << linux_RDS_CONG_MONITOR_BIT(port))
+
+#define linux_RDS_RDMA_SUCCESS      0
+#define linux_RDS_RDMA_REMOTE_ERROR 1
+#define linux_RDS_RDMA_CANCELED     2
+#define linux_RDS_RDMA_DROPPED      3
+#define linux_RDS_RDMA_OTHER_ERROR  4
+
+#define linux_RDS_MAX_ZCOOKIES 8
+
+#define linux_RDS_RDMA_READWRITE  0x0001
+#define linux_RDS_RDMA_FENCE      0x0002
+#define linux_RDS_RDMA_INVALIDATE 0x0004
+#define linux_RDS_RDMA_USE_ONCE   0x0008
+#define linux_RDS_RDMA_DONTWAIT   0x0010
+#define linux_RDS_RDMA_NOTIFY_ME  0x0020
+#define linux_RDS_RDMA_SILENT     0x0040
 
 //=============================================================================
 // Architecture specific
