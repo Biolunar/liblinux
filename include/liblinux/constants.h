@@ -1067,6 +1067,28 @@ enum linux_rds_message_rxpath_latency
 #define linux_RDS_RDMA_NOTIFY_ME  0x0020
 #define linux_RDS_RDMA_SILENT     0x0040
 
+//-----------------------------------------------------------------------------
+// VSOCK
+
+#define linux_SO_VM_SOCKETS_BUFFER_SIZE     0
+#define linux_SO_VM_SOCKETS_BUFFER_MIN_SIZE 1
+#define linux_SO_VM_SOCKETS_BUFFER_MAX_SIZE 2
+#define linux_SO_VM_SOCKETS_PEER_HOST_VM_ID 3
+#define linux_SO_VM_SOCKETS_TRUSTED         5
+#define linux_SO_VM_SOCKETS_CONNECT_TIMEOUT 6
+#define linux_SO_VM_SOCKETS_NONBLOCK_TXRX   7
+
+#define linux_VMADDR_CID_ANY        -1U
+#define linux_VMADDR_PORT_ANY       -1U
+#define linux_VMADDR_CID_HYPERVISOR  0
+#define linux_VMADDR_CID_RESERVED    1
+#define linux_VMADDR_CID_HOST        2
+
+#define linux_VM_SOCKETS_INVALID_VERSION   -1U
+#define linux_VM_SOCKETS_VERSION_EPOCH(_v) (((_v) & 0xFF000000) >> 24)
+#define linux_VM_SOCKETS_VERSION_MAJOR(_v) (((_v) & 0x00FF0000) >> 16)
+#define linux_VM_SOCKETS_VERSION_MINOR(_v) (((_v) & 0x0000FFFF))
+
 //=============================================================================
 // Architecture specific
 

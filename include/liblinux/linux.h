@@ -1148,13 +1148,13 @@ struct linux_ax25_route_opt_struct
 };
 struct linux_ax25_ctl_struct
 {
-        linux_ax25_address port_addr;
-        linux_ax25_address source_addr;
-        linux_ax25_address dest_addr;
-        unsigned int cmd;
-        unsigned long arg;
-        unsigned char digi_count;
-        linux_ax25_address digi_addr[linux_AX25_MAX_DIGIS];
+	linux_ax25_address port_addr;
+	linux_ax25_address source_addr;
+	linux_ax25_address dest_addr;
+	unsigned int cmd;
+	unsigned long arg;
+	unsigned char digi_count;
+	linux_ax25_address digi_addr[linux_AX25_MAX_DIGIS];
 };
 struct linux_ax25_info_struct_deprecated
 {
@@ -1541,6 +1541,41 @@ struct linux_rds_zcopy_cookies
 {
 	uint32_t num;
 	uint32_t cookies[linux_RDS_MAX_ZCOOKIES];
+};
+
+//-----------------------------------------------------------------------------
+// VSOCK
+
+struct linux_sockaddr_vm
+{
+	linux_kernel_sa_family_t svm_family;
+	unsigned short svm_reserved1;
+	unsigned int svm_port;
+	unsigned int svm_cid;
+	unsigned char svm_zero[sizeof(struct linux_sockaddr) - sizeof(linux_sa_family_t) - sizeof(unsigned short) - sizeof(unsigned int) - sizeof(unsigned int)];
+};
+struct linux_vsock_diag_req
+{
+	uint8_t sdiag_family;
+	uint8_t sdiag_protocol;
+	uint16_t pad;
+	uint32_t vdiag_states;
+	uint32_t vdiag_ino;
+	uint32_t vdiag_show;
+	uint32_t vdiag_cookie[2];
+};
+struct linux_vsock_diag_msg
+{
+	uint8_t vdiag_family;
+	uint8_t vdiag_type;
+	uint8_t vdiag_state;
+	uint8_t vdiag_shutdown;
+	uint32_t vdiag_src_cid;
+	uint32_t vdiag_src_port;
+	uint32_t vdiag_dst_cid;
+	uint32_t vdiag_dst_port;
+	uint32_t vdiag_ino;
+	uint32_t vdiag_cookie[2];
 };
 
 //=============================================================================
