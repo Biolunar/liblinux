@@ -1115,6 +1115,77 @@ struct linux_packet_mreq
 };
 
 //-----------------------------------------------------------------------------
+// ax25
+
+typedef struct
+{
+	char ax25_call[7];
+} linux_ax25_address;
+struct linux_sockaddr_ax25
+{
+	linux_kernel_sa_family_t sax25_family;
+	linux_ax25_address sax25_call;
+	int sax25_ndigis;
+};
+struct linux_full_sockaddr_ax25
+{
+	struct linux_sockaddr_ax25 fsa_ax25;
+	linux_ax25_address fsa_digipeater[linux_AX25_MAX_DIGIS];
+};
+struct linux_ax25_routes_struct
+{
+	linux_ax25_address port_addr;
+	linux_ax25_address dest_addr;
+	unsigned char digi_count;
+	linux_ax25_address digi_addr[linux_AX25_MAX_DIGIS];
+};
+struct linux_ax25_route_opt_struct
+{
+	linux_ax25_address port_addr;
+	linux_ax25_address dest_addr;
+	int cmd;
+	int arg;
+};
+struct linux_ax25_ctl_struct
+{
+        linux_ax25_address port_addr;
+        linux_ax25_address source_addr;
+        linux_ax25_address dest_addr;
+        unsigned int cmd;
+        unsigned long arg;
+        unsigned char digi_count;
+        linux_ax25_address digi_addr[linux_AX25_MAX_DIGIS];
+};
+struct linux_ax25_info_struct_deprecated
+{
+	unsigned int n2, n2count;
+	unsigned int t1, t1timer;
+	unsigned int t2, t2timer;
+	unsigned int t3, t3timer;
+	unsigned int idle, idletimer;
+	unsigned int state;
+	unsigned int rcv_q, snd_q;
+};
+struct linux_ax25_info_struct
+{
+	unsigned int n2, n2count;
+	unsigned int t1, t1timer;
+	unsigned int t2, t2timer;
+	unsigned int t3, t3timer;
+	unsigned int idle, idletimer;
+	unsigned int state;
+	unsigned int rcv_q, snd_q;
+	unsigned int vs, vr, va, vs_max;
+	unsigned int paclen;
+	unsigned int window;
+};
+struct linux_ax25_fwd_struct
+{
+	linux_ax25_address port_from;
+	linux_ax25_address port_to;
+};
+
+//-----------------------------------------------------------------------------
 // x25
 
 struct linux_x25_address

@@ -748,7 +748,7 @@ enum
 #define linux_SIOCATALKDIFADDR (linux_SIOCPROTOPRIVATE + 0)
 
 //-----------------------------------------------------------------------------
-// packet
+// Packet
 
 #define linux_PACKET_HOST      0
 #define linux_PACKET_BROADCAST 1
@@ -835,6 +835,42 @@ enum linux_tpacket_versions
 #define linux_PACKET_MR_UNICAST   3
 
 //-----------------------------------------------------------------------------
+// ax25
+
+#define linux_AX25_MTU       256
+#define linux_AX25_MAX_DIGIS   8
+
+#define linux_AX25_WINDOW   1
+#define linux_AX25_T1       2
+#define linux_AX25_N2       3
+#define linux_AX25_T3       4
+#define linux_AX25_T2       5
+#define linux_AX25_BACKOFF  6
+#define linux_AX25_EXTSEQ   7
+#define linux_AX25_PIDINCL  8
+#define linux_AX25_IDLE     9
+#define linux_AX25_PACLEN  10
+#define linux_AX25_IAMDIGI 12
+#define linux_AX25_KILL    99
+
+#define linux_SIOCAX25GETUID     (linux_SIOCPROTOPRIVATE+0)
+#define linux_SIOCAX25ADDUID     (linux_SIOCPROTOPRIVATE+1)
+#define linux_SIOCAX25DELUID     (linux_SIOCPROTOPRIVATE+2)
+#define linux_SIOCAX25NOUID      (linux_SIOCPROTOPRIVATE+3)
+#define linux_SIOCAX25OPTRT      (linux_SIOCPROTOPRIVATE+7)
+#define linux_SIOCAX25CTLCON     (linux_SIOCPROTOPRIVATE+8)
+#define linux_SIOCAX25GETINFOOLD (linux_SIOCPROTOPRIVATE+9)
+#define linux_SIOCAX25ADDFWD     (linux_SIOCPROTOPRIVATE+10)
+#define linux_SIOCAX25DELFWD     (linux_SIOCPROTOPRIVATE+11)
+#define linux_SIOCAX25DEVCTL     (linux_SIOCPROTOPRIVATE+12)
+#define linux_SIOCAX25GETINFO    (linux_SIOCPROTOPRIVATE+13)
+
+#define linux_AX25_SET_RT_IPMODE 2
+
+#define linux_AX25_NOUID_DEFAULT 0
+#define linux_AX25_NOUID_BLOCK   1
+
+//-----------------------------------------------------------------------------
 // x25
 
 #define linux_SIOCX25GSUBSCRIP      (linux_SIOCPROTOPRIVATE +  0)
@@ -871,7 +907,7 @@ enum linux_tpacket_versions
 #define linux_X25_MASK_CALLED_AE   0x20
 
 //-----------------------------------------------------------------------------
-// netlink
+// Netlink
 
 #define linux_NETLINK_ROUTE           0
 #define linux_NETLINK_UNUSED          1
