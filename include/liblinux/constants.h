@@ -1190,6 +1190,120 @@ enum linux_rds_message_rxpath_latency
 #define linux_VM_SOCKETS_VERSION_MINOR(_v) (((_v) & 0x0000FFFF))
 
 //=============================================================================
+// High-Level Data Link Control (HDLC)
+
+#define linux_GENERIC_HDLC_VERSION 4
+
+#define linux_CLOCK_DEFAULT  0
+#define linux_CLOCK_EXT      1
+#define linux_CLOCK_INT      2
+#define linux_CLOCK_TXINT    3
+#define linux_CLOCK_TXFROMRX 4
+
+#define linux_ENCODING_DEFAULT    0
+#define linux_ENCODING_NRZ        1
+#define linux_ENCODING_NRZI       2
+#define linux_ENCODING_FM_MARK    3
+#define linux_ENCODING_FM_SPACE   4
+#define linux_ENCODING_MANCHESTER 5
+
+#define linux_PARITY_DEFAULT         0
+#define linux_PARITY_NONE            1
+#define linux_PARITY_CRC16_PR0       2
+#define linux_PARITY_CRC16_PR1       3
+#define linux_PARITY_CRC16_PR0_CCITT 4
+#define linux_PARITY_CRC16_PR1_CCITT 5
+#define linux_PARITY_CRC32_PR0_CCITT 6
+#define linux_PARITY_CRC32_PR1_CCITT 7
+
+#define linux_LMI_DEFAULT 0
+#define linux_LMI_NONE    1
+#define linux_LMI_ANSI    2
+#define linux_LMI_CCITT   3
+#define linux_LMI_CISCO   4
+
+//=============================================================================
+// Network devices
+
+#define linux_IFNAMSIZ  16
+#define linux_IFALIASZ 256
+
+enum linux_net_device_flags
+{
+	linux_IFF_UP          = 1<<0,
+	linux_IFF_BROADCAST   = 1<<1,
+	linux_IFF_DEBUG       = 1<<2,
+	linux_IFF_LOOPBACK    = 1<<3,
+	linux_IFF_POINTOPOINT = 1<<4,
+	linux_IFF_NOTRAILERS  = 1<<5,
+	linux_IFF_RUNNING     = 1<<6,
+	linux_IFF_NOARP       = 1<<7,
+	linux_IFF_PROMISC     = 1<<8,
+	linux_IFF_ALLMULTI    = 1<<9,
+	linux_IFF_MASTER      = 1<<10,
+	linux_IFF_SLAVE       = 1<<11,
+	linux_IFF_MULTICAST   = 1<<12,
+	linux_IFF_PORTSEL     = 1<<13,
+	linux_IFF_AUTOMEDIA   = 1<<14,
+	linux_IFF_DYNAMIC     = 1<<15,
+	linux_IFF_LOWER_UP    = 1<<16,
+	linux_IFF_DORMANT     = 1<<17,
+	linux_IFF_ECHO        = 1<<18,
+        linux_IFF_VOLATILE    = (linux_IFF_LOOPBACK    |
+	                         linux_IFF_POINTOPOINT |
+	                         linux_IFF_BROADCAST   |
+	                         linux_IFF_ECHO        |
+	                         linux_IFF_MASTER      |
+	                         linux_IFF_SLAVE       |
+	                         linux_IFF_RUNNING     |
+	                         linux_IFF_LOWER_UP    |
+	                         linux_IFF_DORMANT),
+};
+
+#define linux_IF_GET_IFACE 0x0001
+#define linux_IF_GET_PROTO 0x0002
+
+#define linux_IF_IFACE_V35         0x1000
+#define linux_IF_IFACE_V24         0x1001
+#define linux_IF_IFACE_X21         0x1002
+#define linux_IF_IFACE_T1          0x1003
+#define linux_IF_IFACE_E1          0x1004
+#define linux_IF_IFACE_SYNC_SERIAL 0x1005
+#define linux_IF_IFACE_X21D        0x1006
+
+#define linux_IF_PROTO_HDLC           0x2000
+#define linux_IF_PROTO_PPP            0x2001
+#define linux_IF_PROTO_CISCO          0x2002
+#define linux_IF_PROTO_FR             0x2003
+#define linux_IF_PROTO_FR_ADD_PVC     0x2004
+#define linux_IF_PROTO_FR_DEL_PVC     0x2005
+#define linux_IF_PROTO_X25            0x2006
+#define linux_IF_PROTO_HDLC_ETH       0x2007
+#define linux_IF_PROTO_FR_ADD_ETH_PVC 0x2008
+#define linux_IF_PROTO_FR_DEL_ETH_PVC 0x2009
+#define linux_IF_PROTO_FR_PVC         0x200A
+#define linux_IF_PROTO_FR_ETH_PVC     0x200B
+#define linux_IF_PROTO_RAW            0x200C
+
+enum
+{
+	linux_IF_OPER_UNKNOWN,
+	linux_IF_OPER_NOTPRESENT,
+	linux_IF_OPER_DOWN,
+	linux_IF_OPER_LOWERLAYERDOWN,
+	linux_IF_OPER_TESTING,
+	linux_IF_OPER_DORMANT,
+	linux_IF_OPER_UP,
+};
+enum
+{
+	linux_IF_LINK_MODE_DEFAULT,
+	linux_IF_LINK_MODE_DORMANT,
+};
+
+#define linux_IFHWADDRLEN 6
+
+//=============================================================================
 // Architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)

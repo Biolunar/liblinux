@@ -793,7 +793,7 @@ struct linux_sel_arg_struct
 #endif
 
 //=============================================================================
-// Socket types
+// Socket
 
 typedef unsigned short           linux_kernel_sa_family_t;
 typedef linux_kernel_sa_family_t linux_sa_family_t;
@@ -1017,7 +1017,6 @@ struct linux_ipv6hdr
 	struct linux_in6_addr saddr;
 	struct linux_in6_addr daddr;
 };
-/* TODO: ipv6_tunnel
 struct linux_ip6_tnl_parm
 {
 	char name[linux_IFNAMSIZ];
@@ -1044,7 +1043,7 @@ struct linux_ip6_tnl_parm2 {
 	uint16_t o_flags;
 	uint32_t i_key;
 	uint32_t o_key;
-};*/
+};
 
 //-----------------------------------------------------------------------------
 // AppleTalk
@@ -1685,6 +1684,112 @@ struct linux_vsock_diag_msg
 	uint32_t vdiag_dst_port;
 	uint32_t vdiag_ino;
 	uint32_t vdiag_cookie[2];
+};
+
+//=============================================================================
+// High-Level Data Link Control (HDLC)
+
+typedef struct
+{
+	unsigned int clock_rate;
+	unsigned int clock_type;
+	unsigned short loopback;
+} linux_sync_serial_settings;
+typedef struct
+{
+	unsigned int clock_rate;
+	unsigned int clock_type;
+	unsigned short loopback;
+	unsigned int slot_map;
+} linux_te1_settings;
+typedef struct
+{
+	unsigned short encoding;
+	unsigned short parity;
+} linux_raw_hdlc_proto;
+typedef struct
+{
+	unsigned int t391;
+	unsigned int t392;
+	unsigned int n391;
+	unsigned int n392;
+	unsigned int n393;
+	unsigned short lmi;
+	unsigned short dce;
+} linux_fr_proto;
+typedef struct
+{
+	unsigned int dlci;
+} linux_fr_proto_pvc;
+typedef struct
+{
+	unsigned int dlci;
+	char master[linux_IFNAMSIZ];
+} linux_fr_proto_pvc_info;
+typedef struct
+{
+	unsigned int interval;
+	unsigned int timeout;
+} linux_cisco_proto;
+
+//=============================================================================
+// Network devices
+
+struct linux_ifmap
+{
+	unsigned long mem_start;
+	unsigned long mem_end;
+	unsigned short base_addr;
+	unsigned char irq;
+	unsigned char dma;
+	unsigned char port;
+};
+struct linux_if_settings
+{
+	unsigned int type;
+	unsigned int size;
+	union
+	{
+		linux_raw_hdlc_proto* raw_hdlc;
+		linux_cisco_proto* cisco;
+		linux_fr_proto* fr;
+		linux_fr_proto_pvc* fr_pvc;
+		linux_fr_proto_pvc_info* fr_pvc_info;
+		linux_sync_serial_settings* sync;
+		linux_te1_settings* te1;
+	} ifs_ifsu;
+};
+struct linux_ifreq
+{
+	union
+	{
+		char ifrn_name[linux_IFNAMSIZ];
+	} ifr_ifrn;
+	union
+	{
+		struct linux_sockaddr ifru_addr;
+		struct linux_sockaddr ifru_dstaddr;
+		struct linux_sockaddr ifru_broadaddr;
+		struct linux_sockaddr ifru_netmask;
+		struct linux_sockaddr ifru_hwaddr;
+		short ifru_flags;
+		int ifru_ivalue;
+		int ifru_mtu;
+		struct linux_ifmap ifru_map;
+		char ifru_slave[linux_IFNAMSIZ];
+		char ifru_newname[linux_IFNAMSIZ];
+		void* ifru_data;
+		struct linux_if_settings ifru_settings;
+	} ifr_ifru;
+};
+struct linux_ifconf
+{
+	int ifc_len;
+	union
+	{
+		char* ifcu_buf;
+		struct linux_ifreq* ifcu_req;
+	} ifc_ifcu;
 };
 
 //=============================================================================
