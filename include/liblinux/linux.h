@@ -936,6 +936,115 @@ struct linux_in6_flowlabel_req
 	uint16_t flr_linger;
 	uint32_t _flr_pad;
 };
+struct linux_in6_rtmsg
+{
+	struct linux_in6_addr rtmsg_dst;
+	struct linux_in6_addr rtmsg_src;
+	struct linux_in6_addr rtmsg_gateway;
+	uint32_t rtmsg_type;
+	uint16_t rtmsg_dst_len;
+	uint16_t rtmsg_src_len;
+	uint32_t rtmsg_metric;
+	unsigned long rtmsg_info;
+	uint32_t rtmsg_flags;
+	int rtmsg_ifindex;
+};
+struct linux_in6_pktinfo
+{
+	struct linux_in6_addr ipi6_addr;
+	int ipi6_ifindex;
+};
+struct linux_ip6_mtuinfo
+{
+	struct linux_sockaddr_in6 ip6m_addr;
+	uint32_t ip6m_mtu;
+};
+struct linux_in6_ifreq
+{
+	struct linux_in6_addr ifr6_addr;
+	uint32_t ifr6_prefixlen;
+	int ifr6_ifindex;
+};
+struct linux_ipv6_rt_hdr
+{
+	uint8_t nexthdr;
+	uint8_t hdrlen;
+	uint8_t type;
+	uint8_t segments_left;
+};
+struct linux_ipv6_opt_hdr
+{
+	uint8_t nexthdr;
+	uint8_t hdrlen;
+};
+_Static_assert(sizeof(struct linux_ipv6_opt_hdr) == 2*sizeof(uint8_t), "struct linux_ipv6_opt_hdr has padding");
+struct linux_rt0_hdr
+{
+	struct linux_ipv6_rt_hdr rt_hdr;
+	uint32_t reserved;
+	struct linux_in6_addr addr[];
+};
+struct linux_rt2_hdr
+{
+	struct linux_ipv6_rt_hdr rt_hdr;
+	uint32_t reserved;
+	struct linux_in6_addr addr;
+};
+struct linux_ipv6_destopt_hao
+{
+	/*
+	 * This structures must not have padding, but that's not possible to force in standard C.
+	 * That's why you have to do the work yourself.
+	 */
+	uint8_t type;
+	uint8_t length;
+	unsigned char addr[sizeof(struct linux_in6_addr)]; // struct linux_in6_addr
+};
+_Static_assert(sizeof(struct linux_ipv6_destopt_hao) == 2*sizeof(uint8_t)+sizeof(struct linux_in6_addr), "struct linux_ipv6_destopt_hao has padding");
+struct linux_ipv6hdr
+{
+#if defined(LINUX_ENDIAN_LITTLE)
+	uint8_t priority :4,
+	        version  :4;
+#elif defined(LINUX_ENDIAN_BIG)
+	uint8_t version  :4,
+	        priority :4;
+#endif
+	uint8_t flow_lbl[3];
+	uint16_t payload_len;
+	uint8_t nexthdr;
+	uint8_t hop_limit;
+	struct linux_in6_addr saddr;
+	struct linux_in6_addr daddr;
+};
+/* TODO: ipv6_tunnel
+struct linux_ip6_tnl_parm
+{
+	char name[linux_IFNAMSIZ];
+	int link;
+	uint8_t proto;
+	uint8_t encap_limit;
+	uint8_t hop_limit;
+	uint32_t flowinfo;
+	uint32_t flags;
+	struct linux_in6_addr laddr;
+	struct linux_in6_addr raddr;
+};
+struct linux_ip6_tnl_parm2 {
+	char name[linux_IFNAMSIZ];
+	int link;
+	uint8_t proto;
+	uint8_t encap_limit;
+	uint8_t hop_limit;
+	uint32_t flowinfo;
+	uint32_t flags;
+	struct linux_in6_addr laddr;
+	struct linux_in6_addr raddr;
+	uint16_t i_flags;
+	uint16_t o_flags;
+	uint32_t i_key;
+	uint32_t o_key;
+};*/
 
 //-----------------------------------------------------------------------------
 // AppleTalk
