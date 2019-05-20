@@ -8,33 +8,30 @@ is required (C11 is recommended).
 SUPPORTED ARCHITECTURES
 -----------------------
 Currently supported are:
+- arm-eabi
+- arm64
 - x86
 - x32
 - x86_64
-- arm64
 
-REQUIRED ASSEMBLERS
--------------------
-x86, x32 and x86_64: NASM (Netwide Assembler)
-arm64: gas (GNU Assembler)
+Supported ASSEMBLERS
+--------------------
+arm-eabi, arm64: gas (GNU Assembler)
+x86, x32 and x86_64: NASM (Netwide Assembler), gas (GNU Assembler)
 
 BUILDING & INSTALLATION
 -----------------------
-To build a version of the library, run
-    make [CONFIG=filename.mk] <command>
+To build the library, run
+    make [CONFIG=filename.mk] [command]
 Valid commands:
-    help      - this help message
-    build     - builds the library
-    test      - builds the library and runs the test suite
-    clean     - removes all previously build files
-    install   - copies the headers and all previously build libraries to (DESTDIR)(PREFIX)
-    uninstall - removes the headers and all previously build libraries from (DESTDIR)(PREFIX)
-You need to specfiy a config file to build or install the library or you can create a default config file named 'config.mk'.
+    all (default) - build the library
+    clean         - remove all previously build files
+    test          - build the library and run the test suite
+    install       - copy the headers and the library to $(DESTDIR)$(PREFIX)
+    uninstall     - remove the headers and the library from $(DESTDIR)$(PREFIX)
 
 You can build multiple versions of the library as long as you use a different
-TARGET name for each (or they will just replace eachother)
-
-If you install the library without building it first, only the headers will be copied.
+$(TARGET) name for each (or they will just replace eachother)
 
 BUGS
 ----
@@ -42,5 +39,7 @@ None known.
 
 ROADMAP
 -------
-- For every architecture added, increase the minor version number, until all architectures are supported which marks the 1.0.0 release.
-- Support different assemblers for maximum portability.
+- Implement the vsyscalls for x86.
+- Add all constants and types needed to use the syscalls.
+- Complete the test suite.
+- Bump version to 1.0.
