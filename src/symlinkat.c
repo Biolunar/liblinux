@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL3_NORET(symlinkat, char const*, oldname, int, newdfd, char const*, newname);
+extern inline enum linux_error_t linux_symlinkat(char const* oldname, int newdfd, char const* newname);

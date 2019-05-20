@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_RET(recv, int, fd, void*, ubuf, linux_size_t, size, unsigned int, flags, int);
+extern inline enum linux_error_t linux_recv(int fd, void* ubuf, linux_size_t size, unsigned int flags, int* result);

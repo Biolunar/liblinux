@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_NORET(rt_tgsigqueueinfo, linux_pid_t, tgid, linux_pid_t, pid, int, sig, linux_siginfo_t*, uinfo);
+extern inline enum linux_error_t linux_rt_tgsigqueueinfo(linux_pid_t tgid, linux_pid_t pid, int sig, linux_siginfo_t* uinfo);

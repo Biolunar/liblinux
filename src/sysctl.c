@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(sysctl, struct linux_sysctl_args*, args);
+extern inline enum linux_error_t linux_sysctl(struct linux_sysctl_args* args);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_NORET(socketpair, int, family, int, type, int, protocol, int*, usockvec);
+extern inline enum linux_error_t linux_socketpair(int family, int type, int protocol, int* usockvec);

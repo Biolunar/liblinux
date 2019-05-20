@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(sched_get_priority_max, int, policy, int);
+extern inline enum linux_error_t linux_sched_get_priority_max(int policy, int* result);

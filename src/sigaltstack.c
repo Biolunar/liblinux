@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(sigaltstack, linux_stack_t const*, uss, linux_stack_t*, uoss);
+extern inline enum linux_error_t linux_sigaltstack(linux_stack_t const* uss, linux_stack_t* uoss);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL3_NORET(unlinkat, int, dfd, char const*, pathname, int, flag);
+extern inline enum linux_error_t linux_unlinkat(int dfd, char const* pathname, int flag);

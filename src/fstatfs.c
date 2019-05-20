@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(fstatfs, unsigned int, fd, struct linux_statfs*, buf);
+extern inline enum linux_error_t linux_fstatfs(unsigned int fd, struct linux_statfs* buf);

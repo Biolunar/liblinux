@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_RET(timerfd_create, int, clockid, int, flags, int);
+extern inline enum linux_error_t linux_timerfd_create(int clockid, int flags, int* result);

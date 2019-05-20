@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(bdflush, int, func, linux_word_t, data);
+extern inline enum linux_error_t linux_bdflush(int func, linux_word_t data);

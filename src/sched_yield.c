@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL0_NORET(sched_yield);
+extern inline enum linux_error_t linux_sched_yield(void);

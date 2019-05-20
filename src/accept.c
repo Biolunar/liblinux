@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL3_RET(accept, int, fd, struct linux_sockaddr*, upeer_sockaddr, int*, upeer_addrlen, int);
+extern inline enum linux_error_t linux_accept(int fd, struct linux_sockaddr* upeer_sockaddr, int* upeer_addrlen, int* result);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(alarm, unsigned int, seconds, unsigned int);
+extern inline enum linux_error_t linux_alarm(unsigned int seconds, unsigned int* result);

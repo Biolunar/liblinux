@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(arch_prctl, int, option, linux_uword_t, arg2);
+extern inline enum linux_error_t linux_arch_prctl(int option, linux_uword_t arg2);

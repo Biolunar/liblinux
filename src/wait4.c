@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_RET(wait4, linux_pid_t, upid, int*, stat_addr, int, options, struct linux_rusage*, ru, linux_word_t);
+extern inline enum linux_error_t linux_wait4(linux_pid_t upid, int* stat_addr, int options, struct linux_rusage* ru, linux_word_t* result);

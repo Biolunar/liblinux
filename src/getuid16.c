@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL0_RET(getuid16, linux_old_uid_t);
+extern inline enum linux_error_t linux_getuid16(linux_old_uid_t* result);

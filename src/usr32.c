@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL0_NORET(usr32);
+extern inline enum linux_error_t linux_usr32(void);

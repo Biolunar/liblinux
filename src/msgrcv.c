@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL5_RET(msgrcv, int, msqid, struct linux_msgbuf*, msgp, linux_size_t, msgsz, linux_word_t, msgtyp, int, msgflg, linux_word_t);
+extern inline enum linux_error_t linux_msgrcv(int msqid, struct linux_msgbuf* msgp, linux_size_t msgsz, linux_word_t msgtyp, int msgflg, linux_word_t* result);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(stime32, linux_time_t*, tptr);
+extern inline enum linux_error_t linux_stime32(linux_time_t* tptr);

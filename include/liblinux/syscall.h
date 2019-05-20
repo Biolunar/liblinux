@@ -35,7 +35,7 @@
         (union{uint64_t ll; uint32_t l[2];}){.ll = (uint64_t)(x)}.l[1]
 #endif
 
-//------------------------------------------------------------------------------
+//==============================================================================
 // Generic functions
 
 /*
@@ -78,9 +78,9 @@ linux_word_t linux_vsyscall6(linux_uword_t arg1, linux_uword_t arg2, linux_uword
 #endif // LINUX_ARCH_X86
 
 // Generic functions
-//------------------------------------------------------------------------------
+//==============================================================================
 
-//------------------------------------------------------------------------------
+//==============================================================================
 // Direct functions
 
 /*
@@ -103,118 +103,6 @@ noreturn void linux_sigreturn(void);
 #endif // LINUX_ARCH_ARM_EABI || LINUX_ARCH_X86
 
 // Direct functions
-//------------------------------------------------------------------------------
-
-/*
- * Following macros are to convieniently declare and/or define the syscalls as
- * C functions.
- *
- * There are four sets of macros:
- * 1) functions with return value
- *   a) declaration only
- *   b) definition
- * 2) functions without return value
- *   a) declaration only
- *   b) definition
- *
- * LINUX_DECLARE_SYSCALL2_RET(NAME, arg1_t, arg1, arg2_t, arg2)
- * expands to
- * enum linux_error_t linux_NAME(arg1_t arg1, arg2_t arg2);
- *
- * LINUX_DECLARE_SYSCALL2_NORET(NAME, arg1_t, arg1, arg2_t, arg2, ret_t)
- * expands to
- * enum linux_error_t linux_NAME(arg1_t arg1, arg2_t arg2, ret_t*);
- * Notice that the last parameter is a pointer to the return type.
- *
- * Example:
- * The open syscall can be declared as
- * LINUX_DECLARE_SYSCALL3_RET(open, char const*, filename, int, flags, umode_t, mode, int);
- * which expands to the declaration
- * enum linux_error_t linux_open(char const* filename, int flags, umode_t mode, int* result);
- *
- * Functions which return a value created with these macros, accept a null
- * pointer as the final argument if the caller is not interested in the return
- * value.
- */
-
-//------------------------------------------------------------------------------
-// Declaration with return value
-
-#define LINUX_DECLARE_SYSCALL0_RET(name, ret_t) \
-	enum linux_error_t linux_ ## name(ret_t* result)
-#define LINUX_DECLARE_SYSCALL1_RET(name, arg1_t, arg1, ret_t) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, ret_t* result)
-#define LINUX_DECLARE_SYSCALL2_RET(name, arg1_t, arg1, arg2_t, arg2, ret_t) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, ret_t* result)
-#define LINUX_DECLARE_SYSCALL3_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, ret_t) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3, ret_t* result)
-#define LINUX_DECLARE_SYSCALL4_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, ret_t) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, ret_t* result)
-#define LINUX_DECLARE_SYSCALL5_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, ret_t) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5, ret_t* result)
-#define LINUX_DECLARE_SYSCALL6_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6, ret_t) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5, arg6_t arg6, ret_t* result)
-
-#ifdef LINUX_ARCH_X86
-
-#define LINUX_DECLARE_VSYSCALL0_RET(name, ret_t) \
-	enum linux_error_t linux_ ## name ## _v(ret_t* result)
-#define LINUX_DECLARE_VSYSCALL1_RET(name, arg1_t, arg1, ret_t) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, ret_t* result)
-#define LINUX_DECLARE_VSYSCALL2_RET(name, arg1_t, arg1, arg2_t, arg2, ret_t) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, ret_t* result)
-#define LINUX_DECLARE_VSYSCALL3_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, ret_t) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3, ret_t* result)
-#define LINUX_DECLARE_VSYSCALL4_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, ret_t) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, ret_t* result)
-#define LINUX_DECLARE_VSYSCALL5_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, ret_t) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5, ret_t* result)
-#define LINUX_DECLARE_VSYSCALL6_RET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6, ret_t) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5, arg6_t arg6, ret_t* result)
-
-#endif // LINUX_ARCH_X86
-
-// Declaration with return value
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// Declaration without return value
-
-#define LINUX_DECLARE_SYSCALL0_NORET(name) \
-	enum linux_error_t linux_ ## name(void)
-#define LINUX_DECLARE_SYSCALL1_NORET(name, arg1_t, arg1) \
-	enum linux_error_t linux_ ## name(arg1_t arg1)
-#define LINUX_DECLARE_SYSCALL2_NORET(name, arg1_t, arg1, arg2_t, arg2) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2)
-#define LINUX_DECLARE_SYSCALL3_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3)
-#define LINUX_DECLARE_SYSCALL4_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4)
-#define LINUX_DECLARE_SYSCALL5_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5)
-#define LINUX_DECLARE_SYSCALL6_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6) \
-	enum linux_error_t linux_ ## name(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5, arg6_t arg6)
-
-#ifdef LINUX_ARCH_X86
-
-#define LINUX_DECLARE_VSYSCALL0_NORET(name) \
-	enum linux_error_t linux_ ## name ## _v(void)
-#define LINUX_DECLARE_VSYSCALL1_NORET(name, arg1_t, arg1) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1)
-#define LINUX_DECLARE_VSYSCALL2_NORET(name, arg1_t, arg1, arg2_t, arg2) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2)
-#define LINUX_DECLARE_VSYSCALL3_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3)
-#define LINUX_DECLARE_VSYSCALL4_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4)
-#define LINUX_DECLARE_VSYSCALL5_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5)
-#define LINUX_DECLARE_VSYSCALL6_NORET(name, arg1_t, arg1, arg2_t, arg2, arg3_t, arg3, arg4_t, arg4, arg5_t, arg5, arg6_t, arg6) \
-	enum linux_error_t linux_ ## name ## _v(arg1_t arg1, arg2_t arg2, arg3_t arg3, arg4_t arg4, arg5_t arg5, arg6_t arg6)
-
-#endif // LINUX_ARCH_X86
-
-// Declaration without return value
-//------------------------------------------------------------------------------
+//==============================================================================
 
 #endif // !HEADER_LIBLINUX_SYSCALL_H_INCLUDED

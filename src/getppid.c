@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL0_RET(getppid, int);
+extern inline enum linux_error_t linux_getppid(int* result);

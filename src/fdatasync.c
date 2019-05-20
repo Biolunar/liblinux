@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(fdatasync, unsigned int, fd);
+extern inline enum linux_error_t linux_fdatasync(unsigned int fd);

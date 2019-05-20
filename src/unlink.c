@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(unlink, char const*, pathname);
+extern inline enum linux_error_t linux_unlink(char const* pathname);

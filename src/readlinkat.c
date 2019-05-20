@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_RET(readlinkat, int, dfd, char const*, pathname, char*, buf, int, bufsiz, int);
+extern inline enum linux_error_t linux_readlinkat(int dfd, char const* pathname, char* buf, int bufsiz, int* result);

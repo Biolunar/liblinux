@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL3_RET(dup3, unsigned int, oldfd, unsigned int, newfd, int, flags, int);
+extern inline enum linux_error_t linux_dup3(unsigned int oldfd, unsigned int newfd, int flags, int* result);

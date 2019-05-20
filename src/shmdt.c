@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(shmdt, char*, shmaddr);
+extern inline enum linux_error_t linux_shmdt(char* shmaddr);

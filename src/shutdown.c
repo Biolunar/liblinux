@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(shutdown, int, fd, int, how);
+extern inline enum linux_error_t linux_shutdown(int fd, int how);

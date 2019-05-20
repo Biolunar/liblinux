@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(userfaultfd, int, flags, int);
+extern inline enum linux_error_t linux_userfaultfd(int flags, int* result);

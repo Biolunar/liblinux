@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL3_RET(inotify_add_watch, int, fd, char const*, pathname, uint32_t, mask, int);
+extern inline enum linux_error_t linux_inotify_add_watch(int fd, char const* pathname, uint32_t mask, int* result);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(mlockall, int, flags);
+extern inline enum linux_error_t linux_mlockall(int flags);

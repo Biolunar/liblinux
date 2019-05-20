@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(getitimer, int, which, struct linux_itimerval*, value);
+extern inline enum linux_error_t linux_getitimer(int which, struct linux_itimerval* value);

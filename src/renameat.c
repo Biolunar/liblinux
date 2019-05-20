@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_NORET(renameat, int, olddfd, char const*, oldname, int, newdfd, char const*, newname);
+extern inline enum linux_error_t linux_renameat(int olddfd, char const* oldname, int newdfd, char const* newname);

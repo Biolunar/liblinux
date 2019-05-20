@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(epoll_create, int, size, int);
+extern inline enum linux_error_t linux_epoll_create(int size, int* result);

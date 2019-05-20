@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(vm86, linux_uword_t, cmd, linux_uword_t, arg);
+extern inline enum linux_error_t linux_vm86(linux_uword_t cmd, linux_uword_t arg);

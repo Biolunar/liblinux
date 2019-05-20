@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_NORET(epoll_ctl, int, epfd, int, op, int, fd, struct linux_epoll_event*, event);
+extern inline enum linux_error_t linux_epoll_ctl(int epfd, int op, int fd, struct linux_epoll_event* event);

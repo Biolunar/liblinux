@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL3_RET(ioctl, unsigned int, fd, unsigned int, cmd, linux_uword_t, arg, int);
+extern inline enum linux_error_t linux_ioctl(unsigned int fd, unsigned int cmd, linux_uword_t arg, int* result);

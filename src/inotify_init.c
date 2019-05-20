@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL0_RET(inotify_init, int);
+extern inline enum linux_error_t linux_inotify_init(int* result);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_RET(memfd_create, char const*, uname, unsigned int, flags, int);
+extern inline enum linux_error_t linux_memfd_create(char const* uname, unsigned int flags, int* result);

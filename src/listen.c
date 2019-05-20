@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(listen, int, fd, int, backlog);
+extern inline enum linux_error_t linux_listen(int fd, int backlog);

@@ -5,8 +5,11 @@
 - Added arm-eabi architecture.
 - Added endian detection.
 - Added architecture detection.
-- Added functions for all syscalls.
+- Added functions for all Linux 5.1 syscalls.
+- Added some constants and types for selected syscalls.
+- Improved the Makefile.
 - Fixed parameter sign-extension bug on x32.
+- Removed the LINUX_SYSCALLx_... macros.
 
 0.4.0
 =====

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(setreuid, linux_uid_t, ruid, linux_uid_t, euid);
+extern inline enum linux_error_t linux_setreuid(linux_uid_t ruid, linux_uid_t euid);

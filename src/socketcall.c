@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_RET(socketcall, int, call, linux_uword_t*, args, int);
+extern inline enum linux_error_t linux_socketcall(int call, linux_uword_t* args, int* result);

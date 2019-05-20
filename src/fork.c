@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL0_RET(fork, linux_word_t);
+extern inline enum linux_error_t linux_fork(linux_word_t* result);

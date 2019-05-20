@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(uselib, char const*, library);
+extern inline enum linux_error_t linux_uselib(char const* library);

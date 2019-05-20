@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(dup, unsigned int, fildes, int);
+extern inline enum linux_error_t linux_dup(unsigned int fildes, int* result);

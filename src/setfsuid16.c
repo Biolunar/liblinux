@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(setfsuid16, linux_old_uid_t, uid, linux_word_t);
+extern inline enum linux_error_t linux_setfsuid16(linux_old_uid_t uid, linux_word_t* result);

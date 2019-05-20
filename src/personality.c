@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(personality, unsigned int, personality, unsigned int);
+extern inline enum linux_error_t linux_personality(unsigned int personality, unsigned int* result);

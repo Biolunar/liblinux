@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(umount, char*, name, int, flags);
+extern inline enum linux_error_t linux_umount(char* name, int flags);

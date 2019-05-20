@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(setgid, linux_gid_t, gid);
+extern inline enum linux_error_t linux_setgid(linux_gid_t gid);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL5_RET(ppoll, struct linux_pollfd*, ufds, unsigned int, nfds, struct linux_kernel_timespec*, tsp, linux_sigset_t const*, sigmask, linux_size_t, sigsetsize, int);
+extern inline enum linux_error_t linux_ppoll(struct linux_pollfd* ufds, unsigned int nfds, struct linux_kernel_timespec* tsp, linux_sigset_t const* sigmask, linux_size_t sigsetsize, int* result);

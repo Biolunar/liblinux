@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL6_RET(ipc, unsigned int, call, int, first, linux_uword_t, second, linux_uword_t, third, void*, ptr, linux_word_t, fifth, linux_word_t);
+extern inline enum linux_error_t linux_ipc(unsigned int call, int first, linux_uword_t second, linux_uword_t third, void* ptr, linux_word_t fifth, linux_word_t* result);

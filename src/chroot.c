@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(chroot, char const*, filename);
+extern inline enum linux_error_t linux_chroot(char const* filename);

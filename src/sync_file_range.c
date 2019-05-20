@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL4_NORET(sync_file_range, int, fd, linux_loff_t, offset, linux_loff_t, nbytes, unsigned int, flags);
+extern inline enum linux_error_t linux_sync_file_range(int fd, linux_loff_t offset, linux_loff_t nbytes, unsigned int flags);

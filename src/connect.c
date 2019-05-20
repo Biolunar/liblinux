@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL3_NORET(connect, int, fd, struct linux_sockaddr*, uservaddr, int, addrlen);
+extern inline enum linux_error_t linux_connect(int fd, struct linux_sockaddr* uservaddr, int addrlen);

@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL5_NORET(linkat, int, olddfd, char const*, oldname, int, newdfd, char const*, newname, int, flags);
+extern inline enum linux_error_t linux_linkat(int olddfd, char const* oldname, int newdfd, char const* newname, int flags);

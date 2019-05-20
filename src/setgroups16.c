@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(setgroups16, int, gidsetsize, linux_old_gid_t*, grouplist);
+extern inline enum linux_error_t linux_setgroups16(int gidsetsize, linux_old_gid_t* grouplist);

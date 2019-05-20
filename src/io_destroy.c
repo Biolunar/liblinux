@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_NORET(io_destroy, linux_aio_context_t, ctx);
+extern inline enum linux_error_t linux_io_destroy(linux_aio_context_t ctx);

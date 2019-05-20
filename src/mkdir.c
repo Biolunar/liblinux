@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL2_NORET(mkdir, char const*, pathname, linux_umode_t, mode);
+extern inline enum linux_error_t linux_mkdir(char const* pathname, linux_umode_t mode);

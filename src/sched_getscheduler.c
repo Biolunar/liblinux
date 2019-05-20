@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL1_RET(sched_getscheduler, linux_pid_t, pid, int);
+extern inline enum linux_error_t linux_sched_getscheduler(linux_pid_t pid, int* result);

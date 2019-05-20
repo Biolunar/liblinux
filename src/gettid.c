@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline LINUX_DECLARE_SYSCALL0_RET(gettid, linux_pid_t);
+extern inline enum linux_error_t linux_gettid(linux_pid_t* result);
