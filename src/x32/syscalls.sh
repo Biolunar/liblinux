@@ -1,0 +1,9 @@
+SYSCALLS="clock_nanosleep\
+          clone\
+          close\
+          dup3\
+          getpid\
+          mmap\
+          pipe2\
+          rseq\
+          sched_yield"

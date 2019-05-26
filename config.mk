@@ -23,9 +23,13 @@
 # x86_64
 # -----
 # TOOL = [gas, nasm]
+#
+# The INTERP variable can be used for cross compilation to specify an emulator
+# to run the test suite in.
 
 ARCH     = $(shell uname -m)
 TOOL     = gas
+INTERP   =
 include src/$(ARCH)/$(TOOL)/build.mk
 
 # Output
@@ -43,4 +47,4 @@ ASMFLAGS =
 AR       = ar
 ARFLAGS  = -rv
 CC       = cc
-CFLAGS   = -std=c11 -pedantic-errors -nostdlib -ffreestanding -static -fno-stack-protector -O3 -Wall -Wextra
+CFLAGS   = -std=c11 -pedantic-errors -fno-stack-protector -O3 -Wall -Wextra

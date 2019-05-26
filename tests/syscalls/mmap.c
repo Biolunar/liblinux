@@ -1,6 +1,6 @@
 #include "test.h"
 
-enum TestResult test_available(void)
+static enum TestResult test_available(void)
 {
 	enum linux_error_t err = linux_error_none;
 
@@ -10,12 +10,12 @@ enum TestResult test_available(void)
 	err = linux_mmap(0, 0, 0, 0, 0, 0, 0);
 #endif
 	if (err == linux_ENOSYS)
-		return TEST_FAILURE;
+		return TEST_NOT_SUPPORTED;
 
 	return TEST_SUCCESS;
 }
 
-enum TestResult test_correct_usage(void)
+static enum TestResult test_correct_usage(void)
 {
 	enum linux_error_t err = linux_error_none;
 
@@ -38,14 +38,7 @@ enum TestResult test_correct_usage(void)
 	return TEST_SUCCESS;
 }
 
-noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
-{
-	(void)argc;
-	(void)argv;
-	(void)envp;
-
-	DO_TEST(test_available);
-	DO_TEST(test_correct_usage);
-
-	linux_exit_group(0);
-}
+BEGIN_TEST()
+	DO_TEST(test_available, "Syscall is available");
+	DO_TEST(test_correct_usage, "Syscall works");
+END_TEST()

@@ -1,14 +1,14 @@
 #include "test.h"
 
-enum TestResult test_available(void)
+static enum TestResult test_available(void)
 {
 	if (linux_sched_yield() == linux_ENOSYS)
-		return TEST_FAILURE;
+		return TEST_NOT_SUPPORTED;
 
 	return TEST_SUCCESS;
 }
 
-enum TestResult test_correct_usage(void)
+static enum TestResult test_correct_usage(void)
 {
 	if (linux_sched_yield())
 		return TEST_FAILURE;
@@ -16,14 +16,7 @@ enum TestResult test_correct_usage(void)
 	return TEST_SUCCESS;
 }
 
-noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
-{
-	(void)argc;
-	(void)argv;
-	(void)envp;
-
-	DO_TEST(test_available);
-	DO_TEST(test_correct_usage);
-
-	linux_exit_group(0);
-}
+BEGIN_TEST()
+	DO_TEST(test_available, "Syscall is available");
+	DO_TEST(test_correct_usage, "Syscall works");
+END_TEST()

@@ -30,6 +30,7 @@ include src/$(ARCH)/build.mk
 asmobj  = $(asmsrc:.asm=.o)
 cobj    = $(csrc:.c=.o)
 cdep    = $(csrc:.c=.d)
+testdep = tests/error.d tests/compile.d $(tests:=.d)
 
 ###############################################################################
 # Public targets
@@ -37,9 +38,11 @@ cdep    = $(csrc:.c=.d)
 all: $(TARGET)
 
 clean:
-	rm -f $(TARGET) $(asmobj) $(cobj) $(cdep) $(tests)
+	rm -f $(TARGET) $(asmobj) $(cobj) $(cdep) tests/error tests/compile $(tests) $(testdep)
 
-test: $(tests)
+test: tests/error tests/compile $(tests)
+	@$(INTERP) tests/error
+	@tests/run_tests.sh $(ARCH) $(INTERP)
 
 install: all
 	cp -r include/liblinux $(DSTDIR)$(PREFIX)/include
@@ -52,20 +55,21 @@ uninstall:
 ###############################################################################
 # Private targets
 
+-include $(cdep) $(testdep)
+
 .SUFFIXES: .asm .o
 .asm.o:
 	$(ASM) $(ASMFLAGS) $(asmflags) -o $@ $<
 
--include $(cdep)
-
 .SUFFIXES: .c .o
 .c.o:
-	$(CC) $(CFLAGS) -MMD -c -I include -o $@ $<
-	
+	$(CC) $(CFLAGS) -nostdlib -ffreestanding -MMD -c -I include -o $@ $<
+
 $(TARGET): $(asmobj) $(cobj)
 	$(AR) $(ARFLAGS) $@ $(asmobj) $(cobj)
 
-$(tests): $(TARGET)
+tests/error tests/compile $(tests): $(TARGET)
 
+.SUFFIXES: .c
 .c:
-	$(CC) $(CFLAGS) -I include -o $@ $< $(TARGET)
+	$(CC) $(CFLAGS) -nostdlib -ffreestanding -fno-stack-protector -MMD -I include -static -o $@ $< $(TARGET)
