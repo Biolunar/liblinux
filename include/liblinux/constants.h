@@ -1304,6 +1304,49 @@ enum
 #define linux_IFHWADDRLEN 6
 
 //=============================================================================
+// wait
+
+// Status bits
+// -----------
+// Bits  1- 7: signal number
+// Bit      8: core dump
+// Bits  9-16: exit code
+// Bits 17-32: unknown
+
+static inline uint8_t linux_WEXITSTATUS(int const status)
+{
+	return (status & 0xFF00) >> 8;
+}
+static inline uint8_t linux_WTERMSIG(int const status)
+{
+	return status & 0x7F;
+}
+static inline uint8_t linux_WSTOPSIG(int const status)
+{
+	return linux_WEXITSTATUS(status);
+}
+static inline bool linux_WIFEXITED(int const status)
+{
+	return !linux_WTERMSIG(status);
+}
+static inline bool linux_WIFSTOPPED(int const status)
+{
+	return (status & 0xFF) == 0x7F;
+}
+static inline bool linux_WIFSIGNALED(int const status)
+{
+	return (status & 0xFFFF) - 1u < 0xFFu;
+}
+static inline bool linux_WCOREDUMP(int const status)
+{
+	return status & 0x80;
+}
+static inline bool linux_WIFCONTINUED(int const status)
+{
+	return status == 0xFFFF;
+}
+
+//=============================================================================
 // Architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)

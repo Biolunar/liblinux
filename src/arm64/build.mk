@@ -280,6 +280,7 @@ csrc = \
        src/io_uring_register.c
 
 tests = \
+        tests/syscalls/accept\
         tests/syscalls/sched_yield\
         tests/syscalls/getpid\
         tests/syscalls/close\

@@ -2,7 +2,7 @@
 
 static enum TestResult test_available(void)
 {
-	enum linux_error_t err = linux_error_none;
+	enum linux_error err = linux_error_none;
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
 	err = linux_mmap_pgoff(0, 0, 0, 0, 0, 0, 0);
@@ -17,7 +17,7 @@ static enum TestResult test_available(void)
 
 static enum TestResult test_correct_usage(void)
 {
-	enum linux_error_t err = linux_error_none;
+	enum linux_error err = linux_error_none;
 
 	linux_size_t const len = sizeof(int);
 	linux_uword_t ret;

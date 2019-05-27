@@ -1,4 +1,5 @@
-SYSCALLS="clock_nanosleep\
+SYSCALLS="accept\
+          clock_nanosleep\
           clone\
           close\
           dup3\

@@ -28,7 +28,6 @@
 #include <stdalign.h>
 
 // TODO: I changed (u)long to (u)word_t in all signatures. Is this also necessary for the struct members (I don't think so)? TODO: also change the typedefs?
-// TODO: Sign extension problem while casting the return value?
 // TODO: update constants and types/structs to v5.1
 // TODO: find a good and future proof way to name all syscalls. Currently I'm using the names from the unterlying kernel functions.
 
@@ -36,6 +35,11 @@
 // -----------------
 // long -> linux_word_t
 // unsigned long -> linux_uword_t
+
+//=============================================================================
+// Convenience types
+
+typedef uint32_t linux_fd_t;
 
 //=============================================================================
 // Generic types
@@ -1997,13 +2001,13 @@ inline enum linux_error linux_dup(unsigned int const fildes, int* const result)
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_dup3(unsigned int const oldfd, unsigned int const newfd, int const flags, int* const result)
+inline enum linux_error linux_dup3(linux_fd_t const oldfd, linux_fd_t const newfd, int const flags, linux_fd_t* const result)
 {
 	linux_word_t const ret = linux_syscall3(oldfd, newfd, (unsigned int)flags, linux_syscall_name_dup3);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_fcntl(unsigned int const fd, unsigned int const cmd, linux_uword_t const arg, linux_word_t* const result)
@@ -2031,7 +2035,7 @@ inline enum linux_error linux_flock(unsigned int const fd, unsigned int const cm
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_close(unsigned int const fd)
+inline enum linux_error linux_close(linux_fd_t const fd)
 {
 	linux_word_t const ret = linux_syscall1(fd, linux_syscall_name_close);
 	if (linux_syscall_returned_error(ret))
@@ -3211,13 +3215,13 @@ inline enum linux_error linux_shmdt(char* const shmaddr)
 //-----------------------------------------------------------------------------
 // socket
 
-inline enum linux_error linux_socket(int const family, int const type, int const protocol, int* const result)
+inline enum linux_error linux_socket(int const family, int const type, int const protocol, linux_fd_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((unsigned int)family, (unsigned int)type, (unsigned int)protocol, linux_syscall_name_socket);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_socketpair(int const family, int const type, int const protocol, int* const usockvec)
@@ -3227,23 +3231,23 @@ inline enum linux_error linux_socketpair(int const family, int const type, int c
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_bind(int const fd, struct linux_sockaddr* const umyaddr, int const addrlen)
+inline enum linux_error linux_bind(linux_fd_t const fd, struct linux_sockaddr const* const umyaddr, int const addrlen)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)fd, (uintptr_t)umyaddr, (unsigned int)addrlen, linux_syscall_name_bind);
+	linux_word_t const ret = linux_syscall3(fd, (uintptr_t)umyaddr, (unsigned int)addrlen, linux_syscall_name_bind);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_listen(int const fd, int const backlog)
+inline enum linux_error linux_listen(linux_fd_t const fd, int const backlog)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)fd, (unsigned int)backlog, linux_syscall_name_listen);
+	linux_word_t const ret = linux_syscall2(fd, (unsigned int)backlog, linux_syscall_name_listen);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_connect(int const fd, struct linux_sockaddr* const uservaddr, int const addrlen)
+inline enum linux_error linux_connect(linux_fd_t const fd, struct linux_sockaddr const* const uservaddr, int const addrlen)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)fd, (uintptr_t)uservaddr, (unsigned int)addrlen, linux_syscall_name_connect);
+	linux_word_t const ret = linux_syscall3(fd, (uintptr_t)uservaddr, (unsigned int)addrlen, linux_syscall_name_connect);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -3749,7 +3753,7 @@ inline enum linux_error linux_vhangup(void)
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_pipe2(int* const fildes, int const flags)
+inline enum linux_error linux_pipe2(linux_fd_t* const fildes, int const flags)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)fildes, (unsigned int)flags, linux_syscall_name_pipe2);
 	if (linux_syscall_returned_error(ret))
@@ -4230,13 +4234,13 @@ inline enum linux_error linux_semop(int const semid, struct linux_sembuf* const 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_accept(int const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, int* const result)
+inline enum linux_error linux_accept(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, linux_fd_t* const result)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, linux_syscall_name_accept);
+	linux_word_t const ret = linux_syscall3(fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, linux_syscall_name_accept);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_kexec_file_load(int const kernel_fd, int const initrd_fd, linux_uword_t const cmdline_len, char const* const cmdline_ptr, linux_uword_t const flags)

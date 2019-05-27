@@ -382,6 +382,7 @@ csrc = \
        src/get_tls.c
 
 tests = \
+        tests/syscalls/accept\
         tests/syscalls/sched_yield\
         tests/syscalls/getpid\
         tests/syscalls/close\
