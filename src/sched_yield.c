@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error_t linux_sched_yield(void);
+extern inline enum linux_error linux_sched_yield(void);

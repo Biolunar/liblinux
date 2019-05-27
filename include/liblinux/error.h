@@ -22,7 +22,7 @@
 
 #include <stdbool.h>
 
-enum linux_error_t
+enum linux_error
 {
 	linux_error_none      =    0,
 

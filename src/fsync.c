@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error_t linux_fsync(unsigned int fd);
+extern inline enum linux_error linux_fsync(unsigned int fd);
