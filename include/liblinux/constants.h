@@ -22,7 +22,9 @@
 #include "endian.h"
 
 //=============================================================================
-// sigaction handler
+// signals
+
+#define linux_NSIG    64
 
 #define linux_SIG_DFL ((linux_sighandler_t)0)
 #define linux_SIG_IGN ((linux_sighandler_t)1)
@@ -571,35 +573,26 @@ enum
 #define linux_IP_DEFAULT_MULTICAST_TTL  1
 #define linux_IP_DEFAULT_MULTICAST_LOOP 1
 
-#define linux_IN_CLASSA(a)       ((((long int) (a)) & 0x80000000) == 0)
-#define linux_IN_CLASSA_NET      0xff000000
-#define linux_IN_CLASSA_NSHIFT   24
-#define linux_IN_CLASSA_HOST     (0xffffffff & ~linux_IN_CLASSA_NET)
-#define linux_IN_CLASSA_MAX      128
-#define linux_IN_CLASSB(a)       ((((long int) (a)) & 0xc0000000) == 0x80000000)
-#define linux_IN_CLASSB_NET      0xffff0000
-#define linux_IN_CLASSB_NSHIFT   16
-#define linux_IN_CLASSB_HOST     (0xffffffff & ~linux_IN_CLASSB_NET)
-#define linux_IN_CLASSB_MAX      65536
-#define linux_IN_CLASSC(a)       ((((long int) (a)) & 0xe0000000) == 0xc0000000)
-#define linux_IN_CLASSC_NET      0xffffff00
-#define linux_IN_CLASSC_NSHIFT   8
-#define linux_IN_CLASSC_HOST     (0xffffffff & ~linux_IN_CLASSC_NET)
-#define linux_IN_CLASSD(a)       ((((long int) (a)) & 0xf0000000) == 0xe0000000)
-#define linux_IN_MULTICAST(a)    linux_IN_CLASSD(a)
-#define linux_IN_MULTICAST_NET   0xe0000000
-#define linux_IN_BADCLASS(a)     (((long int) (a) ) == (long int)0xffffffff)
-#define linux_IN_EXPERIMENTAL(a) linux_IN_BADCLASS((a))
-#define linux_IN_CLASSE(a)       ((((long int) (a)) & 0xf0000000) == 0xf0000000)
-#define linux_IN_CLASSE_NET      0xffffffff
-#define linux_IN_CLASSE_NSHIFT   0
+#define linux_IN_CLASSA_NET    0xff000000
+#define linux_IN_CLASSA_NSHIFT 24
+#define linux_IN_CLASSA_HOST   (0xffffffff & ~linux_IN_CLASSA_NET)
+#define linux_IN_CLASSA_MAX    128
+#define linux_IN_CLASSB_NET    0xffff0000
+#define linux_IN_CLASSB_NSHIFT 16
+#define linux_IN_CLASSB_HOST   (0xffffffff & ~linux_IN_CLASSB_NET)
+#define linux_IN_CLASSB_MAX    65536
+#define linux_IN_CLASSC_NET    0xffffff00
+#define linux_IN_CLASSC_NSHIFT 8
+#define linux_IN_CLASSC_HOST   (0xffffffff & ~linux_IN_CLASSC_NET)
+#define linux_IN_MULTICAST_NET 0xe0000000
+#define linux_IN_CLASSE_NET    0xffffffff
+#define linux_IN_CLASSE_NSHIFT 0
 
-#define linux_INADDR_ANY               ((unsigned long int) 0x00000000)
-#define linux_INADDR_BROADCAST         ((unsigned long int) 0xffffffff)
-#define linux_INADDR_NONE              ((unsigned long int) 0xffffffff)
+#define linux_INADDR_ANY               ((unsigned long int)0x00000000)
+#define linux_INADDR_BROADCAST         ((unsigned long int)0xffffffff)
+#define linux_INADDR_NONE              ((unsigned long int)0xffffffff)
 #define linux_IN_LOOPBACKNET           127
 #define linux_INADDR_LOOPBACK          0x7f000001
-#define linux_IN_LOOPBACK(a)           ((((long int) (a)) & 0xff000000) == 0x7f000000)
 #define linux_INADDR_UNSPEC_GROUP      0xe0000000U
 #define linux_INADDR_ALLHOSTS_GROUP    0xe0000001U
 #define linux_INADDR_ALLRTRS_GROUP     0xe0000002U
@@ -1304,47 +1297,63 @@ enum
 #define linux_IFHWADDRLEN 6
 
 //=============================================================================
-// wait
+// stat
 
-// Status bits
-// -----------
-// Bits  1- 7: signal number
-// Bit      8: core dump
-// Bits  9-16: exit code
-// Bits 17-32: unknown
+#define linux_S_IFMT   00170000
+#define linux_S_IFSOCK 00140000
+#define linux_S_IFLNK  00120000
+#define linux_S_IFREG  00100000
+#define linux_S_IFBLK  00060000
+#define linux_S_IFDIR  00040000
+#define linux_S_IFCHR  00020000
+#define linux_S_IFIFO  00010000
+#define linux_S_ISUID  00004000
+#define linux_S_ISGID  00002000
+#define linux_S_ISVTX  00001000
 
-static inline uint8_t linux_WEXITSTATUS(int const status)
-{
-	return (status & 0xFF00) >> 8;
-}
-static inline uint8_t linux_WTERMSIG(int const status)
-{
-	return status & 0x7F;
-}
-static inline uint8_t linux_WSTOPSIG(int const status)
-{
-	return linux_WEXITSTATUS(status);
-}
-static inline bool linux_WIFEXITED(int const status)
-{
-	return !linux_WTERMSIG(status);
-}
-static inline bool linux_WIFSTOPPED(int const status)
-{
-	return (status & 0xFF) == 0x7F;
-}
-static inline bool linux_WIFSIGNALED(int const status)
-{
-	return (status & 0xFFFF) - 1u < 0xFFu;
-}
-static inline bool linux_WCOREDUMP(int const status)
-{
-	return status & 0x80;
-}
-static inline bool linux_WIFCONTINUED(int const status)
-{
-	return status == 0xFFFF;
-}
+#define linux_S_IRWXU 00700
+#define linux_S_IRUSR 00400
+#define linux_S_IWUSR 00200
+#define linux_S_IXUSR 00100
+#define linux_S_IRWXG 00070
+#define linux_S_IRGRP 00040
+#define linux_S_IWGRP 00020
+#define linux_S_IXGRP 00010
+#define linux_S_IRWXO 00007
+#define linux_S_IROTH 00004
+#define linux_S_IWOTH 00002
+#define linux_S_IXOTH 00001
+
+//=============================================================================
+// statx
+
+#define linux_STATX_TYPE        0x00000001U
+#define linux_STATX_MODE        0x00000002U
+#define linux_STATX_NLINK       0x00000004U
+#define linux_STATX_UID         0x00000008U
+#define linux_STATX_GID         0x00000010U
+#define linux_STATX_ATIME       0x00000020U
+#define linux_STATX_MTIME       0x00000040U
+#define linux_STATX_CTIME       0x00000080U
+#define linux_STATX_INO         0x00000100U
+#define linux_STATX_SIZE        0x00000200U
+#define linux_STATX_BLOCKS      0x00000400U
+#define linux_STATX_BASIC_STATS 0x000007ffU
+#define linux_STATX_BTIME       0x00000800U
+#define linux_STATX_ALL         0x00000fffU
+#define linux_STATX_RESERVED    0x80000000U
+
+#define linux_STATX_ATTR_COMPRESSED 0x00000004
+#define linux_STATX_ATTR_IMMUTABLE  0x00000010
+#define linux_STATX_ATTR_APPEND     0x00000020
+#define linux_STATX_ATTR_NODUMP     0x00000040
+#define linux_STATX_ATTR_ENCRYPTED  0x00000800
+#define linux_STATX_ATTR_AUTOMOUNT  0x00001000
+
+//=============================================================================
+// select
+
+#define linux_FD_SETSIZE 1024
 
 //=============================================================================
 // Architecture specific

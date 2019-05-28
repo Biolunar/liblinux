@@ -3,7 +3,7 @@
 static enum TestResult test_correct_usage(void)
 {
 	linux_word_t pid;
-	if (linux_clone(linux_SIGCHLD, 0, 0, 0, 0, &pid))
+	if (linux_fork(&pid))
 		return TEST_FAILURE;
 
 	if (!pid) // child

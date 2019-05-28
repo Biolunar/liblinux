@@ -24,9 +24,11 @@
 #include "names.h"
 #include "constants.h"
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdalign.h>
 
+// TODO: Do old signal syscalls work with 64 bit sigset? (Use NSIG or _NSIG or both?)
 // TODO: I changed (u)long to (u)word_t in all signatures. Is this also necessary for the struct members (I don't think so)? TODO: also change the typedefs?
 // TODO: update constants and types/structs to v5.1
 // TODO: find a good and future proof way to name all syscalls. Currently I'm using the names from the unterlying kernel functions.
@@ -37,7 +39,7 @@
 // unsigned long -> linux_uword_t
 
 //=============================================================================
-// Convenience types
+// Helper types
 
 typedef uint32_t linux_fd_t;
 
@@ -84,7 +86,7 @@ struct linux_pollfd
 };
 typedef struct
 {
-	unsigned long sig[64 / LINUX_BITS_PER_LONG];
+	unsigned long sig[linux_NSIG / LINUX_BITS_PER_LONG];
 } linux_sigset_t; // Defined in a bunch of different architectures but all those agree on the definition. So assume it's generic.
 typedef union linux_sigval
 {
@@ -5327,5 +5329,198 @@ inline enum linux_error linux_get_thread_area(struct linux_user_desc* const u_in
 #if defined(LINUX_ARCH_X86)
 // TODO: Add vsyscalls for x86.
 #endif
+
+//=============================================================================
+// Helper functions
+
+// Process status bits
+// -------------------
+// Bits  1- 7: signal number
+// Bit      8: core dump
+// Bits  9-16: exit code
+// Bits 17-32: unknown
+
+static inline uint8_t linux_WEXITSTATUS(int const status)
+{
+	return (status & 0xFF00) >> 8;
+}
+static inline uint8_t linux_WTERMSIG(int const status)
+{
+	return status & 0x7F;
+}
+static inline uint8_t linux_WSTOPSIG(int const status)
+{
+	return linux_WEXITSTATUS(status);
+}
+static inline bool linux_WIFEXITED(int const status)
+{
+	return !linux_WTERMSIG(status);
+}
+static inline bool linux_WIFSTOPPED(int const status)
+{
+	return (status & 0xFF) == 0x7F;
+}
+static inline bool linux_WIFSIGNALED(int const status)
+{
+	return (status & 0xFFFF) - 1u < 0xFFu;
+}
+static inline bool linux_WCOREDUMP(int const status)
+{
+	return status & 0x80;
+}
+static inline bool linux_WIFCONTINUED(int const status)
+{
+	return status == 0xFFFF;
+}
+
+static inline bool linux_S_ISLNK(linux_umode_t const m)
+{
+	return (m & linux_S_IFMT) == linux_S_IFLNK;
+}
+
+static inline bool linux_S_ISREG(linux_umode_t const m)
+{
+	return (m & linux_S_IFMT) == linux_S_IFREG;
+}
+
+static inline bool linux_S_ISDIR(linux_umode_t const m)
+{
+	return (m & linux_S_IFMT) == linux_S_IFDIR;
+}
+
+static inline bool linux_S_ISCHR(linux_umode_t const m)
+{
+	return (m & linux_S_IFMT) == linux_S_IFCHR;
+}
+
+static inline bool linux_S_ISBLK(linux_umode_t const m)
+{
+	return (m & linux_S_IFMT) == linux_S_IFBLK;
+}
+
+static inline bool linux_S_ISFIFO(linux_umode_t const m)
+{
+	return (m & linux_S_IFMT) == linux_S_IFIFO;
+}
+
+static inline bool linux_S_ISSOCK(linux_umode_t const m)
+{
+	return (m & linux_S_IFMT) == linux_S_IFSOCK;
+}
+
+#define LINUX_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+static inline void linux_sigemptyset(linux_sigset_t* const set)
+{
+	for (size_t i = 0; i < LINUX_ARRAY_SIZE(set->sig); ++i)
+		set->sig[i] = 0UL;
+}
+
+static inline void linux_sigfillset(linux_sigset_t* const set)
+{
+	for (size_t i = 0; i < LINUX_ARRAY_SIZE(set->sig); ++i)
+		set->sig[i] = (unsigned long)-1; // -1 == ULONG_MAX
+}
+
+static inline enum linux_error linux_sigaddset(linux_sigset_t* const set, int const signum)
+{
+	if (signum <= 0 || signum > linux_NSIG)
+		return linux_EINVAL;
+	size_t const word = (size_t)(signum - 1) / (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	size_t const bit = (size_t)(signum - 1) % (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	set->sig[word] |= 1UL << bit;
+	return linux_error_none;
+}
+static inline enum linux_error linux_sigdelset(linux_sigset_t* const set, int const signum)
+{
+	if (signum <= 0 || signum > linux_NSIG)
+		return linux_EINVAL;
+	size_t const word = (size_t)(signum - 1) / (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	size_t const bit = (size_t)(signum - 1) % (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	set->sig[word] &= ~(1UL << bit);
+	return linux_error_none;
+}
+
+static inline enum linux_error linux_sigismember(linux_sigset_t const* const set, int const signum, bool* const ret)
+{
+	if (signum <= 0 || signum > linux_NSIG)
+		return linux_EINVAL;
+	size_t const word = (size_t)(signum - 1) / (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	size_t const bit = (size_t)(signum - 1) % (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	*ret = set->sig[word] & (1UL << bit);
+	return linux_error_none;
+}
+
+static inline void linux_FD_ZERO(linux_fd_set* const set)
+{
+	for (size_t i = 0; i < LINUX_ARRAY_SIZE(set->fds_bits); ++i)
+		set->fds_bits[i] = 0UL;
+}
+#undef LINUX_ARRAY_SIZE
+
+static inline void linux_FD_SET(linux_fd_t const fd, linux_fd_set* const set)
+{
+	if (fd >= linux_FD_SETSIZE)
+		return;
+	set->fds_bits[fd / (8 * sizeof(long))] |= (1UL << (fd % (8 * sizeof(long)))); // 8 == CHAR_BIT
+}
+
+static inline void linux_FD_CLR(linux_fd_t const fd, linux_fd_set* const set)
+{
+	if (fd >= linux_FD_SETSIZE)
+		return;
+	set->fds_bits[fd / (8 * sizeof(long))] &= ~(1UL << (fd % (8 * sizeof(long)))); // 8 == CHAR_BIT
+}
+
+static inline bool linux_FD_ISSET(linux_fd_t const fd, linux_fd_set* const set)
+{
+	if (fd >= linux_FD_SETSIZE)
+		return false;
+	return set->fds_bits[fd / (8 * sizeof(long))] & (1UL << (fd % (8 * sizeof(long)))); // 8 == CHAR_BIT
+}
+
+static inline bool linux_IN_CLASSA(uint32_t const addr)
+{
+	return (addr & 0x80000000) == 0;
+}
+
+static inline bool linux_IN_CLASSB(uint32_t const addr)
+{
+	return (addr & 0xc0000000) == 0x80000000;
+}
+
+static inline bool linux_IN_CLASSC(uint32_t const addr)
+{
+	return (addr & 0xe0000000) == 0xc0000000;
+}
+
+static inline bool linux_IN_CLASSD(uint32_t const addr)
+{
+	return (addr & 0xf0000000) == 0xe0000000;
+}
+
+static inline bool linux_IN_CLASSE(uint32_t const addr)
+{
+	return (addr & 0xf0000000) == 0xf0000000;
+}
+
+static inline bool linux_IN_MULTICAST(uint32_t const addr)
+{
+	return linux_IN_CLASSD(addr);
+}
+
+static inline bool linux_IN_BADCLASS(uint32_t const addr)
+{
+	return addr == 0xffffffff;
+}
+
+static inline bool linux_IN_EXPERIMENTAL(uint32_t const addr)
+{
+	return linux_IN_BADCLASS(addr);
+}
+
+static inline bool linux_IN_LOOPBACK(uint32_t const addr)
+{
+	return (addr & 0xff000000) == 0x7f000000;
+}
 
 #endif // !HEADER_LIBLINUX_LINUX_H_INCLUDED
