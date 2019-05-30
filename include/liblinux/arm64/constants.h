@@ -218,4 +218,240 @@ enum linux_sock_type
 #define linux_SO_RCVTIMEO     linux_SO_RCVTIMEO_OLD
 #define linux_SO_SNDTIMEO     linux_SO_SNDTIMEO_OLD
 
+//=============================================================================
+// ioctl
+
+#define linux_IOC_SIZEBITS 14
+#define linux_IOC_DIRBITS   2
+
+#define linux_IOC_NONE  0U
+#define linux_IOC_WRITE 1U
+#define linux_IOC_READ  2U
+
+#define linux_TCGETS          0x5401
+#define linux_TCSETS          0x5402
+#define linux_TCSETSW         0x5403
+#define linux_TCSETSF         0x5404
+#define linux_TCGETA          0x5405
+#define linux_TCSETA          0x5406
+#define linux_TCSETAW         0x5407
+#define linux_TCSETAF         0x5408
+#define linux_TCSBRK          0x5409
+#define linux_TCXONC          0x540A
+#define linux_TCFLSH          0x540B
+#define linux_TIOCEXCL        0x540C
+#define linux_TIOCNXCL        0x540D
+#define linux_TIOCSCTTY       0x540E
+#define linux_TIOCGPGRP       0x540F
+#define linux_TIOCSPGRP       0x5410
+#define linux_TIOCOUTQ        0x5411
+#define linux_TIOCSTI         0x5412
+#define linux_TIOCGWINSZ      0x5413
+#define linux_TIOCSWINSZ      0x5414
+#define linux_TIOCMGET        0x5415
+#define linux_TIOCMBIS        0x5416
+#define linux_TIOCMBIC        0x5417
+#define linux_TIOCMSET        0x5418
+#define linux_TIOCGSOFTCAR    0x5419
+#define linux_TIOCSSOFTCAR    0x541A
+#define linux_FIONREAD        0x541B
+#define linux_TIOCINQ         linux_FIONREAD
+#define linux_TIOCLINUX       0x541C
+#define linux_TIOCCONS        0x541D
+#define linux_TIOCGSERIAL     0x541E
+#define linux_TIOCSSERIAL     0x541F
+#define linux_TIOCPKT         0x5420
+#define linux_FIONBIO         0x5421
+#define linux_TIOCNOTTY       0x5422
+#define linux_TIOCSETD        0x5423
+#define linux_TIOCGETD        0x5424
+#define linux_TCSBRKP         0x5425
+#define linux_TIOCSBRK        0x5427
+#define linux_TIOCCBRK        0x5428
+#define linux_TIOCGSID        0x5429
+#define linux_TCGETS2         linux_IOR('T', 0x2A, struct linux_termios2)
+#define linux_TCSETS2         linux_IOW('T', 0x2B, struct linux_termios2)
+#define linux_TCSETSW2        linux_IOW('T', 0x2C, struct linux_termios2)
+#define linux_TCSETSF2        linux_IOW('T', 0x2D, struct linux_termios2)
+#define linux_TIOCGRS485      0x542E
+#define linux_TIOCSRS485      0x542F
+#define linux_TIOCGPTN        linux_IOR('T', 0x30, unsigned int)
+#define linux_TIOCSPTLCK      linux_IOW('T', 0x31, int)
+#define linux_TIOCGDEV        linux_IOR('T', 0x32, unsigned int)
+#define linux_TIOCSIG         linux_IOW('T', 0x36, int)
+#define linux_TIOCVHANGUP     0x5437
+#define linux_TIOCGPKT        linux_IOR('T', 0x38, int)
+#define linux_TIOCGPTLCK      linux_IOR('T', 0x39, int)
+#define linux_TIOCGEXCL       linux_IOR('T', 0x40, int)
+#define linux_TIOCGPTPEER     linux_IO('T', 0x41)
+#define linux_TIOCGISO7816    linux_IOR('T', 0x42, struct linux_serial_iso7816)
+#define linux_TIOCSISO7816    linux_IOWR('T', 0x43, struct linux_serial_iso7816)
+#define linux_FIONCLEX        0x5450
+#define linux_FIOCLEX         0x5451
+#define linux_FIOASYNC        0x5452
+#define linux_TIOCSERCONFIG   0x5453
+#define linux_TIOCSERGWILD    0x5454
+#define linux_TIOCSERSWILD    0x5455
+#define linux_TIOCGLCKTRMIOS  0x5456
+#define linux_TIOCSLCKTRMIOS  0x5457
+#define linux_TIOCSERGSTRUCT  0x5458
+#define linux_TIOCSERGETLSR   0x5459
+#define linux_TIOCSERGETMULTI 0x545A
+#define linux_TIOCSERSETMULTI 0x545B
+#define linux_TIOCMIWAIT      0x545C
+#define linux_TIOCGICOUNT     0x545D
+#define linux_FIOQSIZE        0x5460
+
+//=============================================================================
+// termbits
+
+#define linux_NCCS 19
+
+#define linux_VINTR     0
+#define linux_VQUIT     1
+#define linux_VERASE    2
+#define linux_VKILL     3
+#define linux_VEOF      4
+#define linux_VTIME     5
+#define linux_VMIN      6
+#define linux_VSWTC     7
+#define linux_VSTART    8
+#define linux_VSTOP     9
+#define linux_VSUSP    10
+#define linux_VEOL     11
+#define linux_VREPRINT 12
+#define linux_VDISCARD 13
+#define linux_VWERASE  14
+#define linux_VLNEXT   15
+#define linux_VEOL2    16
+
+#define linux_IGNBRK  0000001
+#define linux_BRKINT  0000002
+#define linux_IGNPAR  0000004
+#define linux_PARMRK  0000010
+#define linux_INPCK   0000020
+#define linux_ISTRIP  0000040
+#define linux_INLCR   0000100
+#define linux_IGNCR   0000200
+#define linux_ICRNL   0000400
+#define linux_IUCLC   0001000
+#define linux_IXON    0002000
+#define linux_IXANY   0004000
+#define linux_IXOFF   0010000
+#define linux_IMAXBEL 0020000
+#define linux_IUTF8   0040000
+
+#define linux_OPOST  0000001
+#define linux_OLCUC  0000002
+#define linux_ONLCR  0000004
+#define linux_OCRNL  0000010
+#define linux_ONOCR  0000020
+#define linux_ONLRET 0000040
+#define linux_OFILL  0000100
+#define linux_OFDEL  0000200
+#define linux_NLDLY  0000400
+#define linux_CRDLY  0003000
+#define linux_TABDLY 0014000
+#define linux_BSDLY  0020000
+#define linux_VTDLY  0040000
+#define linux_FFDLY  0100000
+
+#define linux_NL0 0000000
+#define linux_NL1 0000400
+
+#define linux_CR0 0000000
+#define linux_CR1 0001000
+#define linux_CR2 0002000
+#define linux_CR3 0003000
+
+#define linux_TAB0  0000000
+#define linux_TAB1  0004000
+#define linux_TAB2  0010000
+#define linux_TAB3  0014000
+#define linux_XTABS 0014000
+
+#define linux_BS0 0000000
+#define linux_BS1 0020000
+
+#define linux_VT0 0000000
+#define linux_VT1 0040000
+
+#define linux_FF0 0000000
+#define linux_FF1 0100000
+
+#define linux_CBAUD   0010017
+#define linux_EXTA    linux_B19200
+#define linux_EXTB    linux_B38400
+#define linux_CSIZE   0000060
+#define linux_CSTOPB  0000100
+#define linux_CREAD   0000200
+#define linux_PARENB  0000400
+#define linux_PARODD  0001000
+#define linux_HUPCL   0002000
+#define linux_CLOCAL  0004000
+#define linux_CBAUDEX 0010000
+#define linux_CIBAUD  002003600000
+#define linux_CMSPAR  010000000000
+#define linux_CRTSCTS 020000000000
+
+#define linux_B0     0000000
+#define linux_B50    0000001
+#define linux_B75    0000002
+#define linux_B110   0000003
+#define linux_B134   0000004
+#define linux_B150   0000005
+#define linux_B200   0000006
+#define linux_B300   0000007
+#define linux_B600   0000010
+#define linux_B1200  0000011
+#define linux_B1800  0000012
+#define linux_B2400  0000013
+#define linux_B4800  0000014
+#define linux_B9600  0000015
+#define linux_B19200 0000016
+#define linux_B38400 0000017
+
+#define linux_CS5 0000000
+#define linux_CS6 0000020
+#define linux_CS7 0000040
+#define linux_CS8 0000060
+
+#define linux_BOTHER   0010000
+#define linux_B57600   0010001
+#define linux_B115200  0010002
+#define linux_B230400  0010003
+#define linux_B460800  0010004
+#define linux_B500000  0010005
+#define linux_B576000  0010006
+#define linux_B921600  0010007
+#define linux_B1000000 0010010
+#define linux_B1152000 0010011
+#define linux_B1500000 0010012
+#define linux_B2000000 0010013
+#define linux_B2500000 0010014
+#define linux_B3000000 0010015
+#define linux_B3500000 0010016
+#define linux_B4000000 0010017
+
+#define linux_ISIG    0000001
+#define linux_ICANON  0000002
+#define linux_XCASE   0000004
+#define linux_ECHO    0000010
+#define linux_ECHOE   0000020
+#define linux_ECHOK   0000040
+#define linux_ECHONL  0000100
+#define linux_NOFLSH  0000200
+#define linux_TOSTOP  0000400
+#define linux_ECHOCTL 0001000
+#define linux_ECHOPRT 0002000
+#define linux_ECHOKE  0004000
+#define linux_FLUSHO  0010000
+#define linux_PENDIN  0040000
+#define linux_IEXTEN  0100000
+#define linux_EXTPROC 0200000
+
+#define linux_TCSANOW   0
+#define linux_TCSADRAIN 1
+#define linux_TCSAFLUSH 2
+
 #endif // !HEADER_LIBLINUX_ARM64_CONSTANTS_H_INCLUDED

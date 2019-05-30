@@ -1356,6 +1356,235 @@ enum
 #define linux_FD_SETSIZE 1024
 
 //=============================================================================
+// ioctl
+
+#define linux_IOC_NRBITS   8
+#define linux_IOC_TYPEBITS 8
+
+#define linux_IOC_NRSHIFT   0
+#define linux_IOC_TYPESHIFT (linux_IOC_NRSHIFT   + linux_IOC_NRBITS)
+#define linux_IOC_SIZESHIFT (linux_IOC_TYPESHIFT + linux_IOC_TYPEBITS)
+
+#define linux_TCGETX  0x5432
+#define linux_TCSETX  0x5433
+#define linux_TCSETXF 0x5434
+#define linux_TCSETXW 0x5435
+
+#define linux_TIOCPKT_DATA        0
+#define linux_TIOCPKT_FLUSHREAD   1
+#define linux_TIOCPKT_FLUSHWRITE  2
+#define linux_TIOCPKT_STOP        4
+#define linux_TIOCPKT_START       8
+#define linux_TIOCPKT_NOSTOP     16
+#define linux_TIOCPKT_DOSTOP     32
+#define TIOCPlinux_KT_IOCTL      64
+
+#define linux_TIOCSER_TEMT 0x01
+
+//=============================================================================
+// seccomp
+
+#define linux_SECCOMP_MODE_DISABLED 0
+#define linux_SECCOMP_MODE_STRICT   1
+#define linux_SECCOMP_MODE_FILTER   2
+
+#define linux_SECCOMP_SET_MODE_STRICT  0
+#define linux_SECCOMP_SET_MODE_FILTER  1
+#define linux_SECCOMP_GET_ACTION_AVAIL 2
+#define linux_SECCOMP_GET_NOTIF_SIZES  3
+
+#define linux_SECCOMP_FILTER_FLAG_TSYNC        (1UL << 0)
+#define linux_SECCOMP_FILTER_FLAG_LOG          (1UL << 1)
+#define linux_SECCOMP_FILTER_FLAG_SPEC_ALLOW   (1UL << 2)
+#define linux_SECCOMP_FILTER_FLAG_NEW_LISTENER (1UL << 3)
+
+#define linux_SECCOMP_RET_KILL_PROCESS 0x80000000U
+#define linux_SECCOMP_RET_KILL_THREAD  0x00000000U
+#define linux_SECCOMP_RET_KILL         linux_SECCOMP_RET_KILL_THREAD
+#define linux_SECCOMP_RET_TRAP         0x00030000U
+#define linux_SECCOMP_RET_ERRNO        0x00050000U
+#define linux_SECCOMP_RET_USER_NOTIF   0x7fc00000U
+#define linux_SECCOMP_RET_TRACE        0x7ff00000U
+#define linux_SECCOMP_RET_LOG          0x7ffc0000U
+#define linux_SECCOMP_RET_ALLOW        0x7fff0000U
+
+#define linux_SECCOMP_RET_ACTION_FULL 0xffff0000U
+#define linux_SECCOMP_RET_ACTION      0x7fff0000U
+#define linux_SECCOMP_RET_DATA        0x0000ffffU
+
+#define linux_SECCOMP_IOC_MAGIC      '!'
+#define linux_SECCOMP_IO(nr)         linux_IO(linux_SECCOMP_IOC_MAGIC, nr)
+#define linux_SECCOMP_IOR(nr, type)  linux_IOR(linux_SECCOMP_IOC_MAGIC, nr, type)
+#define linux_SECCOMP_IOW(nr, type)  linux_IOW(linux_SECCOMP_IOC_MAGIC, nr, type)
+#define linux_SECCOMP_IOWR(nr, type) linux_IOWR(linux_SECCOMP_IOC_MAGIC, nr, type)
+
+#define linux_SECCOMP_IOCTL_NOTIF_RECV     linux_SECCOMP_IOWR(0, struct linux_seccomp_notif)
+#define linux_SECCOMP_IOCTL_NOTIF_SEND     linux_SECCOMP_IOWR(1, struct linux_seccomp_notif_resp)
+#define linux_SECCOMP_IOCTL_NOTIF_ID_VALID linux_SECCOMP_IOR(2, uint64_t)
+
+//=============================================================================
+// serial
+
+#define linux_ASYNC_CLOSING_WAIT_INF      0
+#define linux_ASYNC_CLOSING_WAIT_NONE 65535
+
+#define linux_PORT_UNKNOWN           0
+#define linux_PORT_8250              1
+#define linux_PORT_16450             2
+#define linux_PORT_16550             3
+#define linux_PORT_16550A            4
+#define linux_PORT_CIRRUS            5
+#define linux_PORT_16650             6
+#define linux_PORT_16650V2           7
+#define linux_PORT_16750             8
+#define linux_PORT_STARTECH          9
+#define linux_PORT_16C950           10
+#define linux_PORT_16654            11
+#define linux_PORT_16850            12
+#define linux_PORT_RSA              13
+#define linux_PORT_NS16550A         14
+#define linux_PORT_XSCALE           15
+#define linux_PORT_RM9000           16
+#define linux_PORT_OCTEON           17
+#define linux_PORT_AR7              18
+#define linux_PORT_U6_16550A        19
+#define linux_PORT_TEGRA            20
+#define linux_PORT_XR17D15X         21
+#define linux_PORT_LPC3220          22
+#define linux_PORT_8250_CIR         23
+#define linux_PORT_XR17V35X         24
+#define linux_PORT_BRCM_TRUMANAGE   25
+#define linux_PORT_ALTR_16550_F32   26
+#define linux_PORT_ALTR_16550_F64   27
+#define linux_PORT_ALTR_16550_F128  28
+#define linux_PORT_RT2880           29
+#define linux_PORT_16550A_FSL64     30
+#define linux_PORT_PXA              31
+#define linux_PORT_AMBA             32
+#define linux_PORT_CLPS711X         33
+#define linux_PORT_SA1100           34
+#define linux_PORT_UART00           35
+#define linux_PORT_OWL              36
+#define linux_PORT_21285            37
+#define linux_PORT_SUNZILOG         38
+#define linux_PORT_SUNSAB           39
+#define linux_PORT_NPCM             40
+#define linux_PORT_TEGRA_TCU        41
+#define linux_PORT_PCH_8LINE        44
+#define linux_PORT_PCH_2LINE        45
+#define linux_PORT_DZ               46
+#define linux_PORT_ZS               47
+#define linux_PORT_MUX              48
+#define linux_PORT_ATMEL            49
+#define linux_PORT_MAC_ZILOG        50
+#define linux_PORT_PMAC_ZILOG       51
+#define linux_PORT_SCI              52
+#define linux_PORT_SCIF             53
+#define linux_PORT_IRDA             54
+#define linux_PORT_S3C2410          55
+#define linux_PORT_IP22ZILOG        56
+#define linux_PORT_LH7A40X          57
+#define linux_PORT_CPM              58
+#define linux_PORT_MPC52xx          59
+#define linux_PORT_ICOM             60
+#define linux_PORT_S3C2440          61
+#define linux_PORT_IMX              62
+#define linux_PORT_MPSC             63
+#define linux_PORT_TXX9             64
+#define linux_PORT_VR41XX_SIU       65
+#define linux_PORT_VR41XX_DSIU      66
+#define linux_PORT_S3C2400          67
+#define linux_PORT_M32R_SIO         68
+#define linux_PORT_JSM              69
+#define linux_PORT_PNX8XXX          70
+#define linux_PORT_NETX             71
+#define linux_PORT_SUNHV            72
+#define linux_PORT_S3C2412          73
+#define linux_PORT_UARTLITE         74
+#define linux_PORT_BFIN             75
+#define linux_PORT_KS8695           76
+#define linux_PORT_SB1250_DUART     77
+#define linux_PORT_MCF              78
+#define linux_PORT_BFIN_SPORT       79
+#define linux_PORT_MN10300          80
+#define linux_PORT_MN10300_CTS      81
+#define linux_PORT_SC26XX           82
+#define linux_PORT_SCIFA            83
+#define linux_PORT_S3C6400          84
+#define linux_PORT_NWPSERIAL        85
+#define linux_PORT_MAX3100          86
+#define linux_PORT_TIMBUART         87
+#define linux_PORT_MSM              88
+#define linux_PORT_BCM63XX          89
+#define linux_PORT_APBUART          90
+#define linux_PORT_ALTERA_JTAGUART  91
+#define linux_PORT_ALTERA_UART      92
+#define linux_PORT_SCIFB            93
+#define linux_PORT_MAX310X          94
+#define linux_PORT_DA830            95
+#define linux_PORT_OMAP             96
+#define linux_PORT_VT8500           97
+#define linux_PORT_XUARTPS          98
+#define linux_PORT_AR933X           99
+#define linux_PORT_EFMUART         100
+#define linux_PORT_ARC             101
+#define linux_PORT_RP2             102
+#define linux_PORT_LPUART          103
+#define linux_PORT_HSCIF           104
+#define linux_PORT_ASC             105
+#define linux_PORT_TILEGX          106
+#define linux_PORT_MEN_Z135        107
+#define linux_PORT_SC16IS7XX       108
+#define linux_PORT_MESON           109
+#define linux_PORT_DIGICOLOR       110
+#define linux_PORT_SPRD            111
+#define linux_PORT_CRIS            112
+#define linux_PORT_STM32           113
+#define linux_PORT_MVEBU           114
+#define linux_PORT_PIC32           115
+#define linux_PORT_MPS2UART        116
+#define linux_PORT_MTK_BTIF        117
+#define linux_PORT_RDA             118
+
+#define linux_SERIAL_IO_PORT    0
+#define linux_SERIAL_IO_HUB6    1
+#define linux_SERIAL_IO_MEM     2
+#define linux_SERIAL_IO_MEM32   3
+#define linux_SERIAL_IO_AU      4
+#define linux_SERIAL_IO_TSI     5
+#define linux_SERIAL_IO_MEM32BE 6
+#define linux_SERIAL_IO_MEM16   7
+
+#define linux_UART_CLEAR_FIFO 0x01
+#define linux_UART_USE_FIFO   0x02
+#define linux_UART_STARTECH   0x04
+#define linux_UART_NATSEMI    0x08
+
+#define linux_SER_RS485_ENABLED        (1 << 0)
+#define linux_SER_RS485_RTS_ON_SEND    (1 << 1)
+#define linux_SER_RS485_RTS_AFTER_SEND (1 << 2)
+#define linux_SER_RS485_RX_DURING_TX   (1 << 4)
+#define linux_SER_RS485_TERMINATE_BUS  (1 << 5)
+
+#define linux_SER_ISO7816_ENABLED (1 << 0)
+#define linux_SER_ISO7816_T_PARAM (0x0f << 4)
+#define linux_SER_ISO7816_T(t)    (((t) & 0x0f) << 4)
+
+//=============================================================================
+// termbits
+
+#define linux_IBSHIFT 16
+
+#define linux_TCOOFF 0
+#define linux_TCOON  1
+#define linux_TCIOFF 2
+#define linux_TCION  3
+
+#define linux_TCIFLUSH  0
+#define linux_TCOFLUSH  1
+#define linux_TCIOFLUSH 2
+
+//=============================================================================
 // Architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -1378,5 +1607,18 @@ enum
 #define linux_SCM_TIMESTAMP    linux_SO_TIMESTAMP
 #define linux_SCM_TIMESTAMPNS  linux_SO_TIMESTAMPNS
 #define linux_SCM_TIMESTAMPING linux_SO_TIMESTAMPING
+
+#define linux_IOC_DIRSHIFT (linux_IOC_SIZESHIFT + linux_IOC_SIZEBITS)
+
+#define linux_IOC(dir, type, nr, size)    \
+	(((dir) << linux_IOC_DIRSHIFT)  | \
+	((type) << linux_IOC_TYPESHIFT) | \
+	((nr)   << linux_IOC_NRSHIFT)   | \
+	((size) << linux_IOC_SIZESHIFT))
+
+#define linux_IO(type, nr)         linux_IOC(linux_IOC_NONE, (type), (nr), 0)
+#define linux_IOR(type, nr, size)  linux_IOC(linux_IOC_READ, (type), (nr), (size))
+#define linux_IOW(type, nr, size)  linux_IOC(linux_IOC_WRITE, (type), (nr), (size))
+#define linux_IOWR(type, nr, size) linux_IOC(linux_IOC_READ | linux_IOC_WRITE, (type), (nr), (size))
 
 #endif // !HEADER_LIBLINUX_CONSTANTS_H_INCLUDED

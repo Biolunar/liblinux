@@ -212,4 +212,41 @@ struct linux_epoll_event
 };
 _Static_assert(alignof(struct linux_epoll_event) == 4, "struct linux_epoll_event is misaligned");
 
+//=============================================================================
+// termbits
+
+typedef unsigned int  linux_tcflag_t;
+
+struct linux_termios
+{
+	linux_tcflag_t c_iflag;
+	linux_tcflag_t c_oflag;
+	linux_tcflag_t c_cflag;
+	linux_tcflag_t c_lflag;
+	linux_cc_t c_line;
+	linux_cc_t c_cc[linux_NCCS];
+};
+struct linux_termios2
+{
+	linux_tcflag_t c_iflag;
+	linux_tcflag_t c_oflag;
+	linux_tcflag_t c_cflag;
+	linux_tcflag_t c_lflag;
+	linux_cc_t c_line;
+	linux_cc_t c_cc[linux_NCCS];
+	linux_speed_t c_ispeed;
+	linux_speed_t c_ospeed;
+};
+struct linux_ktermios
+{
+	linux_tcflag_t c_iflag;
+	linux_tcflag_t c_oflag;
+	linux_tcflag_t c_cflag;
+	linux_tcflag_t c_lflag;
+	linux_cc_t c_line;
+	linux_cc_t c_cc[linux_NCCS];
+	linux_speed_t c_ispeed;
+	linux_speed_t c_ospeed;
+};
+
 #endif // !HEADER_LIBLINUX_X86_64_STRUCTS_H_INCLUDED

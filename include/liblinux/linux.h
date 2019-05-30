@@ -73,6 +73,8 @@ typedef void                   linux_signalfn_t(int);
 typedef void                   linux_restorefn_t(void);
 typedef linux_restorefn_t*     linux_sigrestore_t;
 typedef int32_t                linux_old_time32_t;
+typedef unsigned char          linux_cc_t;
+typedef unsigned int           linux_speed_t;
 
 typedef struct
 {
@@ -1799,6 +1801,100 @@ struct linux_ifconf
 };
 
 //=============================================================================
+// seccomp
+
+struct linux_seccomp_data
+{
+	int nr;
+	uint32_t arch;
+	uint64_t instruction_pointer;
+	uint64_t args[6];
+};
+struct linux_seccomp_notif_sizes
+{
+	uint16_t seccomp_notif;
+	uint16_t seccomp_notif_resp;
+	uint16_t seccomp_data;
+};
+struct linux_seccomp_notif
+{
+	uint64_t id;
+	uint32_t pid;
+	uint32_t flags;
+	struct linux_seccomp_data data;
+};
+struct linux_seccomp_notif_resp
+{
+	uint64_t id;
+	int64_t val;
+	int32_t error;
+	uint32_t flags;
+};
+
+//=============================================================================
+// serial
+
+struct linux_serial_struct
+{
+	int type;
+	int line;
+	unsigned int port;
+	int irq;
+	int flags;
+	int xmit_fifo_size;
+	int custom_divisor;
+	int baud_base;
+	unsigned short close_delay;
+	char io_type;
+	char reserved_char[1];
+	int hub6;
+	unsigned short closing_wait;
+	unsigned short closing_wait2;
+	unsigned char* iomem_base;
+	unsigned short iomem_reg_shift;
+	unsigned int port_high;
+	unsigned long iomap_base;
+};
+struct linux_serial_multiport_struct
+{
+	int irq;
+	int port1;
+	unsigned char mask1, match1;
+	int port2;
+	unsigned char mask2, match2;
+	int port3;
+	unsigned char mask3, match3;
+	int port4;
+	unsigned char mask4, match4;
+	int port_monitor;
+	int reserved[32];
+};
+struct linux_serial_icounter_struct
+{
+	int cts, dsr, rng, dcd;
+	int rx, tx;
+	int frame, overrun, parity, brk;
+	int buf_overrun;
+	int reserved[9];
+};
+struct linux_serial_rs485
+{
+	uint32_t flags;
+	uint32_t delay_rts_before_send;
+	uint32_t delay_rts_after_send;
+	uint32_t padding[5];
+};
+struct linux_serial_iso7816
+{
+	uint32_t flags;
+	uint32_t tg;
+	uint32_t sc_fi;
+	uint32_t sc_di;
+	uint32_t clk;
+	uint32_t reserved[5];
+};
+
+//=============================================================================
 // Generic syscalls
 
 //-----------------------------------------------------------------------------
@@ -2535,7 +2631,7 @@ inline enum linux_error linux_getitimer(int const which, struct linux_itimerval*
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_setitimer(int const which, struct linux_itimerval* const value, struct linux_itimerval* const ovalue)
+inline enum linux_error linux_setitimer(int const which, struct linux_itimerval const* const value, struct linux_itimerval* const ovalue)
 {
 	linux_word_t const ret = linux_syscall3((unsigned int)which, (uintptr_t)value, (uintptr_t)ovalue, linux_syscall_name_setitimer);
 	if (linux_syscall_returned_error(ret))
@@ -3999,7 +4095,7 @@ inline enum linux_error linux_kcmp(linux_pid_t const pid1, linux_pid_t const pid
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_seccomp(unsigned int const op, unsigned int const flags, char const* const uargs, linux_word_t* const result)
+inline enum linux_error linux_seccomp(unsigned int const op, unsigned int const flags, void* const uargs, linux_word_t* const result)
 {
 	linux_word_t const ret = linux_syscall3(op, flags, (uintptr_t)uargs, linux_syscall_name_seccomp);
 	if (linux_syscall_returned_error(ret))
@@ -4273,7 +4369,7 @@ inline enum linux_error linux_adjtimex(struct linux_kernel_timex* const txc_p, i
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_nanosleep(struct linux_kernel_timespec* const rqtp, struct linux_kernel_timespec* const rmtp)
+inline enum linux_error linux_nanosleep(struct linux_kernel_timespec const* const rqtp, struct linux_kernel_timespec* const rmtp)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)rqtp, (uintptr_t)rmtp, linux_syscall_name_nanosleep);
 	if (linux_syscall_returned_error(ret))
@@ -4703,7 +4799,7 @@ inline enum linux_error linux_futex_time32(uint32_t* const uaddr, int const op, 
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_nanosleep_time32(struct linux_old_timespec32* const rqtp, struct linux_old_timespec32* const rmtp)
+inline enum linux_error linux_nanosleep_time32(struct linux_old_timespec32 const* const rqtp, struct linux_old_timespec32* const rmtp)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)rqtp, (uintptr_t)rmtp, linux_syscall_name_nanosleep_time32);
 	if (linux_syscall_returned_error(ret))
@@ -4745,7 +4841,7 @@ inline enum linux_error linux_clock_getres_time32(linux_clockid_t const which_cl
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_clock_nanosleep_time32(linux_clockid_t const which_clock, int const flags, struct linux_old_timespec32* const rqtp, struct linux_old_timespec32* const rmtp)
+inline enum linux_error linux_clock_nanosleep_time32(linux_clockid_t const which_clock, int const flags, struct linux_old_timespec32 const* const rqtp, struct linux_old_timespec32* const rmtp)
 {
 	linux_word_t const ret = linux_syscall4((unsigned int)which_clock, (unsigned int)flags, (uintptr_t)rqtp, (uintptr_t)rmtp, linux_syscall_name_clock_nanosleep_time32);
 	if (linux_syscall_returned_error(ret))
@@ -5425,17 +5521,18 @@ static inline enum linux_error linux_sigaddset(linux_sigset_t* const set, int co
 {
 	if (signum <= 0 || signum > linux_NSIG)
 		return linux_EINVAL;
-	size_t const word = (size_t)(signum - 1) / (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
-	size_t const bit = (size_t)(signum - 1) % (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	size_t const word = (size_t)(signum - 1) / (8 * sizeof set->sig[0]); // 8 == CHAR_BIT
+	size_t const bit = (size_t)(signum - 1) % (8 * sizeof set->sig[0]); // 8 == CHAR_BIT
 	set->sig[word] |= 1UL << bit;
 	return linux_error_none;
 }
+
 static inline enum linux_error linux_sigdelset(linux_sigset_t* const set, int const signum)
 {
 	if (signum <= 0 || signum > linux_NSIG)
 		return linux_EINVAL;
-	size_t const word = (size_t)(signum - 1) / (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
-	size_t const bit = (size_t)(signum - 1) % (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	size_t const word = (size_t)(signum - 1) / (8 * sizeof set->sig[0]); // 8 == CHAR_BIT
+	size_t const bit = (size_t)(signum - 1) % (8 * sizeof set->sig[0]); // 8 == CHAR_BIT
 	set->sig[word] &= ~(1UL << bit);
 	return linux_error_none;
 }
@@ -5444,11 +5541,50 @@ static inline enum linux_error linux_sigismember(linux_sigset_t const* const set
 {
 	if (signum <= 0 || signum > linux_NSIG)
 		return linux_EINVAL;
-	size_t const word = (size_t)(signum - 1) / (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
-	size_t const bit = (size_t)(signum - 1) % (sizeof set->sig[0] * 8); // 8 == CHAR_BIT
+	size_t const word = (size_t)(signum - 1) / (8 * sizeof set->sig[0]); // 8 == CHAR_BIT
+	size_t const bit = (size_t)(signum - 1) % (8 * sizeof set->sig[0]); // 8 == CHAR_BIT
 	*ret = set->sig[word] & (1UL << bit);
 	return linux_error_none;
 }
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
+static inline void linux_old_sigemptyset(linux_old_sigset_t* const set)
+{
+	*set = 0;
+}
+
+static inline void linux_old_sigfillset(linux_old_sigset_t* const set)
+{
+	*set = (linux_old_sigset_t)-1;
+}
+
+static inline enum linux_error linux_old_sigaddset(linux_old_sigset_t* const set, int const signum)
+{
+	if (signum <= 0 || signum > linux_OLD_NSIG)
+		return linux_EINVAL;
+	_Static_assert(linux_OLD_NSIG <= (8 * sizeof *set), "linux_old_sigset_t is too small"); // 8 == CHAR_BIT
+	*set |= 1UL << (signum - 1);
+	return linux_error_none;
+}
+
+static inline enum linux_error linux_old_sigdelset(linux_old_sigset_t* const set, int const signum)
+{
+	if (signum <= 0 || signum > linux_OLD_NSIG)
+		return linux_EINVAL;
+	_Static_assert(linux_OLD_NSIG <= (8 * sizeof *set), "linux_old_sigset_t is too small"); // 8 == CHAR_BIT
+	*set &= ~(1UL << (signum - 1));
+	return linux_error_none;
+}
+
+static inline enum linux_error linux_old_sigismember(linux_old_sigset_t const* const set, int const signum, bool* const ret)
+{
+	if (signum <= 0 || signum > linux_OLD_NSIG)
+		return linux_EINVAL;
+	_Static_assert(linux_OLD_NSIG <= (8 * sizeof *set), "linux_old_sigset_t is too small"); // 8 == CHAR_BIT
+	*ret = *set & (1UL << (signum - 1));
+	return linux_error_none;
+}
+#endif
 
 static inline void linux_FD_ZERO(linux_fd_set* const set)
 {

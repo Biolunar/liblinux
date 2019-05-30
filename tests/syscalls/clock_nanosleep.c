@@ -3,7 +3,7 @@
 static enum TestResult test_available(void)
 {
 	struct linux_kernel_timespec const ts = {.tv_nsec = 1};
-	if (linux_clock_nanosleep(0, 0, &ts, 0) == linux_ENOSYS)
+	if (linux_clock_nanosleep(linux_CLOCK_MONOTONIC, 0, &ts, 0) == linux_ENOSYS)
 		return TEST_NOT_SUPPORTED;
 
 	return TEST_SUCCESS;
