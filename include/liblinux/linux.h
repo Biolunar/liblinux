@@ -3421,13 +3421,13 @@ inline enum linux_error linux_recvmsg(int const fd, struct linux_user_msghdr* co
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_accept4(int const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, int const flags, int* const result)
+inline enum linux_error linux_accept4(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, int const flags, linux_fd_t* const result)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, (unsigned int)flags, linux_syscall_name_accept4);
+	linux_word_t const ret = linux_syscall4(fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, (unsigned int)flags, linux_syscall_name_accept4);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_recvmmsg(int const fd, struct linux_mmsghdr* const mmsg, unsigned int const vlen, unsigned int const flags, struct linux_kernel_timespec* const timeout, int* const result)
