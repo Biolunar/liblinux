@@ -2,7 +2,7 @@
 
 static enum linux_error fork(linux_pid_t* pid)
 {
-	linux_word_t result;
+	linux_word_t result = 0;
 	enum linux_error const err = linux_clone(linux_SIGCHLD, 0, 0, 0, 0, &result);
 	*pid = (linux_pid_t)result;
 	return err;
@@ -101,7 +101,7 @@ static enum TestResult test_segfault(void)
 
 static enum TestResult test_non_listening(void)
 {
-	linux_fd_t server;
+	linux_fd_t server = 0;
 	if (linux_socket(linux_AF_UNIX, linux_SOCK_STREAM, 0, &server))
 		return TEST_OTHER_FAILURE;
 
@@ -116,7 +116,7 @@ static enum TestResult test_non_listening(void)
 		return TEST_OTHER_FAILURE;
 	}
 
-	linux_fd_t client;
+	linux_fd_t client = 0;
 	enum linux_error const err = linux_accept(server, 0, 0, &client);
 	if (err != linux_EINVAL)
 	{
@@ -134,7 +134,7 @@ static enum TestResult test_non_listening(void)
 
 static enum TestResult test_correct_usage(void)
 {
-	linux_fd_t server;
+	linux_fd_t server = 0;
 	if (linux_socket(linux_AF_UNIX, linux_SOCK_STREAM, 0, &server))
 		return TEST_OTHER_FAILURE;
 
@@ -155,7 +155,7 @@ static enum TestResult test_correct_usage(void)
 		return TEST_OTHER_FAILURE;
 	}
 
-	linux_pid_t pid;
+	linux_pid_t pid = 0;
 	if (fork(&pid))
 	{
 		linux_close(server);
@@ -166,7 +166,7 @@ static enum TestResult test_correct_usage(void)
 		if (linux_close(server))
 			return TEST_OTHER_FAILURE;
 
-		linux_fd_t fd;
+		linux_fd_t fd = 0;
 		if (linux_socket(linux_AF_UNIX, linux_SOCK_STREAM, 0, &fd))
 			return TEST_OTHER_FAILURE;
 
@@ -180,7 +180,7 @@ static enum TestResult test_correct_usage(void)
 		linux_exit_group(TEST_SUCCESS);
 	}
 
-	linux_fd_t client;
+	linux_fd_t client = 0;
 	if (linux_accept(server, 0, 0, &client))
 	{
 		linux_close(server);

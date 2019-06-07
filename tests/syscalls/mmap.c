@@ -11,7 +11,7 @@ static enum TestResult test_available(void)
 static enum TestResult test_correct_usage(void)
 {
 	linux_size_t const len = sizeof(int);
-	linux_uword_t ret;
+	linux_uword_t ret = 0;
 	if (linux_mmap(0, len, linux_PROT_READ | linux_PROT_WRITE, linux_MAP_ANONYMOUS | linux_MAP_PRIVATE, 0, 0, &ret))
 		return TEST_FAILURE;
 

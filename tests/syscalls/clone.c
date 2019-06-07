@@ -2,7 +2,7 @@
 
 static enum TestResult test_correct_usage(void)
 {
-	linux_word_t pid;
+	linux_word_t pid = 0;
 	if (linux_clone(linux_SIGCHLD, 0, 0, 0, 0, &pid))
 		return TEST_FAILURE;
 
