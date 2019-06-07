@@ -47,4 +47,4 @@ ASMFLAGS =
 AR       = ar
 ARFLAGS  = -rv
 CC       = cc
-CFLAGS   = -std=c11 -pedantic-errors -fno-stack-protector -O3 -Wall -Wextra
+CFLAGS   = -std=c11 -fno-stack-protector -O3
