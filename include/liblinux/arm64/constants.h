@@ -193,6 +193,24 @@
 #define linux_O_NDELAY        linux_O_NONBLOCK
 
 //=============================================================================
+// fcntl
+
+#define linux_F_GETLK   5
+#define linux_F_SETLK   6
+#define linux_F_SETLKW  7
+#define linux_F_SETOWN  8
+#define linux_F_GETOWN  9
+#define linux_F_SETSIG 10
+#define linux_F_GETSIG 11
+
+#define linux_F_RDLCK 0
+#define linux_F_WRLCK 1
+#define linux_F_UNLCK 2
+
+#define linux_F_EXLCK 4
+#define linux_F_SHLCK 8
+
+//=============================================================================
 // socket
 
 enum linux_sock_type
@@ -453,5 +471,14 @@ enum linux_sock_type
 #define linux_TCSANOW   0
 #define linux_TCSADRAIN 1
 #define linux_TCSAFLUSH 2
+
+//=============================================================================
+// poll
+
+#define linux_POLLWRNORM 0x0100
+#define linux_POLLWRBAND 0x0200
+#define linux_POLLMSG    0x0400
+#define linux_POLLREMOVE 0x1000
+#define linux_POLLRDHUP  0x2000
 
 #endif // !HEADER_LIBLINUX_ARM64_CONSTANTS_H_INCLUDED

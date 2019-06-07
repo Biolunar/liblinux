@@ -18,6 +18,21 @@
 #define HEADER_LIBLINUX_X32_CONSTANTS_H_INCLUDED
 
 //=============================================================================
+// arch_prctl
+
+#define linux_ARCH_SET_GS 0x1001
+#define linux_ARCH_SET_FS 0x1002
+#define linux_ARCH_GET_FS 0x1003
+#define linux_ARCH_GET_GS 0x1004
+
+#define linux_ARCH_GET_CPUID 0x1011
+#define linux_ARCH_SET_CPUID 0x1012
+
+#define linux_ARCH_MAP_VDSO_X32 0x2001
+#define linux_ARCH_MAP_VDSO_32  0x2002
+#define linux_ARCH_MAP_VDSO_64  0x2003
+
+//=============================================================================
 // signal
 
 //-----------------------------------------------------------------------------
@@ -191,6 +206,24 @@
 #define linux_O_TMPFILE      (020000000 | linux_O_DIRECTORY)
 #define linux_O_TMPFILE_MASK (020000000 | linux_O_DIRECTORY | linux_O_CREAT)      
 #define linux_O_NDELAY        linux_O_NONBLOCK
+
+//=============================================================================
+// fcntl
+
+#define linux_F_GETLK   5
+#define linux_F_SETLK   6
+#define linux_F_SETLKW  7
+#define linux_F_SETOWN  8
+#define linux_F_GETOWN  9
+#define linux_F_SETSIG 10
+#define linux_F_GETSIG 11
+
+#define linux_F_RDLCK 0
+#define linux_F_WRLCK 1
+#define linux_F_UNLCK 2
+
+#define linux_F_EXLCK 4
+#define linux_F_SHLCK 8
 
 //=============================================================================
 // socket
@@ -453,5 +486,14 @@ enum linux_sock_type
 #define linux_TCSANOW   0
 #define linux_TCSADRAIN 1
 #define linux_TCSAFLUSH 2
+
+//=============================================================================
+// poll
+
+#define linux_POLLWRNORM 0x0100
+#define linux_POLLWRBAND 0x0200
+#define linux_POLLMSG    0x0400
+#define linux_POLLREMOVE 0x1000
+#define linux_POLLRDHUP  0x2000
 
 #endif // !HEADER_LIBLINUX_X32_CONSTANTS_H_INCLUDED

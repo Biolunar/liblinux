@@ -214,11 +214,6 @@ typedef struct linux_sigaltstack
 	int ss_flags;
 	linux_size_t ss_size;
 } linux_stack_t;
-struct linux_epoll_event
-{
-	linux_poll_t events;
-	uint64_t data;
-};
 
 struct linux_old_kernel_stat
 {
@@ -357,5 +352,35 @@ struct linux_ktermios
 	linux_speed_t c_ispeed;
 	linux_speed_t c_ospeed;
 };
+
+//=============================================================================
+// fcntl
+
+struct linux_flock
+{
+	short l_type;
+	short l_whence;
+	linux_kernel_off_t l_start;
+	linux_kernel_off_t l_len;
+	linux_kernel_pid_t l_pid;
+};
+struct linux_flock64
+{
+	short l_type;
+	short l_whence;
+	linux_kernel_loff_t l_start;
+	linux_kernel_loff_t l_len;
+	linux_kernel_pid_t l_pid;
+};
+
+//=============================================================================
+// epoll
+
+struct linux_epoll_event
+{
+	linux_poll_t events;
+	uint64_t data;
+};
+_Static_assert(alignof(struct linux_epoll_event) == 4, "struct linux_epoll_event is misaligned");
 
 #endif // !HEADER_LIBLINUX_X86_STRUCTS_H_INCLUDED

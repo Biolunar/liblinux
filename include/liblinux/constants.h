@@ -67,6 +67,41 @@
 #define linux_MLOCK_ONFAULT 0x01
 
 //=============================================================================
+// fcntl
+
+#define linux_F_DUPFD 0
+#define linux_F_GETFD 1
+#define linux_F_SETFD 2
+#define linux_F_GETFL 3
+#define linux_F_SETFL 4
+
+#define linux_F_SETOWN_EX     15
+#define linux_F_GETOWN_EX     16
+#define linux_F_GETOWNER_UIDS 17
+
+#define linux_F_OFD_GETLK  36
+#define linux_F_OFD_SETLK  37
+#define linux_F_OFD_SETLKW 38
+
+#define linux_F_OWNER_TID  0
+#define linux_F_OWNER_PID  1
+#define linux_F_OWNER_PGRP 2
+
+#define linux_FD_CLOEXEC 1
+
+#define linux_LOCK_SH 1
+#define linux_LOCK_EX 2
+#define linux_LOCK_NB 4
+#define linux_LOCK_UN 8
+
+#define linux_LOCK_MAND   32
+#define linux_LOCK_READ   64
+#define linux_LOCK_WRITE 128
+#define linux_LOCK_RW    192
+
+#define linux_F_LINUX_SPECIFIC_BASE 1024
+
+//=============================================================================
 // scheduler
 
 #define linux_SCHED_NORMAL   0
@@ -1356,6 +1391,21 @@ enum
 #define linux_FD_SETSIZE 1024
 
 //=============================================================================
+// poll
+
+#define linux_POLLIN     0x0001
+#define linux_POLLPRI    0x0002
+#define linux_POLLOUT    0x0004
+#define linux_POLLERR    0x0008
+#define linux_POLLHUP    0x0010
+#define linux_POLLNVAL   0x0020
+#define linux_POLLRDNORM 0x0040
+#define linux_POLLRDBAND 0x0080
+
+#define linux_POLLFREE       (linux_poll_t)0x4000
+#define linux_POLL_BUSY_LOOP (linux_poll_t)0x8000
+
+//=============================================================================
 // ioctl
 
 #define linux_IOC_NRBITS   8
@@ -1583,6 +1633,33 @@ enum
 #define linux_TCIFLUSH  0
 #define linux_TCOFLUSH  1
 #define linux_TCIOFLUSH 2
+
+//=============================================================================
+// epoll
+
+#define linux_EPOLL_CLOEXEC linux_O_CLOEXEC
+
+#define linux_EPOLL_CTL_ADD 1
+#define linux_EPOLL_CTL_DEL 2
+#define linux_EPOLL_CTL_MOD 3
+
+#define linux_EPOLLIN     (linux_poll_t)0x00000001
+#define linux_EPOLLPRI    (linux_poll_t)0x00000002
+#define linux_EPOLLOUT    (linux_poll_t)0x00000004
+#define linux_EPOLLERR    (linux_poll_t)0x00000008
+#define linux_EPOLLHUP    (linux_poll_t)0x00000010
+#define linux_EPOLLNVAL   (linux_poll_t)0x00000020
+#define linux_EPOLLRDNORM (linux_poll_t)0x00000040
+#define linux_EPOLLRDBAND (linux_poll_t)0x00000080
+#define linux_EPOLLWRNORM (linux_poll_t)0x00000100
+#define linux_EPOLLWRBAND (linux_poll_t)0x00000200
+#define linux_EPOLLMSG    (linux_poll_t)0x00000400
+#define linux_EPOLLRDHUP  (linux_poll_t)0x00002000
+
+#define linux_EPOLLEXCLUSIVE ((linux_poll_t)(1U << 28))
+#define linux_EPOLLWAKEUP    ((linux_poll_t)(1U << 29))
+#define linux_EPOLLONESHOT   ((linux_poll_t)(1U << 30))
+#define linux_EPOLLET        ((linux_poll_t)(1U << 31))
 
 //=============================================================================
 // Architecture specific

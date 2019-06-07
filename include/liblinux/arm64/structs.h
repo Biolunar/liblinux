@@ -206,11 +206,6 @@ typedef struct linux_sigaltstack
 	int ss_flags;
 	linux_size_t ss_size;
 } linux_stack_t;
-struct linux_epoll_event
-{
-	linux_poll_t events;
-	uint64_t data;
-};
 
 //=============================================================================
 // termbits
@@ -247,6 +242,35 @@ struct linux_ktermios
 	linux_cc_t c_cc[linux_NCCS];
 	linux_speed_t c_ispeed;
 	linux_speed_t c_ospeed;
+};
+
+//=============================================================================
+// fcntl
+
+struct linux_flock
+{
+	short l_type;
+	short l_whence;
+	linux_kernel_off_t l_start;
+	linux_kernel_off_t l_len;
+	linux_kernel_pid_t l_pid;
+};
+struct linux_flock64
+{
+	short l_type;
+	short l_whence;
+	linux_kernel_loff_t l_start;
+	linux_kernel_loff_t l_len;
+	linux_kernel_pid_t l_pid;
+};
+
+//=============================================================================
+// epoll
+
+struct linux_epoll_event
+{
+	linux_poll_t events;
+	uint64_t data;
 };
 
 #endif // !HEADER_LIBLINUX_ARM64_STRUCTS_H_INCLUDED

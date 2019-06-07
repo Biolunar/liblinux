@@ -207,13 +207,6 @@ typedef struct linux_sigaltstack
 	int ss_flags;
 	linux_size_t ss_size;
 } linux_stack_t;
-struct linux_epoll_event
-{
-	linux_poll_t events;
-	uint32_t data_lo;
-	uint32_t data_hi;
-};
-_Static_assert(alignof(struct linux_epoll_event) == 4, "struct linux_epoll_event is misaligned");
 
 //=============================================================================
 // termbits
@@ -251,5 +244,35 @@ struct linux_ktermios
 	linux_speed_t c_ispeed;
 	linux_speed_t c_ospeed;
 };
+
+//=============================================================================
+// fcntl
+
+struct linux_flock
+{
+	short l_type;
+	short l_whence;
+	linux_kernel_off_t l_start;
+	linux_kernel_off_t l_len;
+	linux_kernel_pid_t l_pid;
+};
+struct linux_flock64
+{
+	short l_type;
+	short l_whence;
+	linux_kernel_loff_t l_start;
+	linux_kernel_loff_t l_len;
+	linux_kernel_pid_t l_pid;
+};
+
+//=============================================================================
+// epoll
+
+struct linux_epoll_event
+{
+	linux_poll_t events;
+	unsigned char data[sizeof(uint64_t)];
+};
+_Static_assert(offsetof(struct linux_epoll_event, data) == sizeof(linux_poll_t), "struct linux_epoll_event member 'data' is misaligned");
 
 #endif // !HEADER_LIBLINUX_X32_STRUCTS_H_INCLUDED
