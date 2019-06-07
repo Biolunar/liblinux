@@ -21,21 +21,20 @@ echo "Beginning tests."
 for SYSCALL in $SYSCALLS
 do
 	FILE="tests/syscalls/${SYSCALL}"
-	echo -n "	Testing ${SYSCALL}... "
+	printf "\tTesting ${SYSCALL}... "
 	$INTERP ./$FILE
 	RET=$?
 	if [ $RET -eq 0 ]; then
-		echo -e "\e[32mSUCCESS\e[0m"
+		printf "\033[32mSUCCESS\033[0m\n"
 	elif [ $RET -eq 1 ]; then
-		echo -e "\e[33mNOT SUPPORTED\e[0m"
+		printf "\033[33mNOT SUPPORTED\033[0m\n"
 	elif [ $RET -eq 2 ]; then
-		echo -e "\e[31mFAILURE\e[0m"
+		printf "\033[31mFAILURE\033[0m\n"
 	elif [ $RET -eq 3 ]; then
-		echo -e "\e[31mOTHER FAILURE\e[0m"
+		printf "\033[31mOTHER FAILURE\033[0m\n"
 	else
-		echo -e "\e[31mUNKNOWN ERROR\e[0m"
+		printf "\033[31mUNKNOWN ERROR\033[0m\n"
 	fi
-	#echo "$FILE"
 done
 
 echo "Finished tests."
