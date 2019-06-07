@@ -88,7 +88,7 @@ enum
 	// linux_syscall_name_getsockopt             = LINUX_X32_SYSCALL_BIT +  55, // x86_64
 	linux_syscall_name_clone                  = LINUX_X32_SYSCALL_BIT +  56,
 	linux_syscall_name_fork                   = LINUX_X32_SYSCALL_BIT +  57,
-	linux_syscall_name_vfork                  = LINUX_X32_SYSCALL_BIT +  58,
+	// linux_syscall_name_vfork                  = LINUX_X32_SYSCALL_BIT +  58, // Use linux_vfork_raw()
 	// linux_syscall_name_execve                 = LINUX_X32_SYSCALL_BIT +  59, // x86_64
 	linux_syscall_name_exit                   = LINUX_X32_SYSCALL_BIT +  60,
 	linux_syscall_name_wait4                  = LINUX_X32_SYSCALL_BIT +  61,

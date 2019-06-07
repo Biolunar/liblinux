@@ -11,6 +11,7 @@ asmsrc = \
          src/$(ARCH)/$(TOOL)/syscall4.asm\
          src/$(ARCH)/$(TOOL)/syscall5.asm\
          src/$(ARCH)/$(TOOL)/syscall6.asm\
+         src/$(ARCH)/$(TOOL)/vfork.asm\
          src/$(ARCH)/$(TOOL)/vsyscall0.asm\
          src/$(ARCH)/$(TOOL)/vsyscall1.asm\
          src/$(ARCH)/$(TOOL)/vsyscall2.asm\

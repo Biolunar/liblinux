@@ -4643,7 +4643,11 @@ inline enum linux_error linux_poll(struct linux_pollfd* const ufds, unsigned int
 }
 inline enum linux_error linux_vfork(linux_word_t* const result)
 {
+#if defined(LINUX_ARCH_ARM_EABI)
 	linux_word_t const ret = linux_syscall0(linux_syscall_name_vfork);
+#else
+	linux_word_t const ret = linux_vfork_raw();
+#endif
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)

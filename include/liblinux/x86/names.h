@@ -315,7 +315,7 @@ enum
 	linux_syscall_name_sendfile                     = 187,
 	// (unused) linux_syscall_name_getpmsg                      = 188,
 	// (unused) linux_syscall_name_putpmsg                      = 189,
-	linux_syscall_name_vfork                        = 190,
+	// linux_syscall_name_vfork                        = 190, // Use linux_vfork_raw()
 	linux_syscall_name_getrlimit                    = 191,
 	linux_syscall_name_mmap_pgoff                   = 192,
 	linux_syscall_name_truncate64                   = 193,

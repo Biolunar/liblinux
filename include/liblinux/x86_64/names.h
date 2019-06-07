@@ -86,7 +86,7 @@ enum
 	linux_syscall_name_getsockopt             =  55,
 	linux_syscall_name_clone                  =  56,
 	linux_syscall_name_fork                   =  57,
-	linux_syscall_name_vfork                  =  58,
+	// linux_syscall_name_vfork                  =  58, // Use linux_vfork_raw()
 	linux_syscall_name_execve                 =  59,
 	linux_syscall_name_exit                   =  60,
 	linux_syscall_name_wait4                  =  61,

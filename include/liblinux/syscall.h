@@ -102,6 +102,17 @@ noreturn void linux_rt_sigreturn(void);
 noreturn void linux_sigreturn(void);
 #endif // LINUX_ARCH_ARM_EABI || LINUX_ARCH_X86
 
+/*
+ * vfork is a special syscall. Since parent and child share memory, the wrapper
+ * function needs to fix the stack for the parent after the child finishes.
+ * This is done in this function.
+ */
+#if defined(LINUX_ARCH_X86)    || \
+    defined(LINUX_ARCH_X32)    || \
+    defined(LINUX_ARCH_X86_64)
+linux_word_t linux_vfork_raw(void);
+#endif // LINUX_ARCH_X86 || LINUX_ARCH_X32 || LINUX_ARCH_X86_64
+
 // Direct functions
 //==============================================================================
 
