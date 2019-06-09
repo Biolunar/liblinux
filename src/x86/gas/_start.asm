@@ -24,6 +24,8 @@ _start:
 	lea esi, [esp + 4] # argv
 	lea edx, [4 * edi + esp + 8] # envp
 
+	sub esp, 4 # This is needed to align the stack on a 16 byte boundary.
+
 	push edx # envp
 	push esi # argv
 	push edi # argc
