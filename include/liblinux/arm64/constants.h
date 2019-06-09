@@ -17,6 +17,15 @@
 #ifndef HEADER_LIBLINUX_ARM64_CONSTANTS_H_INCLUDED
 #define HEADER_LIBLINUX_ARM64_CONSTANTS_H_INCLUDED
 
+#if !defined(linux_PAGE_SHIFT)
+// 12 for  4K page size (default)
+// 14 for 16K page size
+// 16 for 64K page size
+#define linux_PAGE_SHIFT 12
+#endif
+#define linux_PAGE_SIZE  (1 << linux_PAGE_SHIFT)
+#define linux_PAGE_MASK  (~(linux_PAGE_SIZE - 1))
+
 //=============================================================================
 // signal
 

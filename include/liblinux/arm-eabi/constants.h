@@ -17,6 +17,10 @@
 #ifndef HEADER_LIBLINUX_ARM_EABI_CONSTANTS_H_INCLUDED
 #define HEADER_LIBLINUX_ARM_EABI_CONSTANTS_H_INCLUDED
 
+#define linux_PAGE_SHIFT 12
+#define linux_PAGE_SIZE  (1UL << linux_PAGE_SHIFT)
+#define linux_PAGE_MASK  (~((1 << linux_PAGE_SHIFT) - 1))
+
 //=============================================================================
 // signal
 

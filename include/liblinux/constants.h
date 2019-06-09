@@ -101,6 +101,52 @@
 
 #define linux_F_LINUX_SPECIFIC_BASE 1024
 
+#define linux_F_SETLEASE         (linux_F_LINUX_SPECIFIC_BASE +  0)
+#define linux_F_GETLEASE         (linux_F_LINUX_SPECIFIC_BASE +  1)
+#define linux_F_NOTIFY           (linux_F_LINUX_SPECIFIC_BASE +  2)
+#define linux_F_CANCELLK         (linux_F_LINUX_SPECIFIC_BASE +  5)
+#define linux_F_DUPFD_CLOEXEC    (linux_F_LINUX_SPECIFIC_BASE +  6)
+#define linux_F_SETPIPE_SZ       (linux_F_LINUX_SPECIFIC_BASE +  7)
+#define linux_F_GETPIPE_SZ       (linux_F_LINUX_SPECIFIC_BASE +  8)
+#define linux_F_ADD_SEALS        (linux_F_LINUX_SPECIFIC_BASE +  9)
+#define linux_F_GET_SEALS        (linux_F_LINUX_SPECIFIC_BASE + 10)
+#define linux_F_GET_RW_HINT      (linux_F_LINUX_SPECIFIC_BASE + 11)
+#define linux_F_SET_RW_HINT      (linux_F_LINUX_SPECIFIC_BASE + 12)
+#define linux_F_GET_FILE_RW_HINT (linux_F_LINUX_SPECIFIC_BASE + 13)
+#define linux_F_SET_FILE_RW_HINT (linux_F_LINUX_SPECIFIC_BASE + 14)
+
+#define linux_F_SEAL_SEAL         0x0001
+#define linux_F_SEAL_SHRINK       0x0002
+#define linux_F_SEAL_GROW         0x0004
+#define linux_F_SEAL_WRITE        0x0008
+#define linux_F_SEAL_FUTURE_WRITE 0x0010
+
+#define linux_RWF_WRITE_LIFE_NOT_SET 0
+#define linux_RWH_WRITE_LIFE_NONE    1
+#define linux_RWH_WRITE_LIFE_SHORT   2
+#define linux_RWH_WRITE_LIFE_MEDIUM  3
+#define linux_RWH_WRITE_LIFE_LONG    4
+#define linux_RWH_WRITE_LIFE_EXTREME 5
+
+#define linux_DN_ACCESS    0x00000001
+#define linux_DN_MODIFY    0x00000002
+#define linux_DN_CREATE    0x00000004
+#define linux_DN_DELETE    0x00000008
+#define linux_DN_RENAME    0x00000010
+#define linux_DN_ATTRIB    0x00000020
+#define linux_DN_MULTISHOT 0x80000000
+
+#define linux_AT_FDCWD              -100
+#define linux_AT_SYMLINK_NOFOLLOW   0x0100
+#define linux_AT_REMOVEDIR          0x0200
+#define linux_AT_SYMLINK_FOLLOW     0x0400
+#define linux_AT_NO_AUTOMOUNT       0x0800
+#define linux_AT_EMPTY_PATH         0x1000
+#define linux_AT_STATX_SYNC_TYPE    0x6000
+#define linux_AT_STATX_SYNC_AS_STAT 0x0000
+#define linux_AT_STATX_FORCE_SYNC   0x2000
+#define linux_AT_STATX_DONT_SYNC    0x4000
+
 //=============================================================================
 // scheduler
 

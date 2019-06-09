@@ -2327,9 +2327,9 @@ inline enum linux_error linux_fchown(unsigned int const fd, linux_uid_t const us
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_openat(int const dfd, char const* const filename, int const flags, linux_umode_t const mode, linux_word_t* const result)
+inline enum linux_error linux_openat(linux_fd_t const dfd, char const* const filename, int const flags, linux_umode_t const mode, linux_word_t* const result)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)dfd, (uintptr_t)filename, (unsigned int)flags, mode, linux_syscall_name_openat);
+	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (unsigned int)flags, mode, linux_syscall_name_openat);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)

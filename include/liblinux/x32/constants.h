@@ -17,6 +17,10 @@
 #ifndef HEADER_LIBLINUX_X32_CONSTANTS_H_INCLUDED
 #define HEADER_LIBLINUX_X32_CONSTANTS_H_INCLUDED
 
+#define linux_PAGE_SHIFT 12
+#define linux_PAGE_SIZE  (1UL << linux_PAGE_SHIFT)
+#define linux_PAGE_MASK  (~(linux_PAGE_SIZE - 1))
+
 //=============================================================================
 // arch_prctl
 
