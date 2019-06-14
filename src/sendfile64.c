@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error linux_sendfile64(int out_fd, int in_fd, linux_loff_t* offset, linux_size_t count, linux_ssize_t* result);
+extern inline enum linux_error linux_sendfile64(linux_fd_t out_fd, linux_fd_t in_fd, linux_loff_t* offset, linux_size_t count, linux_ssize_t* result);
