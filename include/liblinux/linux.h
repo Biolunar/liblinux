@@ -4091,7 +4091,7 @@ inline enum linux_error linux_syncfs(linux_fd_t const fd)
 }
 inline enum linux_error linux_setns(linux_fd_t const fd, int const nstype)
 {
-	linux_word_t const ret = linux_syscall2((linux_fd_t)fd, (unsigned int)nstype, linux_syscall_name_setns);
+	linux_word_t const ret = linux_syscall2((uint32_t)fd, (unsigned int)nstype, linux_syscall_name_setns);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
