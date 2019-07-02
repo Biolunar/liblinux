@@ -16,11 +16,11 @@ noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 	if (!linux_syscall_returned_error(err))
 		linux_exit_group(2);
 
-	err = -linux_error_max;
+	err = -linux_MAX_ERRNO;
 	if (!linux_syscall_returned_error(err))
 		linux_exit_group(3);
 
-	err = -linux_error_max - 1;
+	err = -linux_MAX_ERRNO - 1;
 	if (linux_syscall_returned_error(err))
 		linux_exit_group(4);
 

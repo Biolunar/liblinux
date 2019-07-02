@@ -167,12 +167,12 @@ enum linux_error
 	linux_ERFKILL         =  132, // Operation not possible due to RF-kill
 	linux_EHWPOISON       =  133, // Memory page has hardware error
 
-	linux_error_max       = 4095,
+	linux_MAX_ERRNO       = 4095,
 };
 
 inline bool linux_syscall_returned_error(linux_word_t const ret)
 {
-	return ret < 0 && ret >= -linux_error_max;
+	return ret < 0 && ret >= -linux_MAX_ERRNO;
 }
 
 #endif // !HEADER_LIBLINUX_ERROR_H_INCLUDED
