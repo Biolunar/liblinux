@@ -22,6 +22,17 @@
 #include "endian.h"
 
 //=============================================================================
+// access
+
+enum // Kernel sources do not explicitly define these constants. They correspond to S_IXOTH, S_IWOTH and S_IROTH.
+{
+	linux_F_OK = 0,
+	linux_X_OK = 1,
+	linux_W_OK = 2,
+	linux_R_OK = 4,
+};
+
+//=============================================================================
 // signals
 
 #define linux_NSIG    64

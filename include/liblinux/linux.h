@@ -2118,7 +2118,7 @@ inline enum linux_error linux_dup3(linux_fd_t const oldfd, linux_fd_t const newf
 		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_fcntl(linux_fd_t const fd, unsigned int const cmd, linux_uword_t const arg, linux_word_t* const result) // DEPRECATED ON 32 BIT: use fcntl64
+inline enum linux_error linux_fcntl(linux_fd_t const fd, unsigned int const cmd, linux_uword_t const arg, linux_word_t* const result) // DEPRECATED ON 32 BIT: use linux_fcntl64
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, cmd, arg, linux_syscall_name_fcntl);
 	if (linux_syscall_returned_error(ret))
@@ -2218,7 +2218,7 @@ inline enum linux_error linux_linkat(linux_fd_t const olddfd, char const* const 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_renameat(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname) // DEPRECATED: use renameat2
+inline enum linux_error linux_renameat(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname) // DEPRECATED: use linux_renameat2
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)olddfd, (uintptr_t)oldname, (uint32_t)newdfd, (uintptr_t)newname, linux_syscall_name_renameat);
 	if (linux_syscall_returned_error(ret))
@@ -2328,13 +2328,13 @@ inline enum linux_error linux_fchown(linux_fd_t const fd, linux_uid_t const user
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_openat(linux_fd_t const dfd, char const* const filename, int const flags, linux_umode_t const mode, linux_word_t* const result)
+inline enum linux_error linux_openat(linux_fd_t const dfd, char const* const filename, int const flags, linux_umode_t const mode, linux_fd_t* const result)
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (unsigned int)flags, mode, linux_syscall_name_openat);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (linux_word_t)ret;
+		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_name_to_handle_at(linux_fd_t const dfd, char const* const name, struct linux_file_handle* const handle, int* const mnt_id, int const flag)
@@ -2353,7 +2353,7 @@ inline enum linux_error linux_open_by_handle_at(int const mountdirfd, struct lin
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_newfstat(linux_fd_t const fd, struct linux_stat* const statbuf) // DEPRECATED: use statx
+inline enum linux_error linux_newfstat(linux_fd_t const fd, struct linux_stat* const statbuf) // DEPRECATED: use linux_statx
 {
 	linux_word_t const ret = linux_syscall2((uint32_t)fd, (uintptr_t)statbuf, linux_syscall_name_newfstat);
 	if (linux_syscall_returned_error(ret))
@@ -2446,7 +2446,7 @@ inline enum linux_error linux_pwrite64(linux_fd_t const fd, char const* const bu
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_preadv(linux_uword_t const fd, struct linux_iovec const* const vec, linux_uword_t const vlen, linux_uword_t const pos_l, linux_uword_t const pos_h, linux_ssize_t* const result) // DEPRECATED: use preadv2
+inline enum linux_error linux_preadv(linux_uword_t const fd, struct linux_iovec const* const vec, linux_uword_t const vlen, linux_uword_t const pos_l, linux_uword_t const pos_h, linux_ssize_t* const result) // DEPRECATED: use linux_preadv2
 {
 	linux_word_t const ret = linux_syscall5(fd, (uintptr_t)vec, vlen, pos_l, pos_h, linux_syscall_name_preadv);
 	if (linux_syscall_returned_error(ret))
@@ -2455,7 +2455,7 @@ inline enum linux_error linux_preadv(linux_uword_t const fd, struct linux_iovec 
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_pwritev(linux_uword_t const fd, struct linux_iovec const* const vec, linux_uword_t const vlen, linux_uword_t const pos_l, linux_uword_t const pos_h, linux_ssize_t* const result) // DEPRECATED: use pwritev2
+inline enum linux_error linux_pwritev(linux_uword_t const fd, struct linux_iovec const* const vec, linux_uword_t const vlen, linux_uword_t const pos_l, linux_uword_t const pos_h, linux_ssize_t* const result) // DEPRECATED: use linux_pwritev2
 {
 	linux_word_t const ret = linux_syscall5(fd, (uintptr_t)vec, vlen, pos_l, pos_h, linux_syscall_name_pwritev);
 	if (linux_syscall_returned_error(ret))
@@ -2915,7 +2915,7 @@ inline enum linux_error linux_kill(linux_pid_t const pid, int const sig)
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_tkill(linux_pid_t const pid, int const sig) // DEPRECATED: use tgkill
+inline enum linux_error linux_tkill(linux_pid_t const pid, int const sig) // DEPRECATED: use linux_tgkill
 {
 	linux_word_t const ret = linux_syscall2((unsigned int)pid, (unsigned int)sig, linux_syscall_name_tkill);
 	if (linux_syscall_returned_error(ret))
@@ -3501,7 +3501,7 @@ inline enum linux_error linux_msync(linux_uword_t const start, linux_size_t cons
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_mlock(linux_uword_t const start, linux_size_t const len) // DEPRECATED: use mlock2
+inline enum linux_error linux_mlock(linux_uword_t const start, linux_size_t const len) // DEPRECATED: use linux_mlock2
 {
 	linux_word_t const ret = linux_syscall2(start, len, linux_syscall_name_mlock);
 	if (linux_syscall_returned_error(ret))
@@ -3677,7 +3677,7 @@ inline enum linux_error linux_clone(linux_uword_t const clone_flags, linux_uword
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_execve(char const* const filename, char const* const* const argv, char const* const* const envp) // DEPRECATED: use execveat
+inline enum linux_error linux_execve(char const* const filename, char const* const* const argv, char const* const* const envp) // DEPRECATED: use linux_execveat
 {
 	linux_word_t const ret = linux_syscall3((uintptr_t)filename, (uintptr_t)argv, (uintptr_t)envp, linux_syscall_name_execve);
 	if (linux_syscall_returned_error(ret))
@@ -4342,7 +4342,7 @@ inline enum linux_error linux_semop(int const semid, struct linux_sembuf* const 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_accept(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, linux_fd_t* const result) // DEPRECATED: use accept4
+inline enum linux_error linux_accept(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, linux_fd_t* const result) // DEPRECATED: use linux_accept4
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, linux_syscall_name_accept);
 	if (linux_syscall_returned_error(ret))
@@ -4361,7 +4361,7 @@ inline enum linux_error linux_kexec_file_load(linux_fd_t const kernel_fd, linux_
 #endif
 
 #if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_kernel_timespec* const timeout, int* const result) // DEPRECATED
+inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_kernel_timespec* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
 {
 	linux_word_t const ret = linux_syscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents);
 	if (linux_syscall_returned_error(ret))
@@ -4481,7 +4481,7 @@ inline enum linux_error linux_link(char const* const oldname, char const* const 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_unlink(char const* const pathname)
+inline enum linux_error linux_unlink(char const* const pathname) // DEPRECATED: use linux_unlinkat
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)pathname, linux_syscall_name_unlink);
 	if (linux_syscall_returned_error(ret))
@@ -4669,7 +4669,7 @@ inline enum linux_error linux_chown(char const* const filename, linux_uid_t cons
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_epoll_create(int const size, linux_fd_t* const result) // DEPRECATED
+inline enum linux_error linux_epoll_create(int const size, linux_fd_t* const result) // DEPRECATED: use linux_epoll_create1
 {
 	linux_word_t const ret = linux_syscall1((unsigned int)size, linux_syscall_name_epoll_create);
 	if (linux_syscall_returned_error(ret))
@@ -4678,7 +4678,7 @@ inline enum linux_error linux_epoll_create(int const size, linux_fd_t* const res
 		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_epoll_wait(linux_fd_t const epfd, struct linux_epoll_event* const events, int const maxevents, int const timeout, int* const result) // DEPRECATED
+inline enum linux_error linux_epoll_wait(linux_fd_t const epfd, struct linux_epoll_event* const events, int const maxevents, int const timeout, int* const result) // DEPRECATED: use linux_epoll_pwait
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)epfd, (uintptr_t)events, (unsigned int)maxevents, (unsigned int)timeout, linux_syscall_name_epoll_wait);
 	if (linux_syscall_returned_error(ret))
@@ -4687,7 +4687,7 @@ inline enum linux_error linux_epoll_wait(linux_fd_t const epfd, struct linux_epo
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_inotify_init(linux_fd_t* const result) // DEPRECATED
+inline enum linux_error linux_inotify_init(linux_fd_t* const result) // DEPRECATED: use linux_inotify_init1
 {
 	linux_word_t const ret = linux_syscall0(linux_syscall_name_inotify_init);
 	if (linux_syscall_returned_error(ret))
@@ -4696,7 +4696,7 @@ inline enum linux_error linux_inotify_init(linux_fd_t* const result) // DEPRECAT
 		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_eventfd(unsigned int const count, linux_fd_t* const result) // DEPRECATED: use eventfd2
+inline enum linux_error linux_eventfd(unsigned int const count, linux_fd_t* const result) // DEPRECATED: use linux_eventfd2
 {
 	linux_word_t const ret = linux_syscall1(count, linux_syscall_name_eventfd);
 	if (linux_syscall_returned_error(ret))
@@ -4761,7 +4761,7 @@ inline enum linux_error linux_fadvise64(linux_fd_t const fd, linux_loff_t const 
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
-inline enum linux_error linux_io_getevents_time32(uint32_t const ctx_id, int32_t const min_nr, int32_t const nr, struct linux_io_event* const events, struct linux_old_timespec32* const timeout, int* const result) // DEPRECATED
+inline enum linux_error linux_io_getevents_time32(uint32_t const ctx_id, int32_t const min_nr, int32_t const nr, struct linux_io_event* const events, struct linux_old_timespec32* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
 {
 	linux_word_t const ret = linux_syscall5(ctx_id, (uint32_t)min_nr, (uint32_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents_time32);
 	if (linux_syscall_returned_error(ret))
@@ -4770,7 +4770,7 @@ inline enum linux_error linux_io_getevents_time32(uint32_t const ctx_id, int32_t
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_io_pgetevents_time32(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_old_timespec32* const timeout, struct linux_aio_sigset const* const usig, int* const result) // DEPRECATED
+inline enum linux_error linux_io_pgetevents_time32(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_old_timespec32* const timeout, struct linux_aio_sigset const* const usig, int* const result) // DEPRECATED: use linux_io_pgetevents
 {
 	linux_word_t const ret = linux_syscall6(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, (uintptr_t)usig, linux_syscall_name_io_pgetevents_time32);
 	if (linux_syscall_returned_error(ret))
@@ -4804,7 +4804,7 @@ inline enum linux_error linux_rt_sigtimedwait_time32(linux_sigset_t const* const
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_futex_time32(uint32_t* const uaddr, int const op, uint32_t const val, struct linux_old_timespec32* const utime, uint32_t* const uaddr2, uint32_t const val3, linux_word_t* const result) // DEPRECATED: use futex
+inline enum linux_error linux_futex_time32(uint32_t* const uaddr, int const op, uint32_t const val, struct linux_old_timespec32* const utime, uint32_t* const uaddr2, uint32_t const val3, linux_word_t* const result) // DEPRECATED: use linux_futex
 {
 	linux_word_t const ret = linux_syscall6((uintptr_t)uaddr, (unsigned int)op, val, (uintptr_t)utime, (uintptr_t)uaddr2, val3, linux_syscall_name_futex_time32);
 	if (linux_syscall_returned_error(ret))
@@ -5005,7 +5005,7 @@ inline enum linux_error linux_llseek(linux_fd_t const fd, linux_uword_t const of
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_sendfile(linux_fd_t const out_fd, linux_fd_t const in_fd, linux_off_t* const offset, linux_size_t const count, linux_ssize_t* const result) // DEPRECATED: use sendfile64
+inline enum linux_error linux_sendfile(linux_fd_t const out_fd, linux_fd_t const in_fd, linux_off_t* const offset, linux_size_t const count, linux_ssize_t* const result) // DEPRECATED: use linux_sendfile64
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)out_fd, (uint32_t)in_fd, (uintptr_t)offset, count, linux_syscall_name_sendfile);
 	if (linux_syscall_returned_error(ret))
