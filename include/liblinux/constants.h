@@ -691,6 +691,29 @@ enum
 #define linux_INADDR_ALLSNOOPERS_GROUP 0xe000006aU
 #define linux_INADDR_MAX_LOCAL_GROUP   0xe00000ffU
 
+#define linux_SO_EE_ORIGIN_NONE         0
+#define linux_SO_EE_ORIGIN_LOCAL        1
+#define linux_SO_EE_ORIGIN_ICMP         2
+#define linux_SO_EE_ORIGIN_ICMP6        3
+#define linux_SO_EE_ORIGIN_TXSTATUS     4
+#define linux_SO_EE_ORIGIN_ZEROCOPY     5
+#define linux_SO_EE_ORIGIN_TXTIME       6
+#define linux_SO_EE_ORIGIN_TIMESTAMPING linux_SO_EE_ORIGIN_TXSTATUS
+
+#define linux_SO_EE_OFFENDER(ee) ((struct linux_sockaddr*)((ee)+1))
+
+#define linux_SO_EE_CODE_ZEROCOPY_COPIED 1
+
+#define linux_SO_EE_CODE_TXTIME_INVALID_PARAM 1
+#define linux_SO_EE_CODE_TXTIME_MISSED        2
+
+enum
+{
+	linux_SCM_TSTAMP_SND,
+	linux_SCM_TSTAMP_SCHED,
+	linux_SCM_TSTAMP_ACK,
+};
+
 //-----------------------------------------------------------------------------
 // IPv6
 

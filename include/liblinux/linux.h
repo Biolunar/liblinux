@@ -577,6 +577,11 @@ struct linux_new_utsname
 	char machine[65];
 	char domainname[65];
 };
+struct linux_timespec
+{
+	linux_kernel_time_t tv_sec;
+	long tv_nsec;
+};
 struct linux_timeval
 {
 	linux_kernel_time_t tv_sec;
@@ -908,6 +913,24 @@ struct linux_sockaddr_in
 	unsigned char _pad[sizeof(struct linux_sockaddr) - sizeof(linux_kernel_sa_family_t) - sizeof(uint16_t) - sizeof(struct linux_in_addr)];
 };
 _Static_assert(sizeof(struct linux_sockaddr_in) == sizeof(struct linux_sockaddr), "struct linux_sockaddr_in has wrong size");
+struct linux_sock_extended_err
+{
+	uint32_t ee_errno;
+	uint8_t ee_origin;
+	uint8_t ee_type;
+	uint8_t ee_code;
+	uint8_t ee_pad;
+	uint32_t ee_info;
+	uint32_t ee_data;
+};
+struct linux_scm_timestamping
+{
+	struct linux_timespec ts[3];
+};
+struct linux_scm_timestamping64
+{
+	struct linux_kernel_timespec ts[3];
+};
 
 //-----------------------------------------------------------------------------
 // IPv6
@@ -5626,6 +5649,16 @@ static inline bool linux_FD_ISSET(linux_fd_t const fd, linux_fd_set* const set)
 	if (fd >= linux_FD_SETSIZE)
 		return false;
 	return set->fds_bits[(uint32_t)fd / (8 * sizeof(long))] & (1UL << ((uint32_t)fd % (8 * sizeof(long)))); // 8 == CHAR_BIT
+}
+
+static inline size_t linux_IP_MSFILTER_SIZE(size_t numsrc)
+{
+	return sizeof(struct linux_ip_msfilter) - sizeof(uint32_t) + numsrc * sizeof(uint32_t);
+}
+
+static inline size_t linux_GROUP_FILTER_SIZE(size_t numsrc)
+{
+	return sizeof(struct linux_group_filter) - sizeof(struct linux_kernel_sockaddr_storage) + numsrc * sizeof(struct linux_kernel_sockaddr_storage);
 }
 
 static inline bool linux_IN_CLASSA(uint32_t const addr)
