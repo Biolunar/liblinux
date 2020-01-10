@@ -2,8 +2,8 @@ liblinux
 ========
 
 liblinux is a static C library to abstract away all assembly needed to
-interface with the Linux kernel. To use the C headers at least a C99 compiler
-is required (C11 is recommended).
+interface with the Linux kernel. To use the C headers a C11 compiler is
+required.
 
 SUPPORTED ARCHITECTURES
 -----------------------
