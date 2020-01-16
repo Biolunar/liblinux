@@ -330,4 +330,17 @@ struct linux_epoll_event
 	uint64_t data;
 };
 
+//=============================================================================
+// termios
+
+struct linux_termio
+{
+	unsigned short c_iflag;
+	unsigned short c_oflag;
+	unsigned short c_cflag;
+	unsigned short c_lflag;
+	unsigned char c_line;
+	unsigned char c_cc[linux_NCC];
+};
+
 #endif // !HEADER_LIBLINUX_ARM_EABI_STRUCTS_H_INCLUDED

@@ -481,6 +481,13 @@ struct linux_io_uring_params
 	struct linux_io_sqring_offsets sq_off;
 	struct linux_io_cqring_offsets cq_off;
 };
+struct linux_winsize
+{
+	unsigned short ws_row;
+	unsigned short ws_col;
+	unsigned short ws_xpixel;
+	unsigned short ws_ypixel;
+};
 
 #if defined(LINUX_ARCH_X86)
 struct linux_oldold_utsname
@@ -3693,7 +3700,11 @@ inline enum linux_error linux_waitid(int const which, linux_pid_t const upid, st
 }
 inline enum linux_error linux_clone(linux_uword_t const clone_flags, linux_uword_t const newsp, int* const parent_tidptr, int* const child_tidptr, linux_uword_t const tls, linux_word_t* const result)
 {
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86)
+	linux_word_t const ret = linux_syscall5(clone_flags, newsp, (uintptr_t)parent_tidptr, tls, (uintptr_t)child_tidptr, linux_syscall_name_clone);
+#else
 	linux_word_t const ret = linux_syscall5(clone_flags, newsp, (uintptr_t)parent_tidptr, (uintptr_t)child_tidptr, tls, linux_syscall_name_clone);
+#endif
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)

@@ -500,4 +500,24 @@ enum linux_sock_type
 #define linux_POLLREMOVE 0x1000
 #define linux_POLLRDHUP  0x2000
 
+//=============================================================================
+// termios
+
+#define linux_NCC 8
+
+#define linux_TIOCM_LE   0x0001
+#define linux_TIOCM_DTR  0x0002
+#define linux_TIOCM_RTS  0x0004
+#define linux_TIOCM_ST   0x0008
+#define linux_TIOCM_SR   0x0010
+#define linux_TIOCM_CTS  0x0020
+#define linux_TIOCM_CAR  0x0040
+#define linux_TIOCM_RNG  0x0080
+#define linux_TIOCM_DSR  0x0100
+#define linux_TIOCM_CD   linux_TIOCM_CAR
+#define linux_TIOCM_RI   linux_IOCM_RNG
+#define linux_TIOCM_OUT1 0x2000
+#define linux_TIOCM_OUT2 0x4000
+#define linux_TIOCM_LOOP 0x8000
+
 #endif // !HEADER_LIBLINUX_X86_64_CONSTANTS_H_INCLUDED

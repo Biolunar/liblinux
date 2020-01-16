@@ -383,4 +383,17 @@ struct linux_epoll_event
 };
 _Static_assert(alignof(struct linux_epoll_event) == 4, "struct linux_epoll_event is misaligned");
 
+//=============================================================================
+// termios
+
+struct linux_termio
+{
+	unsigned short c_iflag;
+	unsigned short c_oflag;
+	unsigned short c_cflag;
+	unsigned short c_lflag;
+	unsigned char c_line;
+	unsigned char c_cc[linux_NCC];
+};
+
 #endif // !HEADER_LIBLINUX_X86_STRUCTS_H_INCLUDED

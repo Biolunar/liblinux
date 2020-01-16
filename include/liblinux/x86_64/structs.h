@@ -272,4 +272,17 @@ struct linux_epoll_event
 };
 _Static_assert(offsetof(struct linux_epoll_event, data) == sizeof(linux_poll_t), "struct linux_epoll_event member 'data' is misaligned");
 
+//=============================================================================
+// termios
+
+struct linux_termio
+{
+	unsigned short c_iflag;
+	unsigned short c_oflag;
+	unsigned short c_cflag;
+	unsigned short c_lflag;
+	unsigned char c_line;
+	unsigned char c_cc[linux_NCC];
+};
+
 #endif // !HEADER_LIBLINUX_X86_64_STRUCTS_H_INCLUDED
