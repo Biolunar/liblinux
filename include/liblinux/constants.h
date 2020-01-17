@@ -1774,8 +1774,8 @@ enum
 	((size) << linux_IOC_SIZESHIFT))
 
 #define linux_IO(type, nr)         linux_IOC(linux_IOC_NONE, (type), (nr), 0)
-#define linux_IOR(type, nr, size)  linux_IOC(linux_IOC_READ, (type), (nr), (size))
-#define linux_IOW(type, nr, size)  linux_IOC(linux_IOC_WRITE, (type), (nr), (size))
-#define linux_IOWR(type, nr, size) linux_IOC(linux_IOC_READ | linux_IOC_WRITE, (type), (nr), (size))
+#define linux_IOR(type, nr, size)  linux_IOC(linux_IOC_READ, (type), (nr), sizeof(size))
+#define linux_IOW(type, nr, size)  linux_IOC(linux_IOC_WRITE, (type), (nr), sizeof(size))
+#define linux_IOWR(type, nr, size) linux_IOC(linux_IOC_READ | linux_IOC_WRITE, (type), (nr), sizeof(size))
 
 #endif // !HEADER_LIBLINUX_CONSTANTS_H_INCLUDED
