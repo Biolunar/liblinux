@@ -1742,6 +1742,12 @@ enum
 #define linux_EPOLLET        ((linux_poll_t)(1U << 31))
 
 //=============================================================================
+// timerfd
+
+#define linux_TFD_TIMER_ABSTIME       (1 << 0)
+#define linux_TFD_TIMER_CANCEL_ON_SET (1 << 1)
+
+//=============================================================================
 // Architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -1777,5 +1783,13 @@ enum
 #define linux_IOR(type, nr, size)  linux_IOC(linux_IOC_READ, (type), (nr), sizeof(size))
 #define linux_IOW(type, nr, size)  linux_IOC(linux_IOC_WRITE, (type), (nr), sizeof(size))
 #define linux_IOWR(type, nr, size) linux_IOC(linux_IOC_READ | linux_IOC_WRITE, (type), (nr), sizeof(size))
+
+//=============================================================================
+// Architecture dependent timerfd
+
+#define linux_TFD_CLOEXEC  linux_O_CLOEXEC
+#define linux_TFD_NONBLOCK linux_O_NONBLOCK
+
+#define linux_TFD_IOC_SET_TICKS linux_IOW('T', 0, uint64_t)
 
 #endif // !HEADER_LIBLINUX_CONSTANTS_H_INCLUDED
