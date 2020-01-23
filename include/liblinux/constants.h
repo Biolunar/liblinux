@@ -22,6 +22,36 @@
 #include "endian.h"
 
 //=============================================================================
+// auxvec
+
+#define linux_AT_NULL           0
+#define linux_AT_IGNORE         1
+#define linux_AT_EXECFD         2
+#define linux_AT_PHDR           3
+#define linux_AT_PHENT          4
+#define linux_AT_PHNUM          5
+#define linux_AT_PAGESZ         6
+#define linux_AT_BASE           7
+#define linux_AT_FLAGS          8
+#define linux_AT_ENTRY          9
+#define linux_AT_NOTELF        10
+#define linux_AT_UID           11
+#define linux_AT_EUID          12
+#define linux_AT_GID           13
+#define linux_AT_EGID          14
+#define linux_AT_PLATFORM      15
+#define linux_AT_HWCAP         16
+#define linux_AT_CLKTCK        17
+// 18-22 are reserved
+#define linux_AT_SECURE        23
+#define linux_AT_BASE_PLATFORM 24
+#define linux_AT_RANDOM        25
+#define linux_AT_HWCAP2        26
+#define linux_AT_EXECFN        31
+
+#define linux_AT_VECTOR_SIZE_BASE 20
+
+//=============================================================================
 // access
 
 enum // Kernel sources do not explicitly define these constants. They correspond to S_IXOTH, S_IWOTH and S_IROTH.
@@ -1791,6 +1821,14 @@ enum
 #define linux_IOR(type, nr, size)  linux_IOC(linux_IOC_READ, (type), (nr), sizeof(size))
 #define linux_IOW(type, nr, size)  linux_IOC(linux_IOC_WRITE, (type), (nr), sizeof(size))
 #define linux_IOWR(type, nr, size) linux_IOC(linux_IOC_READ | linux_IOC_WRITE, (type), (nr), sizeof(size))
+
+//=============================================================================
+// Architecture dependent auxval
+
+#ifndef linux_AT_VECTOR_SIZE_ARCH
+#define linux_AT_VECTOR_SIZE_ARCH 0
+#endif
+#define linux_AT_VECTOR_SIZE (2*(linux_AT_VECTOR_SIZE_ARCH + linux_AT_VECTOR_SIZE_BASE + 1))
 
 //=============================================================================
 // Architecture dependent timerfd

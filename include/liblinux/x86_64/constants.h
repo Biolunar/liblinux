@@ -22,6 +22,13 @@
 #define linux_PAGE_MASK  (~(linux_PAGE_SIZE - 1))
 
 //=============================================================================
+// auxvec
+
+#define linux_AT_SYSINFO_EHDR 33
+
+#define linux_AT_VECTOR_SIZE_ARCH 1
+
+//=============================================================================
 // arch_prctl
 
 #define linux_ARCH_SET_GS 0x1001
