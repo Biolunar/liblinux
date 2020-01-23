@@ -335,7 +335,7 @@ enum linux_rseq_cs_flags
 #define linux_PF_XDP        linux_AF_XDP
 #define linux_PF_MAX        linux_AF_MAX
 
-#define linux_SOMAXCONN 128
+#define linux_SOMAXCONN 4096
 
 #define linux_MSG_OOB               1
 #define linux_MSG_PEEK              2
