@@ -717,6 +717,14 @@ enum
 //-----------------------------------------------------------------------------
 // IPv6
 
+#define linux_IN6ADDR_ANY_INIT                       { { { 0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } } }
+#define linux_IN6ADDR_LOOPBACK_INIT                  { { { 0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } } }
+#define linux_IN6ADDR_LINKLOCAL_ALLNODES_INIT        { { { 0xff, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } } }
+#define linux_IN6ADDR_LINKLOCAL_ALLROUTERS_INIT      { { { 0xff, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 } } }
+#define linux_IN6ADDR_INTERFACELOCAL_ALLNODES_INIT   { { { 0xff, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 } } }
+#define linux_IN6ADDR_INTERFACELOCAL_ALLROUTERS_INIT { { { 0xff, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 } } }
+#define linux_IN6ADDR_SITELOCAL_ALLROUTERS_INIT      { { { 0xff, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 } } }
+
 #define linux_IPV6_FL_A_GET   0
 #define linux_IPV6_FL_A_PUT   1
 #define linux_IPV6_FL_A_RENEW 2
