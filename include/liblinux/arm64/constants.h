@@ -313,6 +313,10 @@ enum linux_sock_type
 #define linux_TIOCGPTN        linux_IOR('T', 0x30, unsigned int)
 #define linux_TIOCSPTLCK      linux_IOW('T', 0x31, int)
 #define linux_TIOCGDEV        linux_IOR('T', 0x32, unsigned int)
+#define linux_TCGETX          0x5432
+#define linux_TCSETX          0x5433
+#define linux_TCSETXF         0x5434
+#define linux_TCSETXW         0x5435
 #define linux_TIOCSIG         linux_IOW('T', 0x36, int)
 #define linux_TIOCVHANGUP     0x5437
 #define linux_TIOCGPKT        linux_IOR('T', 0x38, int)
@@ -517,5 +521,15 @@ enum linux_sock_type
 #define linux_TIOCM_OUT1 0x2000
 #define linux_TIOCM_OUT2 0x4000
 #define linux_TIOCM_LOOP 0x8000
+
+//=============================================================================
+// termiox
+
+#define linux_NFF 5
+
+#define	linux_RTSXOFF 0x0001
+#define	linux_CTSXON  0x0002
+#define	linux_DTRXOFF 0x0004
+#define linux_DSRXON  0x0008
 
 #endif // !HEADER_LIBLINUX_ARM64_CONSTANTS_H_INCLUDED

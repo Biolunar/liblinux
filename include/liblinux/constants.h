@@ -1533,11 +1533,6 @@ enum
 #define linux_IOC_TYPESHIFT (linux_IOC_NRSHIFT   + linux_IOC_NRBITS)
 #define linux_IOC_SIZESHIFT (linux_IOC_TYPESHIFT + linux_IOC_TYPEBITS)
 
-#define linux_TCGETX  0x5432
-#define linux_TCSETX  0x5433
-#define linux_TCSETXF 0x5434
-#define linux_TCSETXW 0x5435
-
 #define linux_TIOCPKT_DATA        0
 #define linux_TIOCPKT_FLUSHREAD   1
 #define linux_TIOCPKT_FLUSHWRITE  2
@@ -1784,6 +1779,31 @@ enum
 
 #define linux_TFD_TIMER_ABSTIME       (1 << 0)
 #define linux_TFD_TIMER_CANCEL_ON_SET (1 << 1)
+
+//=============================================================================
+// linux_TIOCLINUX ioctl
+
+#define linux_TIOCL_SETSEL             2
+#define linux_TIOCL_PASTESEL           3
+#define linux_TIOCL_UNBLANKSCREEN      4
+#define linux_TIOCL_SELLOADLUT         5
+#define linux_TIOCL_GETSHIFTSTATE      6
+#define linux_TIOCL_GETMOUSEREPORTING  7
+#define linux_TIOCL_SETVESABLANK      10
+#define linux_TIOCL_SETKMSGREDIRECT   11
+#define linux_TIOCL_GETFGCONSOLE      12
+#define linux_TIOCL_SCROLLCONSOLE     13
+#define linux_TIOCL_BLANKSCREEN       14
+#define linux_TIOCL_BLANKEDSCREEN     15
+#define linux_TIOCL_GETKMSGREDIRECT   17
+
+#define TIOCL_SELCHAR         0
+#define TIOCL_SELWORD         1
+#define TIOCL_SELLINE         2
+#define TIOCL_SELPOINTER      3
+#define TIOCL_SELCLEAR        4
+#define TIOCL_SELMOUSEREPORT 16
+#define TIOCL_SELBUTTONMASK  15
 
 //=============================================================================
 // Architecture specific

@@ -527,6 +527,18 @@ struct linux_old_utsname
 typedef linux_kernel_fd_set linux_fd_set;
 
 //=============================================================================
+// linux_TIOCLINUX ioctl
+
+struct linux_tiocl_selection
+{
+	unsigned short xs;
+	unsigned short ys;
+	unsigned short xe;
+	unsigned short ye;
+	unsigned short sel_mode;
+};
+
+//=============================================================================
 // Architecture specific types
 
 #if defined(LINUX_ARCH_ARM_EABI)

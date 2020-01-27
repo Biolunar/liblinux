@@ -288,4 +288,15 @@ struct linux_termio
 	unsigned char c_cc[linux_NCC];
 };
 
+//=============================================================================
+// termiox
+
+struct linux_termiox
+{
+	uint16_t x_hflag;
+	uint16_t x_cflag;
+	uint16_t x_rflag[linux_NFF];
+	uint16_t x_sflag;
+};
+
 #endif // !HEADER_LIBLINUX_X32_STRUCTS_H_INCLUDED
