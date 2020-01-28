@@ -378,6 +378,14 @@ static void test_arm_eabi(void)
 	linux_io_uring_setup(0, 0, 0);
 	linux_io_uring_enter(0, 0, 0, 0, 0, 0, 0);
 	linux_io_uring_register(0, 0, 0, 0, 0);
+	linux_open_tree(0, 0, 0, 0);
+	linux_move_mount(0, 0, 0, 0, 0);
+	linux_fsopen(0, 0, 0);
+	linux_fsconfig(0, 0, 0, 0, 0);
+	linux_fsmount(0, 0, 0, 0);
+	linux_fspick(0, 0, 0, 0);
+	linux_pidfd_open(0, 0, 0);
+	linux_clone3(0, 0, 0);
 	linux_breakpoint();
 	linux_cacheflush(0, 0, 0);
 	linux_usr26();
@@ -668,6 +676,14 @@ static void test_arm64(void)
 	linux_io_uring_setup(0, 0, 0);
 	linux_io_uring_enter(0, 0, 0, 0, 0, 0, 0);
 	linux_io_uring_register(0, 0, 0, 0, 0);
+	linux_open_tree(0, 0, 0, 0);
+	linux_move_mount(0, 0, 0, 0, 0);
+	linux_fsopen(0, 0, 0);
+	linux_fsconfig(0, 0, 0, 0, 0);
+	linux_fsmount(0, 0, 0, 0);
+	linux_fspick(0, 0, 0, 0);
+	linux_pidfd_open(0, 0, 0);
+	linux_clone3(0, 0, 0);
 }
 #endif
 
@@ -1068,6 +1084,14 @@ static void test_x86(void)
 	linux_io_uring_setup(0, 0, 0);
 	linux_io_uring_enter(0, 0, 0, 0, 0, 0, 0);
 	linux_io_uring_register(0, 0, 0, 0, 0);
+	linux_open_tree(0, 0, 0, 0);
+	linux_move_mount(0, 0, 0, 0, 0);
+	linux_fsopen(0, 0, 0);
+	linux_fsconfig(0, 0, 0, 0, 0);
+	linux_fsmount(0, 0, 0, 0);
+	linux_fspick(0, 0, 0, 0);
+	linux_pidfd_open(0, 0, 0);
+	linux_clone3(0, 0, 0);
 }
 #endif
 
@@ -1394,6 +1418,14 @@ static void test_x32_and_x86_64(void)
 	linux_io_uring_setup(0, 0, 0);
 	linux_io_uring_enter(0, 0, 0, 0, 0, 0, 0);
 	linux_io_uring_register(0, 0, 0, 0, 0);
+	linux_open_tree(0, 0, 0, 0);
+	linux_move_mount(0, 0, 0, 0, 0);
+	linux_fsopen(0, 0, 0);
+	linux_fsconfig(0, 0, 0, 0, 0);
+	linux_fsmount(0, 0, 0, 0);
+	linux_fspick(0, 0, 0, 0);
+	linux_pidfd_open(0, 0, 0);
+	linux_clone3(0, 0, 0);
 }
 #endif
 

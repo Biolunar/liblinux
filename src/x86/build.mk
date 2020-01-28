@@ -393,7 +393,15 @@ csrc = \
        src/pidfd_send_signal.c\
        src/io_uring_setup.c\
        src/io_uring_enter.c\
-       src/io_uring_register.c
+       src/io_uring_register.c\
+       src/open_tree.c\
+       src/move_mount.c\
+       src/fsopen.c\
+       src/fsconfig.c\
+       src/fsmount.c\
+       src/fspick.c\
+       src/pidfd_open.c\
+       src/clone3.c
 
 tests = \
         tests/syscalls/fork\
@@ -789,4 +797,12 @@ tests = \
         tests/syscalls/pidfd_send_signal\
         tests/syscalls/io_uring_setup\
         tests/syscalls/io_uring_enter\
-        tests/syscalls/io_uring_register
+        tests/syscalls/io_uring_register\
+        tests/syscalls/open_tree\
+        tests/syscalls/move_mount\
+        tests/syscalls/fsopen\
+        tests/syscalls/fsconfig\
+        tests/syscalls/fsmount\
+        tests/syscalls/fspick\
+        tests/syscalls/pidfd_open\
+        tests/syscalls/clone3

@@ -372,6 +372,14 @@ SYSCALLS="fork\
           io_uring_setup\
           io_uring_enter\
           io_uring_register\
+          open_tree\
+          move_mount\
+          fsopen\
+          fsconfig\
+          fsmount\
+          fspick\
+          pidfd_open\
+          clone3\
           breakpoint\
           cacheflush\
           usr26\

@@ -374,6 +374,14 @@ csrc = \
        src/io_uring_setup.c\
        src/io_uring_enter.c\
        src/io_uring_register.c\
+       src/open_tree.c\
+       src/move_mount.c\
+       src/fsopen.c\
+       src/fsconfig.c\
+       src/fsmount.c\
+       src/fspick.c\
+       src/pidfd_open.c\
+       src/clone3.c\
        src/breakpoint.c\
        src/cacheflush.c\
        src/usr26.c\
@@ -756,6 +764,14 @@ tests = \
         tests/syscalls/io_uring_setup\
         tests/syscalls/io_uring_enter\
         tests/syscalls/io_uring_register\
+        tests/syscalls/open_tree\
+        tests/syscalls/move_mount\
+        tests/syscalls/fsopen\
+        tests/syscalls/fsconfig\
+        tests/syscalls/fsmount\
+        tests/syscalls/fspick\
+        tests/syscalls/pidfd_open\
+        tests/syscalls/clone3\
         tests/syscalls/breakpoint\
         tests/syscalls/cacheflush\
         tests/syscalls/usr26\

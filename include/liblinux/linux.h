@@ -448,6 +448,43 @@ struct linux_rseq
 	uint32_t flags;
 };
 _Static_assert(alignof(struct linux_rseq) == (4 * sizeof(uint64_t)), "struct linux_rseq is misaligned");
+struct linux_io_uring_sqe
+{
+	uint8_t opcode;
+	uint8_t flags;
+	uint16_t ioprio;
+	int32_t fd;
+	union
+	{
+		uint64_t off;
+		uint64_t addr2;
+	};
+	uint64_t addr;
+	uint32_t len;
+	union
+	{
+		linux_kernel_rwf_t rw_flags;
+		uint32_t fsync_flags;
+		uint16_t poll_events;
+		uint32_t sync_range_flags;
+		uint32_t msg_flags;
+		uint32_t timeout_flags;
+		uint32_t accept_flags;
+		uint32_t cancel_flags;
+	};
+	uint64_t user_data;
+	union
+	{
+		uint16_t buf_index;
+		uint64_t _pad2[3];
+	};
+};
+struct linux_io_uring_cqe
+{
+	uint64_t user_data;
+	int32_t res;
+	uint32_t flags;
+};
 struct linux_io_sqring_offsets
 {
 	uint32_t head;
@@ -477,9 +514,16 @@ struct linux_io_uring_params
 	uint32_t flags;
 	uint32_t sq_thread_cpu;
 	uint32_t sq_thread_idle;
-	uint32_t resv[5];
+	uint32_t features;
+	uint32_t resv[4];
 	struct linux_io_sqring_offsets sq_off;
 	struct linux_io_cqring_offsets cq_off;
+};
+struct linux_io_uring_files_update
+{
+	uint32_t offset;
+	uint32_t resv;
+	alignas(8) uint64_t fds;
 };
 struct linux_winsize
 {
@@ -487,6 +531,19 @@ struct linux_winsize
 	unsigned short ws_col;
 	unsigned short ws_xpixel;
 	unsigned short ws_ypixel;
+};
+struct linux_clone_args
+{
+	alignas(8) uint64_t flags;
+	alignas(8) uint64_t pidfd;
+	alignas(8) uint64_t child_tid;
+	alignas(8) uint64_t parent_tid;
+	alignas(8) uint64_t exit_signal;
+	alignas(8) uint64_t stack;
+	alignas(8) uint64_t stack_size;
+	alignas(8) uint64_t tls;
+	alignas(8) uint64_t set_tid;
+	alignas(8) uint64_t set_tid_size;
 };
 
 #if defined(LINUX_ARCH_X86)
@@ -3029,6 +3086,15 @@ inline enum linux_error linux_rt_tgsigqueueinfo(linux_pid_t const tgid, linux_pi
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_pidfd_open(linux_pid_t pid, unsigned int flags, linux_fd_t* result)
+{
+	linux_word_t const ret = linux_syscall2((unsigned int)pid, flags, linux_syscall_name_pidfd_open);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
 inline enum linux_error linux_pidfd_send_signal(linux_fd_t const pidfd, int const sig, linux_siginfo_t* const info, unsigned int const flags)
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)pidfd, (unsigned int)sig, (uintptr_t)info, flags, linux_syscall_name_pidfd_send_signal);
@@ -3723,6 +3789,15 @@ inline enum linux_error linux_clone(linux_uword_t const clone_flags, linux_uword
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_clone3(struct linux_clone_args* uargs, linux_size_t size, linux_pid_t* result)
+{
+	linux_word_t const ret = linux_syscall2((uintptr_t)uargs, size, linux_syscall_name_clone3);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_pid_t)ret;
+	return linux_error_none;
+}
 inline enum linux_error linux_execve(char const* const filename, char const* const* const argv, char const* const* const envp) // DEPRECATED: use linux_execveat
 {
 	linux_word_t const ret = linux_syscall3((uintptr_t)filename, (uintptr_t)argv, (uintptr_t)envp, linux_syscall_name_execve);
@@ -3834,6 +3909,81 @@ inline enum linux_error linux_io_uring_register(linux_fd_t const fd, unsigned in
 }
 
 //-----------------------------------------------------------------------------
+// mount
+
+inline enum linux_error linux_umount(char* const name, int const flags)
+{
+	linux_word_t const ret = linux_syscall2((uintptr_t)name, (unsigned int)flags, linux_syscall_name_umount);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_mount(char* const dev_name, char* const dir_name, char* const type, linux_uword_t const flags, void* const data)
+{
+	linux_word_t const ret = linux_syscall5((uintptr_t)dev_name, (uintptr_t)dir_name, (uintptr_t)type, flags, (uintptr_t)data, linux_syscall_name_mount);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_pivot_root(char const* const new_root, char const* const put_old)
+{
+	linux_word_t const ret = linux_syscall2((uintptr_t)new_root, (uintptr_t)put_old, linux_syscall_name_pivot_root);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_open_tree(linux_fd_t dfd, char const* path, unsigned int flags, linux_fd_t* result)
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)dfd, (uintptr_t)path, flags, linux_syscall_name_open_tree);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_move_mount(linux_fd_t from_dfd, char const* from_path, linux_fd_t to_dfd, char const* to_path, unsigned int ms_flags)
+{
+	linux_word_t const ret = linux_syscall5((uint32_t)from_dfd, (uintptr_t)from_path, (uint32_t)to_dfd, (uintptr_t)to_path, ms_flags, linux_syscall_name_move_mount);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_fsopen(char const* fs_name, unsigned int flags, linux_fd_t* result)
+{
+	linux_word_t const ret = linux_syscall2((uintptr_t)fs_name, flags, linux_syscall_name_fsopen);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_fsconfig(linux_fd_t fs_fd, unsigned int cmd, char const* key, void const* value, int aux)
+{
+	linux_word_t const ret = linux_syscall5((uint32_t)fs_fd, cmd, (uintptr_t)key, (uintptr_t)value, (unsigned int)aux, linux_syscall_name_fsconfig);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_fsmount(linux_fd_t fs_fd, unsigned int flags, unsigned int ms_flags, linux_fd_t* result)
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)fs_fd, flags, ms_flags, linux_syscall_name_fsmount);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_fspick(linux_fd_t dfd, char const* path, unsigned int flags, linux_fd_t* result)
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)dfd, (uintptr_t)path, flags, linux_syscall_name_fspick);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+
+//-----------------------------------------------------------------------------
 // misc
 
 inline enum linux_error linux_getcwd(char* const buf, linux_uword_t const size, int* const result)
@@ -3856,27 +4006,6 @@ inline enum linux_error linux_lookup_dcookie(uint64_t const cookie64, char* cons
 		return (enum linux_error)-ret;
 	if (result)
 		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_umount(char* const name, int const flags)
-{
-	linux_word_t const ret = linux_syscall2((uintptr_t)name, (unsigned int)flags, linux_syscall_name_umount);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_mount(char* const dev_name, char* const dir_name, char* const type, linux_uword_t const flags, void* const data)
-{
-	linux_word_t const ret = linux_syscall5((uintptr_t)dev_name, (uintptr_t)dir_name, (uintptr_t)type, flags, (uintptr_t)data, linux_syscall_name_mount);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_pivot_root(char const* const new_root, char const* const put_old)
-{
-	linux_word_t const ret = linux_syscall2((uintptr_t)new_root, (uintptr_t)put_old, linux_syscall_name_pivot_root);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_chdir(char const* const filename)

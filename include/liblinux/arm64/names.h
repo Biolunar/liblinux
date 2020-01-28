@@ -308,11 +308,21 @@ enum
 	linux_syscall_name_io_pgetevents          = 292,
 	linux_syscall_name_rseq                   = 293,
 	linux_syscall_name_kexec_file_load        = 294,
-	// (295 to 423 are unused)
+	// ...
+	// (295 to 423 are unused, so that the numbers are the same as on 32-bit systems)
+	// ...
 	linux_syscall_name_pidfd_send_signal      = 424,
 	linux_syscall_name_io_uring_setup         = 425,
 	linux_syscall_name_io_uring_enter         = 426,
 	linux_syscall_name_io_uring_register      = 427,
+	linux_syscall_name_open_tree              = 428,
+	linux_syscall_name_move_mount             = 429,
+	linux_syscall_name_fsopen                 = 430,
+	linux_syscall_name_fsconfig               = 431,
+	linux_syscall_name_fsmount                = 432,
+	linux_syscall_name_fspick                 = 433,
+	linux_syscall_name_pidfd_open             = 434,
+	linux_syscall_name_clone3                 = 435,
 };
 
 #endif // !HEADER_LIBLINUX_ARM64_NAMES_H_INCLUDED

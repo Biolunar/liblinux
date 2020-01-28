@@ -79,6 +79,7 @@ enum // Kernel sources do not explicitly define these constants. They correspond
 #define linux_CLONE_FS             0x00000200
 #define linux_CLONE_FILES          0x00000400
 #define linux_CLONE_SIGHAND        0x00000800
+#define linux_CLONE_PIDFD          0x00001000
 #define linux_CLONE_PTRACE         0x00002000
 #define linux_CLONE_VFORK          0x00004000
 #define linux_CLONE_PARENT         0x00008000
@@ -98,6 +99,11 @@ enum // Kernel sources do not explicitly define these constants. They correspond
 #define linux_CLONE_NEWPID         0x20000000
 #define linux_CLONE_NEWNET         0x40000000
 #define linux_CLONE_IO             0x80000000
+
+#define linux_CLONE_CLEAR_SIGHAND 0x100000000ULL
+
+#define linux_CLONE_ARGS_SIZE_VER0 64
+#define linux_CLONE_ARGS_SIZE_VER1 80
 
 //=============================================================================
 // memory
@@ -203,9 +209,13 @@ enum // Kernel sources do not explicitly define these constants. They correspond
 #define linux_SCHED_FLAG_RESET_ON_FORK  0x01
 #define linux_SCHED_FLAG_RECLAIM        0x02
 #define linux_SCHED_FLAG_DL_OVERRUN     0x04
-#define linux_SCHED_FLAG_ALL           (linux_SCHED_FLAG_RESET_ON_FORK | \
-                                        linux_SCHED_FLAG_RECLAIM       | \
-                                        linux_SCHED_FLAG_DL_OVERRUN)
+#define linux_SCHED_FLAG_KEEP_POLICY    0x08
+#define linux_SCHED_FLAG_KEEP_PARAMS    0x10
+#define linux_SCHED_FLAG_UTIL_CLAMP_MIN 0x20
+#define linux_SCHED_FLAG_UTIL_CLAMP_MAX 0x40
+#define linux_SCHED_FLAG_KEEP_ALL       (linux_SCHED_FLAG_KEEP_POLICY | linux_SCHED_FLAG_KEEP_PARAMS)
+#define linux_SCHED_FLAG_UTIL_CLAMP     (linux_SCHED_FLAG_UTIL_CLAMP_MIN | linux_SCHED_FLAG_UTIL_CLAMP_MAX)
+#define linux_SCHED_FLAG_ALL            (linux_SCHED_FLAG_RESET_ON_FORK | linux_SCHED_FLAG_RECLAIM | linux_SCHED_FLAG_DL_OVERRUN)
 
 //=============================================================================
 // interval timer
@@ -1822,6 +1832,143 @@ enum
 
 #define linux_IOCB_FLAG_RESFD  (1 << 0)
 #define linux_IOCB_FLAG_IOPRIO (1 << 1)
+
+//=============================================================================
+// mount
+
+#define linux_MS_RDONLY          1
+#define linux_MS_NOSUID          2
+#define linux_MS_NODEV           4
+#define linux_MS_NOEXEC          8
+#define linux_MS_SYNCHRONOUS    16
+#define linux_MS_REMOUNT        32
+#define linux_MS_MANDLOCK       64
+#define linux_MS_DIRSYNC       128
+#define linux_MS_NOATIME      1024
+#define linux_MS_NODIRATIME   2048
+#define linux_MS_BIND         4096
+#define linux_MS_MOVE         8192
+#define linux_MS_REC         16384
+#define linux_MS_VERBOSE     32768
+#define linux_MS_SILENT      32768
+#define linux_MS_POSIXACL    (1<<16)
+#define linux_MS_UNBINDABLE  (1<<17)
+#define linux_MS_PRIVATE     (1<<18)
+#define linux_MS_SLAVE       (1<<19)
+#define linux_MS_SHARED      (1<<20)
+#define linux_MS_RELATIME    (1<<21)
+#define linux_MS_KERNMOUNT   (1<<22)
+#define linux_MS_I_VERSION   (1<<23)
+#define linux_MS_STRICTATIME (1<<24)
+#define linux_MS_LAZYTIME    (1<<25)
+
+#define linux_MS_RMT_MASK    (linux_MS_RDONLY | linux_MS_SYNCHRONOUS | linux_MS_MANDLOCK | linux_MS_I_VERSION | linux_MS_LAZYTIME)
+
+#define linux_MS_MGC_VAL 0xC0ED0000
+#define linux_MS_MGC_MSK 0xffff0000
+
+#define linux_OPEN_TREE_CLONE   1
+#define linux_OPEN_TREE_CLOEXEC linux_O_CLOEXEC
+
+#define linux_MOVE_MOUNT_F_SYMLINKS   0x00000001
+#define linux_MOVE_MOUNT_F_AUTOMOUNTS 0x00000002
+#define linux_MOVE_MOUNT_F_EMPTY_PATH 0x00000004
+#define linux_MOVE_MOUNT_T_SYMLINKS   0x00000010
+#define linux_MOVE_MOUNT_T_AUTOMOUNTS 0x00000020
+#define linux_MOVE_MOUNT_T_EMPTY_PATH 0x00000040
+#define linux_MOVE_MOUNT_MASK         0x00000077
+
+#define linux_FSOPEN_CLOEXEC 0x00000001
+
+#define linux_FSPICK_CLOEXEC          0x00000001
+#define linux_FSPICK_SYMLINK_NOFOLLOW 0x00000002
+#define linux_FSPICK_NO_AUTOMOUNT     0x00000004
+#define linux_FSPICK_EMPTY_PATH       0x00000008
+
+enum linux_fsconfig_command
+{
+	linux_FSCONFIG_SET_FLAG        = 0,
+	linux_FSCONFIG_SET_STRING      = 1,
+	linux_FSCONFIG_SET_BINARY      = 2,
+	linux_FSCONFIG_SET_PATH        = 3,
+	linux_FSCONFIG_SET_PATH_EMPTY  = 4,
+	linux_FSCONFIG_SET_FD          = 5,
+	linux_FSCONFIG_CMD_CREATE      = 6,
+	linux_FSCONFIG_CMD_RECONFIGURE = 7,
+};
+
+#define linux_FSMOUNT_CLOEXEC		0x00000001
+
+#define linux_MOUNT_ATTR_RDONLY      0x00000001
+#define linux_MOUNT_ATTR_NOSUID      0x00000002
+#define linux_MOUNT_ATTR_NODEV       0x00000004
+#define linux_MOUNT_ATTR_NOEXEC      0x00000008
+#define linux_MOUNT_ATTR_ATIME       0x00000070
+#define linux_MOUNT_ATTR_RELATIME    0x00000000
+#define linux_MOUNT_ATTR_NOATIME     0x00000010
+#define linux_MOUNT_ATTR_STRICTATIME 0x00000020
+#define linux_MOUNT_ATTR_NODIRATIME  0x00000080
+
+//=============================================================================
+// io_uring
+
+#define linux_IOSQE_FIXED_FILE  (1U << 0)
+#define linux_IOSQE_IO_DRAIN    (1U << 1)
+#define linux_IOSQE_IO_LINK     (1U << 2)
+#define linux_IOSQE_IO_HARDLINK (1U << 3)
+
+#define linux_IORING_SETUP_IOPOLL (1U << 0)
+#define linux_IORING_SETUP_SQPOLL (1U << 1)
+#define linux_IORING_SETUP_SQ_AFF (1U << 2)
+#define linux_IORING_SETUP_CQSIZE (1U << 3)
+
+enum
+{
+	linux_IORING_OP_NOP,
+	linux_IORING_OP_READV,
+	linux_IORING_OP_WRITEV,
+	linux_IORING_OP_FSYNC,
+	linux_IORING_OP_READ_FIXED,
+	linux_IORING_OP_WRITE_FIXED,
+	linux_IORING_OP_POLL_ADD,
+	linux_IORING_OP_POLL_REMOVE,
+	linux_IORING_OP_SYNC_FILE_RANGE,
+	linux_IORING_OP_SENDMSG,
+	linux_IORING_OP_RECVMSG,
+	linux_IORING_OP_TIMEOUT,
+	linux_IORING_OP_TIMEOUT_REMOVE,
+	linux_IORING_OP_ACCEPT,
+	linux_IORING_OP_ASYNC_CANCEL,
+	linux_IORING_OP_LINK_TIMEOUT,
+	linux_IORING_OP_CONNECT,
+
+	linux_IORING_OP_LAST,
+};
+
+#define linux_IORING_FSYNC_DATASYNC (1U << 0)
+
+#define linux_IORING_TIMEOUT_ABS (1U << 0)
+
+#define linux_IORING_OFF_SQ_RING 0ULL
+#define linux_IORING_OFF_CQ_RING 0x8000000ULL
+#define linux_IORING_OFF_SQES    0x10000000ULL
+
+#define linux_IORING_SQ_NEED_WAKEUP (1U << 0)
+
+#define linux_IORING_ENTER_GETEVENTS (1U << 0)
+#define linux_IORING_ENTER_SQ_WAKEUP (1U << 1)
+
+#define linux_IORING_FEAT_SINGLE_MMAP   (1U << 0)
+#define linux_IORING_FEAT_NODROP        (1U << 1)
+#define linux_IORING_FEAT_SUBMIT_STABLE (1U << 2)
+
+#define linux_IORING_REGISTER_BUFFERS      0
+#define linux_IORING_UNREGISTER_BUFFERS    1
+#define linux_IORING_REGISTER_FILES        2
+#define linux_IORING_UNREGISTER_FILES      3
+#define linux_IORING_REGISTER_EVENTFD      4
+#define linux_IORING_UNREGISTER_EVENTFD    5
+#define linux_IORING_REGISTER_FILES_UPDATE 6
 
 //=============================================================================
 // Architecture specific

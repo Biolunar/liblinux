@@ -366,12 +366,20 @@ enum
 	linux_syscall_name_io_pgetevents          = LINUX_X32_SYSCALL_BIT + 333,
 	linux_syscall_name_rseq                   = LINUX_X32_SYSCALL_BIT + 334,
 	// ...
-	// (335 to 423 are unused)
+	// (335 to 423 are unused, so that the numbers are the same as on 32-bit systems)
 	// ...
 	linux_syscall_name_pidfd_send_signal      = LINUX_X32_SYSCALL_BIT + 424,
 	linux_syscall_name_io_uring_setup         = LINUX_X32_SYSCALL_BIT + 425,
 	linux_syscall_name_io_uring_enter         = LINUX_X32_SYSCALL_BIT + 426,
 	linux_syscall_name_io_uring_register      = LINUX_X32_SYSCALL_BIT + 427,
+	linux_syscall_name_open_tree              = LINUX_X32_SYSCALL_BIT + 428,
+	linux_syscall_name_move_mount             = LINUX_X32_SYSCALL_BIT + 429,
+	linux_syscall_name_fsopen                 = LINUX_X32_SYSCALL_BIT + 430,
+	linux_syscall_name_fsconfig               = LINUX_X32_SYSCALL_BIT + 431,
+	linux_syscall_name_fsmount                = LINUX_X32_SYSCALL_BIT + 432,
+	linux_syscall_name_fspick                 = LINUX_X32_SYSCALL_BIT + 433,
+	linux_syscall_name_pidfd_open             = LINUX_X32_SYSCALL_BIT + 434,
+	linux_syscall_name_clone3                 = LINUX_X32_SYSCALL_BIT + 435,
 
 	linux_syscall_name_rt_sigaction           = LINUX_X32_SYSCALL_BIT + 512,
 	linux_syscall_name_rt_sigreturn           = LINUX_X32_SYSCALL_BIT + 513,
