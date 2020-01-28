@@ -1806,6 +1806,24 @@ enum
 #define TIOCL_SELBUTTONMASK  15
 
 //=============================================================================
+// aio
+
+enum
+{
+	linux_IOCB_CMD_PREAD   = 0,
+	linux_IOCB_CMD_PWRITE  = 1,
+	linux_IOCB_CMD_FSYNC   = 2,
+	linux_IOCB_CMD_FDSYNC  = 3,
+	linux_IOCB_CMD_POLL    = 5,
+	linux_IOCB_CMD_NOOP    = 6,
+	linux_IOCB_CMD_PREADV  = 7,
+	linux_IOCB_CMD_PWRITEV = 8,
+};
+
+#define linux_IOCB_FLAG_RESFD  (1 << 0)
+#define linux_IOCB_FLAG_IOPRIO (1 << 1)
+
+//=============================================================================
 // Architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)
