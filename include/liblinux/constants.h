@@ -1791,6 +1791,41 @@ enum
 #define linux_TFD_TIMER_CANCEL_ON_SET (1 << 1)
 
 //=============================================================================
+// VT ioctls
+
+#define linux_MIN_NR_CONSOLES  1
+#define linux_MAX_NR_CONSOLES 63
+
+#define linux_VT_OPENQRY       0x5600
+#define linux_VT_GETMODE       0x5601
+#define linux_VT_SETMODE       0x5602
+#define linux_VT_GETSTATE      0x5603
+#define linux_VT_SENDSIG       0x5604
+#define linux_VT_RELDISP       0x5605
+#define linux_VT_ACTIVATE      0x5606
+#define linux_VT_WAITACTIVE    0x5607
+#define linux_VT_DISALLOCATE   0x5608
+#define linux_VT_RESIZE        0x5609
+#define linux_VT_RESIZEX       0x560A
+#define linux_VT_LOCKSWITCH    0x560B
+#define linux_VT_UNLOCKSWITCH  0x560C
+#define linux_VT_GETHIFONTMASK 0x560D
+#define linux_VT_WAITEVENT     0x560E
+#define linux_VT_SETACTIVATE   0x560F
+
+// linux_vt_mode::mode
+#define linux_VT_AUTO    0x00
+#define linux_VT_PROCESS 0x01
+#define linux_VT_ACKACQ  0x02
+
+// linux_vt_event::event
+#define linux_VT_EVENT_SWITCH  0x0001
+#define linux_VT_EVENT_BLANK   0x0002
+#define linux_VT_EVENT_UNBLANK 0x0004
+#define linux_VT_EVENT_RESIZE  0x0008
+#define linux_VT_MAX_EVENT     0x000F
+
+//=============================================================================
 // linux_TIOCLINUX ioctl
 
 #define linux_TIOCL_SETSEL             2

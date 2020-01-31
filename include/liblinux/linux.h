@@ -584,6 +584,51 @@ struct linux_old_utsname
 typedef linux_kernel_fd_set linux_fd_set;
 
 //=============================================================================
+// VT ioctls
+
+struct linux_vt_mode
+{
+	char mode;
+	char waitv;
+	short relsig;
+	short acqsig;
+	short frsig;
+};
+struct linux_vt_stat
+{
+	unsigned short v_active;
+	unsigned short v_signal;
+	unsigned short v_state;
+};
+struct linux_vt_sizes
+{
+	unsigned short v_rows;
+	unsigned short v_cols;
+	unsigned short v_scrollsize;
+};
+struct linux_vt_consize
+{
+	unsigned short v_rows;
+	unsigned short v_cols;
+	unsigned short v_vlin;
+	unsigned short v_clin;
+	unsigned short v_vcol;
+	unsigned short v_ccol;
+};
+struct linux_vt_event
+{
+	unsigned int event;
+	unsigned int oldev;
+	unsigned int newev;
+	unsigned int pad[4];
+};
+struct linux_vt_setactivate
+{
+	unsigned int console;
+	struct linux_vt_mode mode;
+};
+
+//=============================================================================
 // linux_TIOCLINUX ioctl
 
 struct linux_tiocl_selection
