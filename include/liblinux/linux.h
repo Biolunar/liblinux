@@ -584,6 +584,93 @@ struct linux_old_utsname
 typedef linux_kernel_fd_set linux_fd_set;
 
 //=============================================================================
+// KD ioctls
+
+typedef char linux_scrnmap_t;
+
+struct linux_consolefontdesc
+{
+	unsigned short charcount;
+	unsigned short charheight;
+	char* chardata;
+};
+struct linux_unipair
+{
+	unsigned short unicode;
+	unsigned short fontpos;
+};
+struct linux_unimapdesc
+{
+	unsigned short entry_ct;
+	struct linux_unipair* entries;
+};
+struct linux_unimapinit
+{
+	unsigned short advised_hashsize;
+	unsigned short advised_hashstep;
+	unsigned short advised_hashlevel;
+};
+struct linux_kbentry
+{
+	unsigned char kb_table;
+	unsigned char kb_index;
+	unsigned short kb_value;
+};
+struct linux_kbsentry
+{
+	unsigned char kb_func;
+	unsigned char kb_string[512];
+};
+struct linux_kbdiacr
+{
+        unsigned char diacr;
+	unsigned char base;
+	unsigned char result;
+};
+struct linux_kbdiacrs
+{
+        unsigned int kb_cnt;
+	struct linux_kbdiacr kbdiacr[256];
+};
+struct linux_kbdiacruc
+{
+	unsigned int diacr;
+	unsigned int base;
+	unsigned int result;
+};
+struct linux_kbdiacrsuc
+{
+        unsigned int kb_cnt;
+	struct linux_kbdiacruc kbdiacruc[256];
+};
+struct linux_kbkeycode
+{
+	unsigned int scancode;
+	unsigned int keycode;
+};
+struct linux_kbd_repeat
+{
+	int delay;
+	int period;
+};
+struct linux_console_font_op
+{
+	unsigned int op;
+	unsigned int flags;
+	unsigned int width;
+	unsigned int height;
+	unsigned int charcount;
+	unsigned char* data;
+};
+struct linux_console_font
+{
+	unsigned int width;
+	unsigned int height;
+	unsigned int charcount;
+	unsigned char* data;
+};
+
+//=============================================================================
 // VT ioctls
 
 struct linux_vt_mode

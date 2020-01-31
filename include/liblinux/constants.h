@@ -1826,6 +1826,99 @@ enum
 #define linux_VT_MAX_EVENT     0x000F
 
 //=============================================================================
+// KD ioctls
+
+#define linux_GIO_FONT       0x4B60
+#define linux_PIO_FONT       0x4B61
+#define linux_GIO_FONTX      0x4B6B
+#define linux_PIO_FONTX      0x4B6C
+#define linux_PIO_FONTRESET  0x4B6D
+#define linux_GIO_CMAP       0x4B70
+#define linux_PIO_CMAP       0x4B71
+#define linux_KIOCSOUND      0x4B2F
+#define linux_KDMKTONE       0x4B30
+#define linux_KDGETLED       0x4B31
+#define linux_KDSETLED       0x4B32
+#define linux_KDGKBTYPE      0x4B33
+#define linux_KDADDIO        0x4B34
+#define linux_KDDELIO        0x4B35
+#define linux_KDENABIO       0x4B36
+#define linux_KDDISABIO      0x4B37
+#define linux_KDSETMODE      0x4B3A
+#define linux_KDGETMODE      0x4B3B
+#define linux_KDMAPDISP      0x4B3C
+#define linux_KDUNMAPDISP    0x4B3D
+#define linux_GIO_SCRNMAP    0x4B40
+#define linux_PIO_SCRNMAP    0x4B41
+#define linux_GIO_UNISCRNMAP 0x4B69
+#define linux_PIO_UNISCRNMAP 0x4B6A
+#define linux_GIO_UNIMAP     0x4B66
+#define linux_PIO_UNIMAP     0x4B67
+#define linux_PIO_UNIMAPCLR  0x4B68
+#define linux_KDGKBMODE      0x4B44
+#define linux_KDSKBMODE      0x4B45
+#define linux_KDGKBMETA      0x4B62
+#define linux_KDSKBMETA      0x4B63
+#define linux_KDGKBLED       0x4B64
+#define linux_KDSKBLED       0x4B65
+#define linux_KDGKBENT       0x4B46
+#define linux_KDSKBENT       0x4B47
+#define linux_KDGKBSENT      0x4B48
+#define linux_KDSKBSENT      0x4B49
+#define linux_KDGKBDIACR     0x4B4A
+#define linux_KDSKBDIACR     0x4B4B
+#define linux_KDGKBDIACRUC   0x4BFA
+#define linux_KDSKBDIACRUC   0x4BFB
+#define linux_KDGETKEYCODE   0x4B4C
+#define linux_KDSETKEYCODE   0x4B4D
+#define linux_KDSIGACCEPT    0x4B4E
+#define linux_KDKBDREP       0x4B52
+#define linux_KDFONTOP       0x4B72
+
+#define linux_KD_FONT_OP_SET         0
+#define linux_KD_FONT_OP_GET         1
+#define linux_KD_FONT_OP_SET_DEFAULT 2
+#define linux_KD_FONT_OP_COPY        3
+
+#define linux_KD_FONT_FLAG_DONT_RECALC 1
+
+#define linux_LED_SCR 0x01
+#define linux_LED_NUM 0x02
+#define linux_LED_CAP 0x04
+
+#define linux_KB_84    0x01
+#define linux_KB_101   0x02
+#define linux_KB_OTHER 0x03
+
+#define linux_KD_TEXT     0x00
+#define linux_KD_GRAPHICS 0x01
+#define linux_KD_TEXT0    0x02
+#define linux_KD_TEXT1    0x03
+
+#define linux_E_TABSZ 256
+
+#define linux_UNI_DIRECT_BASE 0xF000
+#define linux_UNI_DIRECT_MASK 0x01FF
+
+#define linux_K_RAW       0x00
+#define linux_K_XLATE     0x01
+#define linux_K_MEDIUMRAW 0x02
+#define linux_K_UNICODE   0x03
+#define linux_K_OFF       0x04
+
+#define linux_K_METABIT   0x03
+#define linux_K_ESCPREFIX 0x04
+
+#define linux_K_SCROLLLOCK 0x01
+#define linux_K_NUMLOCK    0x02
+#define linux_K_CAPSLOCK   0x04
+
+#define linux_K_NORMTAB     0x00
+#define linux_K_SHIFTTAB    0x01
+#define linux_K_ALTTAB      0x02
+#define linux_K_ALTSHIFTTAB 0x03
+
+//=============================================================================
 // linux_TIOCLINUX ioctl
 
 #define linux_TIOCL_SETSEL             2
