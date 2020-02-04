@@ -1,3 +1,13 @@
+0.6.0
+=====
+
+- Added all new syscalls up to Linux 5.5.
+- Added a bunch of types and constants for various syscalls.
+- Minor API changes (e.g. use linux_fd_t as the type for file descriptors).
+- Fixed linux_vfork on x86, x32 and x86_64.
+- Fixed linux_clone on some architectures.
+- Added some tests.
+
 0.5.0
 =====
 
@@ -15,7 +25,9 @@
 =====
 
 - Renamed the library from liblinux_syscall to just liblinux.
-- Added a second library, liblinux_start.a, that can be used to compile applications without the need for a libc.
-- Build system completely revamped, check README for details how to build the library.
+- Added a second library, liblinux_start.a, that can be used to compile
+  applications without the need for a libc.
+- Build system completely revamped, check README for details how to build the
+  library.
 - Added x32 ABI.
 - Renamed i386 to x86.

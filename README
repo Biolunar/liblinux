@@ -1,12 +1,12 @@
 liblinux
 ========
 
-liblinux is a static C library to abstract away all assembly needed to
-interface with the Linux kernel. To use the C headers a C11 compiler is
-required.
+liblinux is a static C library which wraps all assembly needed to interface
+with the Linux kernel. To use the C headers a C11 compiler is required.
 
 SUPPORTED ARCHITECTURES
 -----------------------
+
 Currently supported are:
 - arm-eabi
 - arm64
@@ -16,11 +16,13 @@ Currently supported are:
 
 Supported ASSEMBLERS
 --------------------
+
 arm-eabi, arm64: gas (GNU Assembler)
 x86, x32 and x86_64: NASM (Netwide Assembler), gas (GNU Assembler)
 
 BUILDING & INSTALLATION
 -----------------------
+
 To build the library, run
     make [CONFIG=filename.mk] [command]
 Valid commands:
@@ -35,11 +37,55 @@ $(TARGET) name for each (or they will just replace eachother)
 
 BUGS
 ----
-None known.
+
+- I think linux_fork on x86 is probably bugged but I'm not able to make it
+  break. More investigation is needed.
 
 ROADMAP
 -------
+
 - Implement the vsyscalls for x86.
 - Add all constants and types needed to use the syscalls.
 - Complete the test suite.
 - Bump version to 1.0.
+
+FAQ
+---
+
+Q:
+What is the purpose of this library?
+
+A:
+If you want to write a freestanding C program on Linux (i.e. without using
+libc) you need to write assembly. This library aims to wraps all assembly
+needed so you don't have to write any assembly to write a freestanding C
+program. Just linking this library should be enough.
+
+Q:
+Can this library be dynamically linked?
+
+A:
+Dynamic linking is not a goal since that is a userland problem. This library is
+only concerned with wrapping the syscalls and providing the startup code for
+applications. Since this library is static by nature it is very flexible, so
+you could use it in your own dynamic library code.
+
+Q:
+Why is the API so weird? Why do all syscall wrappers just return an error code
+and use a pointer as the last parameter to return values?
+
+A:
+Because C allows only one return value per function and almost every syscall
+can fail. Libc uses errno to convey the error code, but errno is legacy garbage
+and needs hacks to work for example in different threads. For consistency this
+library always returns an error code for the syscall wrappers.
+
+Q:
+Why are the definitions of all functions split into separat compilation units?
+
+A:
+That is being done because of how the linker works. For every function that is
+being used in an application the linker has to pull in the entire compilation
+unit where that function is used. Hence there will be a lot of unused functions
+in your binary and by splitting it up we can reduce the code bloat to reduce
+the binary size.
