@@ -14,7 +14,7 @@ Currently supported are:
 - x32
 - x86_64
 
-Supported ASSEMBLERS
+SUPPORTED ASSEMBLERS
 --------------------
 
 arm-eabi, arm64: gas (GNU Assembler)
