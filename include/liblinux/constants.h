@@ -2038,6 +2038,280 @@ enum linux_fsconfig_command
 #define linux_MOUNT_ATTR_NODIRATIME  0x00000080
 
 //=============================================================================
+// blktrace_api
+
+enum linux_blktrace_cat
+{
+	linux_BLK_TC_READ     = 1 <<  0,
+	linux_BLK_TC_WRITE    = 1 <<  1,
+	linux_BLK_TC_FLUSH    = 1 <<  2,
+	linux_BLK_TC_SYNC     = 1 <<  3,
+	linux_BLK_TC_SYNCIO   = linux_BLK_TC_SYNC,
+	linux_BLK_TC_QUEUE    = 1 <<  4,
+	linux_BLK_TC_REQUEUE  = 1 <<  5,
+	linux_BLK_TC_ISSUE    = 1 <<  6,
+	linux_BLK_TC_COMPLETE = 1 <<  7,
+	linux_BLK_TC_FS       = 1 <<  8,
+	linux_BLK_TC_PC       = 1 <<  9,
+	linux_BLK_TC_NOTIFY   = 1 << 10,
+	linux_BLK_TC_AHEAD    = 1 << 11,
+	linux_BLK_TC_META     = 1 << 12,
+	linux_BLK_TC_DISCARD  = 1 << 13,
+	linux_BLK_TC_DRV_DATA = 1 << 14,
+	linux_BLK_TC_FUA      = 1 << 15,
+
+	linux_BLK_TC_END      = 1 << 15,
+};
+
+#define linux_BLK_TC_SHIFT    16
+#define linux_BLK_TC_ACT(act) ((act) << linux_BLK_TC_SHIFT)
+
+enum linux_blktrace_act
+{
+	linux_BLK_TA_QUEUE = 1,
+	linux_BLK_TA_BACKMERGE,
+	linux_BLK_TA_FRONTMERGE,
+	linux_BLK_TA_GETRQ,
+	linux_BLK_TA_SLEEPRQ,
+	linux_BLK_TA_REQUEUE,
+	linux_BLK_TA_ISSUE,
+	linux_BLK_TA_COMPLETE,
+	linux_BLK_TA_PLUG,
+	linux_BLK_TA_UNPLUG_IO,
+	linux_BLK_TA_UNPLUG_TIMER,
+	linux_BLK_TA_INSERT,
+	linux_BLK_TA_SPLIT,
+	linux_BLK_TA_BOUNCE,
+	linux_BLK_TA_REMAP,
+	linux_BLK_TA_ABORT,
+	linux_BLK_TA_DRV_DATA,
+	linux_BLK_TA_CGROUP = 1 << 8,
+};
+
+enum linux_blktrace_notify
+{
+	linux_BLK_TN_PROCESS = 0,
+	linux_BLK_TN_TIMESTAMP,
+	linux_BLK_TN_MESSAGE,
+	linux_BLK_TN_CGROUP = linux_BLK_TA_CGROUP,
+};
+
+#define linux_BLK_TA_QUEUE        (linux_BLK_TA_QUEUE        | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_BACKMERGE    (linux_BLK_TA_BACKMERGE    | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_FRONTMERGE   (linux_BLK_TA_FRONTMERGE   | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_GETRQ        (linux_BLK_TA_GETRQ        | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_SLEEPRQ      (linux_BLK_TA_SLEEPRQ      | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_REQUEUE      (linux_BLK_TA_REQUEUE      | linux_BLK_TC_ACT(linux_BLK_TC_REQUEUE))
+#define linux_BLK_TA_ISSUE        (linux_BLK_TA_ISSUE        | linux_BLK_TC_ACT(linux_BLK_TC_ISSUE))
+#define linux_BLK_TA_COMPLETE     (linux_BLK_TA_COMPLETE     | linux_BLK_TC_ACT(linux_BLK_TC_COMPLETE))
+#define linux_BLK_TA_PLUG         (linux_BLK_TA_PLUG         | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_UNPLUG_IO    (linux_BLK_TA_UNPLUG_IO    | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_UNPLUG_TIMER (linux_BLK_TA_UNPLUG_TIMER | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_INSERT       (linux_BLK_TA_INSERT       | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_SPLIT        (linux_BLK_TA_SPLIT)
+#define linux_BLK_TA_BOUNCE       (linux_BLK_TA_BOUNCE)
+#define linux_BLK_TA_REMAP        (linux_BLK_TA_REMAP        | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_ABORT        (linux_BLK_TA_ABORT        | linux_BLK_TC_ACT(linux_BLK_TC_QUEUE))
+#define linux_BLK_TA_DRV_DATA     (linux_BLK_TA_DRV_DATA     | linux_BLK_TC_ACT(linux_BLK_TC_DRV_DATA))
+
+#define linux_BLK_TN_PROCESS   (linux_BLK_TN_PROCESS   | linux_BLK_TC_ACT(linux_BLK_TC_NOTIFY))
+#define linux_BLK_TN_TIMESTAMP (linux_BLK_TN_TIMESTAMP | linux_BLK_TC_ACT(linux_BLK_TC_NOTIFY))
+#define linux_BLK_TN_MESSAGE   (linux_BLK_TN_MESSAGE   | linux_BLK_TC_ACT(linux_BLK_TC_NOTIFY))
+
+#define linux_BLK_IO_TRACE_MAGIC   0x65617400
+#define linux_BLK_IO_TRACE_VERSION 0x07
+
+enum
+{
+	linux_Blktrace_setup = 1,
+	linux_Blktrace_running,
+	linux_Blktrace_stopped,
+};
+
+#define linux_BLKTRACE_BDEV_SIZE 32
+
+//=============================================================================
+// blkpg
+
+#define linux_BLKPG linux_IO(0x12, 105)
+
+#define linux_BLKPG_ADD_PARTITION    1
+#define linux_BLKPG_DEL_PARTITION    2
+#define linux_BLKPG_RESIZE_PARTITION 3
+
+#define linux_BLKPG_DEVNAMELTH 64
+#define linux_BLKPG_VOLNAMELTH 64
+
+//=============================================================================
+// fiemap
+
+#define linux_FIEMAP_MAX_OFFSET (~0ULL)
+
+#define linux_FIEMAP_FLAG_SYNC  0x00000001
+#define linux_FIEMAP_FLAG_XATTR 0x00000002
+#define linux_FIEMAP_FLAG_CACHE 0x00000004
+
+#define linux_FIEMAP_FLAGS_COMPAT (linux_FIEMAP_FLAG_SYNC | linux_FIEMAP_FLAG_XATTR)
+
+#define linux_FIEMAP_EXTENT_LAST           0x00000001
+#define linux_FIEMAP_EXTENT_UNKNOWN        0x00000002
+#define linux_FIEMAP_EXTENT_DELALLOC       0x00000004
+#define linux_FIEMAP_EXTENT_ENCODED        0x00000008
+#define linux_FIEMAP_EXTENT_DATA_ENCRYPTED 0x00000080
+#define linux_FIEMAP_EXTENT_NOT_ALIGNED    0x00000100
+#define linux_FIEMAP_EXTENT_DATA_INLINE    0x00000200
+#define linux_FIEMAP_EXTENT_DATA_TAIL      0x00000400
+#define linux_FIEMAP_EXTENT_UNWRITTEN      0x00000800
+#define linux_FIEMAP_EXTENT_MERGED         0x00001000
+#define linux_FIEMAP_EXTENT_SHARED         0x00002000
+
+//=============================================================================
+// fs
+
+#define linux_INR_OPEN_CUR 1024
+#define linux_INR_OPEN_MAX 4096
+
+#define linux_BLOCK_SIZE_BITS 10
+#define linux_BLOCK_SIZE      (1 << linux_BLOCK_SIZE_BITS)
+
+#define linux_SEEK_SET  0
+#define linux_SEEK_CUR  1
+#define linux_SEEK_END  2
+#define linux_SEEK_DATA 3
+#define linux_SEEK_HOLE 4
+#define linux_SEEK_MAX  linux_SEEK_HOLE
+
+#define linux_RENAME_NOREPLACE (1 << 0)
+#define linux_RENAME_EXCHANGE  (1 << 1)
+#define linux_RENAME_WHITEOUT  (1 << 2)
+
+#define linux_FILE_DEDUPE_RANGE_SAME    0
+#define linux_FILE_DEDUPE_RANGE_DIFFERS 1
+
+#define linux_NR_FILE 8192
+
+#define linux_FS_XFLAG_REALTIME     0x00000001
+#define linux_FS_XFLAG_PREALLOC     0x00000002
+#define linux_FS_XFLAG_IMMUTABLE    0x00000008
+#define linux_FS_XFLAG_APPEND       0x00000010
+#define linux_FS_XFLAG_SYNC         0x00000020
+#define linux_FS_XFLAG_NOATIME      0x00000040
+#define linux_FS_XFLAG_NODUMP       0x00000080
+#define linux_FS_XFLAG_RTINHERIT    0x00000100
+#define linux_FS_XFLAG_PROJINHERIT  0x00000200
+#define linux_FS_XFLAG_NOSYMLINKS   0x00000400
+#define linux_FS_XFLAG_EXTSIZE      0x00000800
+#define linux_FS_XFLAG_EXTSZINHERIT 0x00001000
+#define linux_FS_XFLAG_NODEFRAG     0x00002000
+#define linux_FS_XFLAG_FILESTREAM   0x00004000
+#define linux_FS_XFLAG_DAX          0x00008000
+#define linux_FS_XFLAG_COWEXTSIZE   0x00010000
+#define linux_FS_XFLAG_HASATTR      0x80000000
+
+#define linux_BLKROSET         linux_IO(0x12,  93)
+#define linux_BLKROGET         linux_IO(0x12,  94)
+#define linux_BLKRRPART        linux_IO(0x12,  95)
+#define linux_BLKGETSIZE       linux_IO(0x12,  96)
+#define linux_BLKFLSBUF        linux_IO(0x12,  97)
+#define linux_BLKRASET         linux_IO(0x12,  98)
+#define linux_BLKRAGET         linux_IO(0x12,  99)
+#define linux_BLKFRASET        linux_IO(0x12, 100)
+#define linux_BLKFRAGET        linux_IO(0x12, 101)
+#define linux_BLKSECTSET       linux_IO(0x12, 102)
+#define linux_BLKSECTGET       linux_IO(0x12, 103)
+#define linux_BLKSSZGET        linux_IO(0x12, 104)
+// ...
+// (105 to 111 are unused)
+// ...
+#define linux_BLKBSZGET        linux_IOR(0x12, 112, linux_size_t)
+#define linux_BLKBSZSET        linux_IOW(0x12, 113, linux_size_t)
+#define linux_BLKGETSIZE64     linux_IOR(0x12, 114, linux_size_t)
+#define linux_BLKTRACESETUP    linux_IOWR(0x12, 115, struct linux_blk_user_trace_setup)
+#define linux_BLKTRACESTART    linux_IO(0x12, 116)
+#define linux_BLKTRACESTOP     linux_IO(0x12, 117)
+#define linux_BLKTRACETEARDOWN linux_IO(0x12, 118)
+#define linux_BLKDISCARD       linux_IO(0x12, 119)
+#define linux_BLKIOMIN         linux_IO(0x12, 120)
+#define linux_BLKIOOPT         linux_IO(0x12, 121)
+#define linux_BLKALIGNOFF      linux_IO(0x12, 122)
+#define linux_BLKPBSZGET       linux_IO(0x12, 123)
+#define linux_BLKDISCARDZEROES linux_IO(0x12, 124)
+#define linux_BLKSECDISCARD    linux_IO(0x12, 125)
+#define linux_BLKROTATIONAL    linux_IO(0x12, 126)
+#define linux_BLKZEROOUT       linux_IO(0x12, 127)
+
+#define linux_BMAP_IOCTL    1
+#define linux_FIBMAP        linux_IO(0x00, 1)
+#define linux_FIGETBSZ      linux_IO(0x00, 2)
+#define linux_FIFREEZE      linux_IOWR('X', 119, int)
+#define linux_FITHAW        linux_IOWR('X', 120, int)
+#define linux_FITRIM        linux_IOWR('X', 121, struct linux_fstrim_range)
+#define linux_FICLONE       linux_IOW(0x94, 9, int)
+#define linux_FICLONERANGE  linux_IOW(0x94, 13, struct linux_file_clone_range)
+#define linux_FIDEDUPERANGE linux_IOWR(0x94, 54, struct linux_file_dedupe_range)
+
+#define linux_FSLABEL_MAX 256
+
+#define linux_FS_IOC_GETFLAGS     linux_IOR('f', 1, long)
+#define linux_FS_IOC_SETFLAGS     linux_IOW('f', 2, long)
+#define linux_FS_IOC_GETVERSION   linux_IOR('v', 1, long)
+#define linux_FS_IOC_SETVERSION   linux_IOW('v', 2, long)
+#define linux_FS_IOC_FIEMAP       linux_IOWR('f', 11, struct linux_fiemap)
+#define linux_FS_IOC32_GETFLAGS   linux_IOR('f', 1, int)
+#define linux_FS_IOC32_SETFLAGS   linux_IOW('f', 2, int)
+#define linux_FS_IOC32_GETVERSION linux_IOR('v', 1, int)
+#define linux_FS_IOC32_SETVERSION linux_IOW('v', 2, int)
+#define linux_FS_IOC_FSGETXATTR   linux_IOR('X', 31, struct linux_fsxattr)
+#define linux_FS_IOC_FSSETXATTR   linux_IOW('X', 32, struct linux_fsxattr)
+#define linux_FS_IOC_GETFSLABEL   linux_IOR(0x94, 49, char[linux_FSLABEL_MAX])
+#define linux_FS_IOC_SETFSLABEL   linux_IOW(0x94, 50, char[linux_FSLABEL_MAX])
+
+#define linux_FS_SECRM_FL        0x00000001
+#define linux_FS_UNRM_FL         0x00000002
+#define linux_FS_COMPR_FL        0x00000004
+#define linux_FS_SYNC_FL         0x00000008
+#define linux_FS_IMMUTABLE_FL    0x00000010
+#define linux_FS_APPEND_FL       0x00000020
+#define linux_FS_NODUMP_FL       0x00000040
+#define linux_FS_NOATIME_FL      0x00000080
+#define linux_FS_DIRTY_FL        0x00000100
+#define linux_FS_COMPRBLK_FL     0x00000200
+#define linux_FS_NOCOMP_FL       0x00000400
+#define linux_FS_ENCRYPT_FL      0x00000800
+#define linux_FS_BTREE_FL        0x00001000
+#define linux_FS_INDEX_FL        0x00001000
+#define linux_FS_IMAGIC_FL       0x00002000
+#define linux_FS_JOURNAL_DATA_FL 0x00004000
+#define linux_FS_NOTAIL_FL       0x00008000
+#define linux_FS_DIRSYNC_FL      0x00010000
+#define linux_FS_TOPDIR_FL       0x00020000
+#define linux_FS_HUGE_FILE_FL    0x00040000
+#define linux_FS_EXTENT_FL       0x00080000
+#define linux_FS_VERITY_FL       0x00100000
+#define linux_FS_EA_INODE_FL     0x00200000
+#define linux_FS_EOFBLOCKS_FL    0x00400000
+#define linux_FS_NOCOW_FL        0x00800000
+#define linux_FS_INLINE_DATA_FL  0x10000000
+#define linux_FS_PROJINHERIT_FL  0x20000000
+#define linux_FS_CASEFOLD_FL     0x40000000
+#define linux_FS_RESERVED_FL     0x80000000
+
+#define linux_FS_FL_USER_VISIBLE    0x0003DFFF
+#define linux_FS_FL_USER_MODIFIABLE 0x000380FF
+
+#define linux_SYNC_FILE_RANGE_WAIT_BEFORE    1
+#define linux_SYNC_FILE_RANGE_WRITE          2
+#define linux_SYNC_FILE_RANGE_WAIT_AFTER     4
+#define linux_SYNC_FILE_RANGE_WRITE_AND_WAIT (linux_SYNC_FILE_RANGE_WRITE | linux_SYNC_FILE_RANGE_WAIT_BEFORE | linux_SYNC_FILE_RANGE_WAIT_AFTER)
+
+#define linux_RWF_HIPRI     ((linux_kernel_rwf_t)0x00000001)
+#define linux_RWF_DSYNC     ((linux_kernel_rwf_t)0x00000002)
+#define linux_RWF_SYNC      ((linux_kernel_rwf_t)0x00000004)
+#define linux_RWF_NOWAIT    ((linux_kernel_rwf_t)0x00000008)
+#define linux_RWF_APPEND    ((linux_kernel_rwf_t)0x00000010)
+#define linux_RWF_SUPPORTED (linux_RWF_HIPRI | linux_RWF_DSYNC | linux_RWF_SYNC | linux_RWF_NOWAIT | linux_RWF_APPEND)
+
+//=============================================================================
 // io_uring
 
 #define linux_IOSQE_FIXED_FILE  (1U << 0)

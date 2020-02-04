@@ -728,6 +728,137 @@ struct linux_tiocl_selection
 };
 
 //=============================================================================
+// blktrace_api
+
+struct linux_blk_io_trace
+{
+	uint32_t magic;
+	uint32_t sequence;
+	uint64_t time;
+	uint64_t sector;
+	uint32_t bytes;
+	uint32_t action;
+	uint32_t pid;
+	uint32_t device;
+	uint32_t cpu;
+	uint16_t error;
+	uint16_t pdu_len;
+};
+struct linux_blk_io_trace_remap
+{
+	uint32_t device_from; // big endian
+	uint32_t device_to; // big endian
+	uint64_t sector_from; // big endian
+};
+struct linux_blk_user_trace_setup
+{
+	char name[linux_BLKTRACE_BDEV_SIZE];
+	uint16_t act_mask;
+	uint32_t buf_size;
+	uint32_t buf_nr;
+	uint64_t start_lba;
+	uint64_t end_lba;
+	uint32_t pid;
+};
+
+//=============================================================================
+// blkpg
+
+struct linux_blkpg_ioctl_arg
+{
+	int op;
+	int flags;
+	int datalen;
+	void* data;
+};
+struct linux_blkpg_partition
+{
+	long long start;
+	long long length;
+	int pno;
+	char devname[linux_BLKPG_DEVNAMELTH];
+	char volname[linux_BLKPG_VOLNAMELTH];
+};
+
+//=============================================================================
+// fiemap
+
+struct linux_fiemap_extent
+{
+	uint64_t fe_logical;
+	uint64_t fe_physical;
+	uint64_t fe_length;
+	uint64_t fe_reserved64[2];
+	uint32_t fe_flags;
+	uint32_t fe_reserved[3];
+};
+struct linux_fiemap
+{
+	uint64_t fm_start;
+	uint64_t fm_length;
+	uint32_t fm_flags;
+	uint32_t fm_mapped_extents;
+	uint32_t fm_extent_count;
+	uint32_t fm_reserved;
+	struct linux_fiemap_extent fm_extents[];
+};
+
+//=============================================================================
+// fs
+
+struct linux_file_clone_range
+{
+	int64_t src_fd;
+	uint64_t src_offset;
+	uint64_t src_length;
+	uint64_t dest_offset;
+};
+struct linux_fstrim_range
+{
+	uint64_t start;
+	uint64_t len;
+	uint64_t minlen;
+};
+struct linux_file_dedupe_range_info
+{
+	int64_t dest_fd;
+	uint64_t dest_offset;
+	uint64_t bytes_deduped;
+	int32_t status;
+	uint32_t reserved;
+};
+struct linux_file_dedupe_range
+{
+	uint64_t src_offset;
+	uint64_t src_length;
+	uint16_t dest_count;
+	uint16_t reserved1;
+	uint32_t reserved2;
+	struct linux_file_dedupe_range_info info[];
+};
+struct linux_files_stat_struct
+{
+	unsigned long nr_files;
+	unsigned long nr_free_files;
+	unsigned long max_files;
+};
+struct linux_inodes_stat_t
+{
+	long nr_inodes;
+	long nr_unused;
+	long dummy[5];
+};
+struct linux_fsxattr
+{
+	uint32_t fsx_xflags;
+	uint32_t fsx_extsize;
+	uint32_t fsx_nextents;
+	uint32_t fsx_projid;
+	uint32_t fsx_cowextsize;
+	unsigned char fsx_pad[8];
+};
+
+//=============================================================================
 // Architecture specific types
 
 #if defined(LINUX_ARCH_ARM_EABI)
