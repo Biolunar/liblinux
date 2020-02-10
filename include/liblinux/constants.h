@@ -1744,6 +1744,41 @@ enum
 #define linux_SER_ISO7816_T(t)    (((t) & 0x0f) << 4)
 
 //=============================================================================
+// tty
+
+#define linux_NR_LDISCS 30
+
+// line disciplines
+#define linux_N_TTY           0
+#define linux_N_SLIP          1
+#define linux_N_MOUSE         2
+#define linux_N_PPP           3
+#define linux_N_STRIP         4
+#define linux_N_AX25          5
+#define linux_N_X25           6
+#define linux_N_6PACK         7
+#define linux_N_MASC          8
+#define linux_N_R3964         9
+#define linux_N_PROFIBUS_FDL 10
+#define linux_N_IRDA         11
+#define linux_N_SMSBLOCK     12
+#define linux_N_HDLC         13
+#define linux_N_SYNC_PPP     14
+#define linux_N_HCI          15
+#define linux_N_GIGASET_M101 16
+#define linux_N_SLCAN        17
+#define linux_N_PPS          18
+#define linux_N_V253         19
+#define linux_N_CAIF         20
+#define linux_N_GSM0710      21
+#define linux_N_TI_WL        22
+#define linux_N_TRACESINK    23
+#define linux_N_TRACEROUTER  24
+#define linux_N_NCI          25
+#define linux_N_SPEAKUP      26
+#define linux_N_NULL         27
+
+//=============================================================================
 // termbits
 
 #define linux_IBSHIFT 16
