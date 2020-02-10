@@ -267,7 +267,7 @@ _Static_assert(sizeof(struct linux_statfs64) == 84 || sizeof(struct linux_statfs
 //=============================================================================
 // termbits
 
-typedef unsigned int  linux_tcflag_t;
+typedef unsigned int linux_tcflag_t;
 
 struct linux_termios
 {
@@ -279,17 +279,6 @@ struct linux_termios
 	linux_cc_t c_cc[linux_NCCS];
 };
 struct linux_termios2
-{
-	linux_tcflag_t c_iflag;
-	linux_tcflag_t c_oflag;
-	linux_tcflag_t c_cflag;
-	linux_tcflag_t c_lflag;
-	linux_cc_t c_line;
-	linux_cc_t c_cc[linux_NCCS];
-	linux_speed_t c_ispeed;
-	linux_speed_t c_ospeed;
-};
-struct linux_ktermios
 {
 	linux_tcflag_t c_iflag;
 	linux_tcflag_t c_oflag;
