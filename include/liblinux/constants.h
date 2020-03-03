@@ -2408,6 +2408,929 @@ enum
 #define linux_IORING_REGISTER_FILES_UPDATE 6
 
 //=============================================================================
+// Input event codes
+
+#define linux_INPUT_PROP_POINTER        0x00
+#define linux_INPUT_PROP_DIRECT         0x01
+#define linux_INPUT_PROP_BUTTONPAD      0x02
+#define linux_INPUT_PROP_SEMI_MT        0x03
+#define linux_INPUT_PROP_TOPBUTTONPAD   0x04
+#define linux_INPUT_PROP_POINTING_STICK 0x05
+#define linux_INPUT_PROP_ACCELEROMETER  0x06
+
+#define linux_INPUT_PROP_MAX 0x1f
+#define linux_INPUT_PROP_CNT (linux_INPUT_PROP_MAX + 1)
+
+#define linux_EV_SYN       0x00
+#define linux_EV_KEY       0x01
+#define linux_EV_REL       0x02
+#define linux_EV_ABS       0x03
+#define linux_EV_MSC       0x04
+#define linux_EV_SW        0x05
+#define linux_EV_LED       0x11
+#define linux_EV_SND       0x12
+#define linux_EV_REP       0x14
+#define linux_EV_FF        0x15
+#define linux_EV_PWR       0x16
+#define linux_EV_FF_STATUS 0x17
+#define linux_EV_MAX       0x1f
+#define linux_EV_CNT       (linux_EV_MAX + 1)
+
+#define linux_SYN_REPORT    0
+#define linux_SYN_CONFIG    1
+#define linux_SYN_MT_REPORT 2
+#define linux_SYN_DROPPED   3
+#define linux_SYN_MAX       0xf
+#define linux_SYN_CNT       (linux_SYN_MAX + 1)
+
+#define linux_KEY_RESERVED    0
+#define linux_KEY_ESC         1
+#define linux_KEY_1           2
+#define linux_KEY_2           3
+#define linux_KEY_3           4
+#define linux_KEY_4           5
+#define linux_KEY_5           6
+#define linux_KEY_6           7
+#define linux_KEY_7           8
+#define linux_KEY_8           9
+#define linux_KEY_9          10
+#define linux_KEY_0          11
+#define linux_KEY_MINUS      12
+#define linux_KEY_EQUAL      13
+#define linux_KEY_BACKSPACE  14
+#define linux_KEY_TAB        15
+#define linux_KEY_Q          16
+#define linux_KEY_W          17
+#define linux_KEY_E          18
+#define linux_KEY_R          19
+#define linux_KEY_T          20
+#define linux_KEY_Y          21
+#define linux_KEY_U          22
+#define linux_KEY_I          23
+#define linux_KEY_O          24
+#define linux_KEY_P          25
+#define linux_KEY_LEFTBRACE  26
+#define linux_KEY_RIGHTBRACE 27
+#define linux_KEY_ENTER      28
+#define linux_KEY_LEFTCTRL   29
+#define linux_KEY_A          30
+#define linux_KEY_S          31
+#define linux_KEY_D          32
+#define linux_KEY_F          33
+#define linux_KEY_G          34
+#define linux_KEY_H          35
+#define linux_KEY_J          36
+#define linux_KEY_K          37
+#define linux_KEY_L          38
+#define linux_KEY_SEMICOLON  39
+#define linux_KEY_APOSTROPHE 40
+#define linux_KEY_GRAVE      41
+#define linux_KEY_LEFTSHIFT  42
+#define linux_KEY_BACKSLASH  43
+#define linux_KEY_Z          44
+#define linux_KEY_X          45
+#define linux_KEY_C          46
+#define linux_KEY_V          47
+#define linux_KEY_B          48
+#define linux_KEY_N          49
+#define linux_KEY_M          50
+#define linux_KEY_COMMA      51
+#define linux_KEY_DOT        52
+#define linux_KEY_SLASH      53
+#define linux_KEY_RIGHTSHIFT 54
+#define linux_KEY_KPASTERISK 55
+#define linux_KEY_LEFTALT    56
+#define linux_KEY_SPACE      57
+#define linux_KEY_CAPSLOCK   58
+#define linux_KEY_F1         59
+#define linux_KEY_F2         60
+#define linux_KEY_F3         61
+#define linux_KEY_F4         62
+#define linux_KEY_F5         63
+#define linux_KEY_F6         64
+#define linux_KEY_F7         65
+#define linux_KEY_F8         66
+#define linux_KEY_F9         67
+#define linux_KEY_F10        68
+#define linux_KEY_NUMLOCK    69
+#define linux_KEY_SCROLLLOCK 70
+#define linux_KEY_KP7        71
+#define linux_KEY_KP8        72
+#define linux_KEY_KP9        73
+#define linux_KEY_KPMINUS    74
+#define linux_KEY_KP4        75
+#define linux_KEY_KP5        76
+#define linux_KEY_KP6        77
+#define linux_KEY_KPPLUS     78
+#define linux_KEY_KP1        79
+#define linux_KEY_KP2        80
+#define linux_KEY_KP3        81
+#define linux_KEY_KP0        82
+#define linux_KEY_KPDOT      83
+
+#define linux_KEY_ZENKAKUHANKAKU    85
+#define linux_KEY_102ND             86
+#define linux_KEY_F11               87
+#define linux_KEY_F12               88
+#define linux_KEY_RO                89
+#define linux_KEY_KATAKANA          90
+#define linux_KEY_HIRAGANA          91
+#define linux_KEY_HENKAN            92
+#define linux_KEY_KATAKANAHIRAGANA  93
+#define linux_KEY_MUHENKAN          94
+#define linux_KEY_KPJPCOMMA         95
+#define linux_KEY_KPENTER           96
+#define linux_KEY_RIGHTCTRL         97
+#define linux_KEY_KPSLASH           98
+#define linux_KEY_SYSRQ             99
+#define linux_KEY_RIGHTALT         100
+#define linux_KEY_LINEFEED         101
+#define linux_KEY_HOME             102
+#define linux_KEY_UP               103
+#define linux_KEY_PAGEUP           104
+#define linux_KEY_LEFT             105
+#define linux_KEY_RIGHT            106
+#define linux_KEY_END              107
+#define linux_KEY_DOWN             108
+#define linux_KEY_PAGEDOWN         109
+#define linux_KEY_INSERT           110
+#define linux_KEY_DELETE           111
+#define linux_KEY_MACRO            112
+#define linux_KEY_MUTE             113
+#define linux_KEY_VOLUMEDOWN       114
+#define linux_KEY_VOLUMEUP         115
+#define linux_KEY_POWER            116
+#define linux_KEY_KPEQUAL          117
+#define linux_KEY_KPPLUSMINUS      118
+#define linux_KEY_PAUSE            119
+#define linux_KEY_SCALE            120
+
+#define linux_KEY_KPCOMMA   121
+#define linux_KEY_HANGEUL   122
+#define linux_KEY_HANGUEL   linux_KEY_HANGEUL
+#define linux_KEY_HANJA     123
+#define linux_KEY_YEN       124
+#define linux_KEY_LEFTMETA  125
+#define linux_KEY_RIGHTMETA 126
+#define linux_KEY_COMPOSE   127
+
+#define linux_KEY_STOP           128
+#define linux_KEY_AGAIN          129
+#define linux_KEY_PROPS          130
+#define linux_KEY_UNDO           131
+#define linux_KEY_FRONT          132
+#define linux_KEY_COPY           133
+#define linux_KEY_OPEN           134
+#define linux_KEY_PASTE          135
+#define linux_KEY_FIND           136
+#define linux_KEY_CUT            137
+#define linux_KEY_HELP           138
+#define linux_KEY_MENU           139
+#define linux_KEY_CALC           140
+#define linux_KEY_SETUP          141
+#define linux_KEY_SLEEP          142
+#define linux_KEY_WAKEUP         143
+#define linux_KEY_FILE           144
+#define linux_KEY_SENDFILE       145
+#define linux_KEY_DELETEFILE     146
+#define linux_KEY_XFER           147
+#define linux_KEY_PROG1          148
+#define linux_KEY_PROG2          149
+#define linux_KEY_WWW            150
+#define linux_KEY_MSDOS          151
+#define linux_KEY_COFFEE         152
+#define linux_KEY_SCREENLOCK     linux_KEY_COFFEE
+#define linux_KEY_ROTATE_DISPLAY 153
+#define linux_KEY_DIRECTION      linux_KEY_ROTATE_DISPLAY
+#define linux_KEY_CYCLEWINDOWS   154
+#define linux_KEY_MAIL           155
+#define linux_KEY_BOOKMARKS      156
+#define linux_KEY_COMPUTER       157
+#define linux_KEY_BACK           158
+#define linux_KEY_FORWARD        159
+#define linux_KEY_CLOSECD        160
+#define linux_KEY_EJECTCD        161
+#define linux_KEY_EJECTCLOSECD   162
+#define linux_KEY_NEXTSONG       163
+#define linux_KEY_PLAYPAUSE      164
+#define linux_KEY_PREVIOUSSONG   165
+#define linux_KEY_STOPCD         166
+#define linux_KEY_RECORD         167
+#define linux_KEY_REWIND         168
+#define linux_KEY_PHONE          169
+#define linux_KEY_ISO            170
+#define linux_KEY_CONFIG         171
+#define linux_KEY_HOMEPAGE       172
+#define linux_KEY_REFRESH        173
+#define linux_KEY_EXIT           174
+#define linux_KEY_MOVE           175
+#define linux_KEY_EDIT           176
+#define linux_KEY_SCROLLUP       177
+#define linux_KEY_SCROLLDOWN     178
+#define linux_KEY_KPLEFTPAREN    179
+#define linux_KEY_KPRIGHTPAREN   180
+#define linux_KEY_NEW            181
+#define linux_KEY_REDO           182
+
+#define linux_KEY_F13 183
+#define linux_KEY_F14 184
+#define linux_KEY_F15 185
+#define linux_KEY_F16 186
+#define linux_KEY_F17 187
+#define linux_KEY_F18 188
+#define linux_KEY_F19 189
+#define linux_KEY_F20 190
+#define linux_KEY_F21 191
+#define linux_KEY_F22 192
+#define linux_KEY_F23 193
+#define linux_KEY_F24 194
+
+#define linux_KEY_PLAYCD         200
+#define linux_KEY_PAUSECD        201
+#define linux_KEY_PROG3          202
+#define linux_KEY_PROG4          203
+#define linux_KEY_DASHBOARD      204
+#define linux_KEY_SUSPEND        205
+#define linux_KEY_CLOSE          206
+#define linux_KEY_PLAY           207
+#define linux_KEY_FASTFORWARD    208
+#define linux_KEY_BASSBOOST      209
+#define linux_KEY_PRINT          210
+#define linux_KEY_HP             211
+#define linux_KEY_CAMERA         212
+#define linux_KEY_SOUND          213
+#define linux_KEY_QUESTION       214
+#define linux_KEY_EMAIL          215
+#define linux_KEY_CHAT           216
+#define linux_KEY_SEARCH         217
+#define linux_KEY_CONNECT        218
+#define linux_KEY_FINANCE        219
+#define linux_KEY_SPORT          220
+#define linux_KEY_SHOP           221
+#define linux_KEY_ALTERASE       222
+#define linux_KEY_CANCEL         223
+#define linux_KEY_BRIGHTNESSDOWN 224
+#define linux_KEY_BRIGHTNESSUP   225
+#define linux_KEY_MEDIA          226
+
+#define linux_KEY_SWITCHVIDEOMODE 227
+#define linux_KEY_KBDILLUMTOGGLE  228
+#define linux_KEY_KBDILLUMDOWN    229
+#define linux_KEY_KBDILLUMUP      230
+
+#define linux_KEY_SEND        231
+#define linux_KEY_REPLY       232
+#define linux_KEY_FORWARDMAIL 233
+#define linux_KEY_SAVE        234
+#define linux_KEY_DOCUMENTS   235
+
+#define linux_KEY_BATTERY 236
+
+#define linux_KEY_BLUETOOTH 237
+#define linux_KEY_WLAN      238
+#define linux_KEY_UWB       239
+
+#define linux_KEY_UNKNOWN 240
+
+#define linux_KEY_VIDEO_NEXT       241
+#define linux_KEY_VIDEO_PREV       242
+#define linux_KEY_BRIGHTNESS_CYCLE 243
+#define linux_KEY_BRIGHTNESS_AUTO  244
+#define linux_KEY_BRIGHTNESS_ZERO  linux_KEY_BRIGHTNESS_AUTO
+#define linux_KEY_DISPLAY_OFF      245
+
+#define linux_KEY_WWAN   246
+#define linux_KEY_WIMAX  linux_KEY_WWAN
+#define linux_KEY_RFKILL 247
+
+#define linux_KEY_MICMUTE 248
+
+#define linux_BTN_MISC 0x100
+#define linux_BTN_0    0x100
+#define linux_BTN_1    0x101
+#define linux_BTN_2    0x102
+#define linux_BTN_3    0x103
+#define linux_BTN_4    0x104
+#define linux_BTN_5    0x105
+#define linux_BTN_6    0x106
+#define linux_BTN_7    0x107
+#define linux_BTN_8    0x108
+#define linux_BTN_9    0x109
+
+#define linux_BTN_MOUSE   0x110
+#define linux_BTN_LEFT    0x110
+#define linux_BTN_RIGHT   0x111
+#define linux_BTN_MIDDLE  0x112
+#define linux_BTN_SIDE    0x113
+#define linux_BTN_EXTRA   0x114
+#define linux_BTN_FORWARD 0x115
+#define linux_BTN_BACK    0x116
+#define linux_BTN_TASK    0x117
+
+#define linux_BTN_JOYSTICK 0x120
+#define linux_BTN_TRIGGER  0x120
+#define linux_BTN_THUMB    0x121
+#define linux_BTN_THUMB2   0x122
+#define linux_BTN_TOP      0x123
+#define linux_BTN_TOP2     0x124
+#define linux_BTN_PINKIE   0x125
+#define linux_BTN_BASE     0x126
+#define linux_BTN_BASE2    0x127
+#define linux_BTN_BASE3    0x128
+#define linux_BTN_BASE4    0x129
+#define linux_BTN_BASE5    0x12a
+#define linux_BTN_BASE6    0x12b
+#define linux_BTN_DEAD     0x12f
+
+#define linux_BTN_GAMEPAD 0x130
+#define linux_BTN_SOUTH   0x130
+#define linux_BTN_A       linux_BTN_SOUTH
+#define linux_BTN_EAST    0x131
+#define linux_BTN_B       linux_BTN_EAST
+#define linux_BTN_C       0x132
+#define linux_BTN_NORTH   0x133
+#define linux_BTN_X       linux_BTN_NORTH
+#define linux_BTN_WEST    0x134
+#define linux_BTN_Y       linux_BTN_WEST
+#define linux_BTN_Z       0x135
+#define linux_BTN_TL      0x136
+#define linux_BTN_TR      0x137
+#define linux_BTN_TL2     0x138
+#define linux_BTN_TR2     0x139
+#define linux_BTN_SELECT  0x13a
+#define linux_BTN_START   0x13b
+#define linux_BTN_MODE    0x13c
+#define linux_BTN_THUMBL  0x13d
+#define linux_BTN_THUMBR  0x13e
+
+#define linux_BTN_DIGI           0x140
+#define linux_BTN_TOOL_PEN       0x140
+#define linux_BTN_TOOL_RUBBER    0x141
+#define linux_BTN_TOOL_BRUSH     0x142
+#define linux_BTN_TOOL_PENCIL    0x143
+#define linux_BTN_TOOL_AIRBRUSH  0x144
+#define linux_BTN_TOOL_FINGER    0x145
+#define linux_BTN_TOOL_MOUSE     0x146
+#define linux_BTN_TOOL_LENS      0x147
+#define linux_BTN_TOOL_QUINTTAP  0x148
+#define linux_BTN_STYLUS3        0x149
+#define linux_BTN_TOUCH          0x14a
+#define linux_BTN_STYLUS         0x14b
+#define linux_BTN_STYLUS2        0x14c
+#define linux_BTN_TOOL_DOUBLETAP 0x14d
+#define linux_BTN_TOOL_TRIPLETAP 0x14e
+#define linux_BTN_TOOL_QUADTAP   0x14f
+
+#define linux_BTN_WHEEL     0x150
+#define linux_BTN_GEAR_DOWN 0x150
+#define linux_BTN_GEAR_UP   0x151
+
+#define linux_KEY_OK                0x160
+#define linux_KEY_SELECT            0x161
+#define linux_KEY_GOTO              0x162
+#define linux_KEY_CLEAR             0x163
+#define linux_KEY_POWER2            0x164
+#define linux_KEY_OPTION            0x165
+#define linux_KEY_INFO              0x166
+#define linux_KEY_TIME              0x167
+#define linux_KEY_VENDOR            0x168
+#define linux_KEY_ARCHIVE           0x169
+#define linux_KEY_PROGRAM           0x16a
+#define linux_KEY_CHANNEL           0x16b
+#define linux_KEY_FAVORITES         0x16c
+#define linux_KEY_EPG               0x16d
+#define linux_KEY_PVR               0x16e
+#define linux_KEY_MHP               0x16f
+#define linux_KEY_LANGUAGE          0x170
+#define linux_KEY_TITLE             0x171
+#define linux_KEY_SUBTITLE          0x172
+#define linux_KEY_ANGLE             0x173
+#define linux_KEY_FULL_SCREEN       0x174
+#define linux_KEY_ZOOM              linux_KEY_FULL_SCREEN
+#define linux_KEY_MODE              0x175
+#define linux_KEY_KEYBOARD          0x176
+#define linux_KEY_ASPECT_RATIO      0x177
+#define linux_KEY_SCREEN            linux_KEY_ASPECT_RATIO
+#define linux_KEY_PC                0x178
+#define linux_KEY_TV                0x179
+#define linux_KEY_TV2               0x17a
+#define linux_KEY_VCR               0x17b
+#define linux_KEY_VCR2              0x17c
+#define linux_KEY_SAT               0x17d
+#define linux_KEY_SAT2              0x17e
+#define linux_KEY_CD                0x17f
+#define linux_KEY_TAPE              0x180
+#define linux_KEY_RADIO             0x181
+#define linux_KEY_TUNER             0x182
+#define linux_KEY_PLAYER            0x183
+#define linux_KEY_TEXT              0x184
+#define linux_KEY_DVD               0x185
+#define linux_KEY_AUX               0x186
+#define linux_KEY_MP3               0x187
+#define linux_KEY_AUDIO             0x188
+#define linux_KEY_VIDEO             0x189
+#define linux_KEY_DIRECTORY         0x18a
+#define linux_KEY_LIST              0x18b
+#define linux_KEY_MEMO              0x18c
+#define linux_KEY_CALENDAR          0x18d
+#define linux_KEY_RED               0x18e
+#define linux_KEY_GREEN             0x18f
+#define linux_KEY_YELLOW            0x190
+#define linux_KEY_BLUE              0x191
+#define linux_KEY_CHANNELUP         0x192
+#define linux_KEY_CHANNELDOWN       0x193
+#define linux_KEY_FIRST             0x194
+#define linux_KEY_LAST              0x195
+#define linux_KEY_AB                0x196
+#define linux_KEY_NEXT              0x197
+#define linux_KEY_RESTART           0x198
+#define linux_KEY_SLOW              0x199
+#define linux_KEY_SHUFFLE           0x19a
+#define linux_KEY_BREAK             0x19b
+#define linux_KEY_PREVIOUS          0x19c
+#define linux_KEY_DIGITS            0x19d
+#define linux_KEY_TEEN              0x19e
+#define linux_KEY_TWEN              0x19f
+#define linux_KEY_VIDEOPHONE        0x1a0
+#define linux_KEY_GAMES             0x1a1
+#define linux_KEY_ZOOMIN            0x1a2
+#define linux_KEY_ZOOMOUT           0x1a3
+#define linux_KEY_ZOOMRESET         0x1a4
+#define linux_KEY_WORDPROCESSOR     0x1a5
+#define linux_KEY_EDITOR            0x1a6
+#define linux_KEY_SPREADSHEET       0x1a7
+#define linux_KEY_GRAPHICSEDITOR    0x1a8
+#define linux_KEY_PRESENTATION      0x1a9
+#define linux_KEY_DATABASE          0x1aa
+#define linux_KEY_NEWS              0x1ab
+#define linux_KEY_VOICEMAIL         0x1ac
+#define linux_KEY_ADDRESSBOOK       0x1ad
+#define linux_KEY_MESSENGER         0x1ae
+#define linux_KEY_DISPLAYTOGGLE     0x1af
+#define linux_KEY_BRIGHTNESS_TOGGLE linux_KEY_DISPLAYTOGGLE
+#define linux_KEY_SPELLCHECK        0x1b0
+#define linux_KEY_LOGOFF            0x1b1
+
+#define linux_KEY_DOLLAR 0x1b2
+#define linux_KEY_EURO   0x1b3
+
+#define linux_KEY_FRAMEBACK      0x1b4
+#define linux_KEY_FRAMEFORWARD   0x1b5
+#define linux_KEY_CONTEXT_MENU   0x1b6
+#define linux_KEY_MEDIA_REPEAT   0x1b7
+#define linux_KEY_10CHANNELSUP   0x1b8
+#define linux_KEY_10CHANNELSDOWN 0x1b9
+#define linux_KEY_IMAGES         0x1ba
+
+#define linux_KEY_DEL_EOL  0x1c0
+#define linux_KEY_DEL_EOS  0x1c1
+#define linux_KEY_INS_LINE 0x1c2
+#define linux_KEY_DEL_LINE 0x1c3
+
+#define linux_KEY_FN     0x1d0
+#define linux_KEY_FN_ESC 0x1d1
+#define linux_KEY_FN_F1  0x1d2
+#define linux_KEY_FN_F2  0x1d3
+#define linux_KEY_FN_F3  0x1d4
+#define linux_KEY_FN_F4  0x1d5
+#define linux_KEY_FN_F5  0x1d6
+#define linux_KEY_FN_F6  0x1d7
+#define linux_KEY_FN_F7  0x1d8
+#define linux_KEY_FN_F8  0x1d9
+#define linux_KEY_FN_F9  0x1da
+#define linux_KEY_FN_F10 0x1db
+#define linux_KEY_FN_F11 0x1dc
+#define linux_KEY_FN_F12 0x1dd
+#define linux_KEY_FN_1   0x1de
+#define linux_KEY_FN_2   0x1df
+#define linux_KEY_FN_D   0x1e0
+#define linux_KEY_FN_E   0x1e1
+#define linux_KEY_FN_F   0x1e2
+#define linux_KEY_FN_S   0x1e3
+#define linux_KEY_FN_B   0x1e4
+
+#define linux_KEY_BRL_DOT1  0x1f1
+#define linux_KEY_BRL_DOT2  0x1f2
+#define linux_KEY_BRL_DOT3  0x1f3
+#define linux_KEY_BRL_DOT4  0x1f4
+#define linux_KEY_BRL_DOT5  0x1f5
+#define linux_KEY_BRL_DOT6  0x1f6
+#define linux_KEY_BRL_DOT7  0x1f7
+#define linux_KEY_BRL_DOT8  0x1f8
+#define linux_KEY_BRL_DOT9  0x1f9
+#define linux_KEY_BRL_DOT10 0x1fa
+
+#define linux_KEY_NUMERIC_0     0x200
+#define linux_KEY_NUMERIC_1     0x201
+#define linux_KEY_NUMERIC_2     0x202
+#define linux_KEY_NUMERIC_3     0x203
+#define linux_KEY_NUMERIC_4     0x204
+#define linux_KEY_NUMERIC_5     0x205
+#define linux_KEY_NUMERIC_6     0x206
+#define linux_KEY_NUMERIC_7     0x207
+#define linux_KEY_NUMERIC_8     0x208
+#define linux_KEY_NUMERIC_9     0x209
+#define linux_KEY_NUMERIC_STAR  0x20a
+#define linux_KEY_NUMERIC_POUND 0x20b
+#define linux_KEY_NUMERIC_A     0x20c
+#define linux_KEY_NUMERIC_B     0x20d
+#define linux_KEY_NUMERIC_C     0x20e
+#define linux_KEY_NUMERIC_D     0x20f
+
+#define linux_KEY_CAMERA_FOCUS 0x210
+#define linux_KEY_WPS_BUTTON   0x211
+
+#define linux_KEY_TOUCHPAD_TOGGLE 0x212
+#define linux_KEY_TOUCHPAD_ON     0x213
+#define linux_KEY_TOUCHPAD_OFF    0x214
+
+#define linux_KEY_CAMERA_ZOOMIN  0x215
+#define linux_KEY_CAMERA_ZOOMOUT 0x216
+#define linux_KEY_CAMERA_UP      0x217
+#define linux_KEY_CAMERA_DOWN    0x218
+#define linux_KEY_CAMERA_LEFT    0x219
+#define linux_KEY_CAMERA_RIGHT   0x21a
+
+#define linux_KEY_ATTENDANT_ON     0x21b
+#define linux_KEY_ATTENDANT_OFF    0x21c
+#define linux_KEY_ATTENDANT_TOGGLE 0x21d
+#define linux_KEY_LIGHTS_TOGGLE    0x21e
+
+#define linux_BTN_DPAD_UP    0x220
+#define linux_BTN_DPAD_DOWN  0x221
+#define linux_BTN_DPAD_LEFT  0x222
+#define linux_BTN_DPAD_RIGHT 0x223
+
+#define linux_KEY_ALS_TOGGLE         0x230
+#define linux_KEY_ROTATE_LOCK_TOGGLE 0x231
+
+#define linux_KEY_BUTTONCONFIG    0x240
+#define linux_KEY_TASKMANAGER     0x241
+#define linux_KEY_JOURNAL         0x242
+#define linux_KEY_CONTROLPANEL    0x243
+#define linux_KEY_APPSELECT       0x244
+#define linux_KEY_SCREENSAVER     0x245
+#define linux_KEY_VOICECOMMAND    0x246
+#define linux_KEY_ASSISTANT       0x247
+#define linux_KEY_KBD_LAYOUT_NEXT 0x248
+
+#define linux_KEY_BRIGHTNESS_MIN 0x250
+#define linux_KEY_BRIGHTNESS_MAX 0x251
+
+#define linux_KEY_KBDINPUTASSIST_PREV      0x260
+#define linux_KEY_KBDINPUTASSIST_NEXT      0x261
+#define linux_KEY_KBDINPUTASSIST_PREVGROUP 0x262
+#define linux_KEY_KBDINPUTASSIST_NEXTGROUP 0x263
+#define linux_KEY_KBDINPUTASSIST_ACCEPT    0x264
+#define linux_KEY_KBDINPUTASSIST_CANCEL    0x265
+
+#define linux_KEY_RIGHT_UP   0x266
+#define linux_KEY_RIGHT_DOWN 0x267
+#define linux_KEY_LEFT_UP    0x268
+#define linux_KEY_LEFT_DOWN  0x269
+
+#define linux_KEY_ROOT_MENU             0x26a
+#define linux_KEY_MEDIA_TOP_MENU        0x26b
+#define linux_KEY_NUMERIC_11            0x26c
+#define linux_KEY_NUMERIC_12            0x26d
+#define linux_KEY_AUDIO_DESC            0x26e
+#define linux_KEY_3D_MODE               0x26f
+#define linux_KEY_NEXT_FAVORITE         0x270
+#define linux_KEY_STOP_RECORD           0x271
+#define linux_KEY_PAUSE_RECORD          0x272
+#define linux_KEY_VOD                   0x273
+#define linux_KEY_UNMUTE                0x274
+#define linux_KEY_FASTREVERSE           0x275
+#define linux_KEY_SLOWREVERSE           0x276
+#define linux_KEY_DATA                  0x277
+#define linux_KEY_ONSCREEN_KEYBOARD     0x278
+#define linux_KEY_PRIVACY_SCREEN_TOGGLE 0x279
+
+#define linux_KEY_MACRO1  0x290
+#define linux_KEY_MACRO2  0x291
+#define linux_KEY_MACRO3  0x292
+#define linux_KEY_MACRO4  0x293
+#define linux_KEY_MACRO5  0x294
+#define linux_KEY_MACRO6  0x295
+#define linux_KEY_MACRO7  0x296
+#define linux_KEY_MACRO8  0x297
+#define linux_KEY_MACRO9  0x298
+#define linux_KEY_MACRO10 0x299
+#define linux_KEY_MACRO11 0x29a
+#define linux_KEY_MACRO12 0x29b
+#define linux_KEY_MACRO13 0x29c
+#define linux_KEY_MACRO14 0x29d
+#define linux_KEY_MACRO15 0x29e
+#define linux_KEY_MACRO16 0x29f
+#define linux_KEY_MACRO17 0x2a0
+#define linux_KEY_MACRO18 0x2a1
+#define linux_KEY_MACRO19 0x2a2
+#define linux_KEY_MACRO20 0x2a3
+#define linux_KEY_MACRO21 0x2a4
+#define linux_KEY_MACRO22 0x2a5
+#define linux_KEY_MACRO23 0x2a6
+#define linux_KEY_MACRO24 0x2a7
+#define linux_KEY_MACRO25 0x2a8
+#define linux_KEY_MACRO26 0x2a9
+#define linux_KEY_MACRO27 0x2aa
+#define linux_KEY_MACRO28 0x2ab
+#define linux_KEY_MACRO29 0x2ac
+#define linux_KEY_MACRO30 0x2ad
+
+#define linux_KEY_MACRO_RECORD_START 0x2b0
+#define linux_KEY_MACRO_RECORD_STOP  0x2b1
+#define linux_KEY_MACRO_PRESET_CYCLE 0x2b2
+#define linux_KEY_MACRO_PRESET1      0x2b3
+#define linux_KEY_MACRO_PRESET2      0x2b4
+#define linux_KEY_MACRO_PRESET3      0x2b5
+
+#define linux_KEY_KBD_LCD_MENU1 0x2b8
+#define linux_KEY_KBD_LCD_MENU2 0x2b9
+#define linux_KEY_KBD_LCD_MENU3 0x2ba
+#define linux_KEY_KBD_LCD_MENU4 0x2bb
+#define linux_KEY_KBD_LCD_MENU5 0x2bc
+
+#define linux_BTN_TRIGGER_HAPPY   0x2c0
+#define linux_BTN_TRIGGER_HAPPY1  0x2c0
+#define linux_BTN_TRIGGER_HAPPY2  0x2c1
+#define linux_BTN_TRIGGER_HAPPY3  0x2c2
+#define linux_BTN_TRIGGER_HAPPY4  0x2c3
+#define linux_BTN_TRIGGER_HAPPY5  0x2c4
+#define linux_BTN_TRIGGER_HAPPY6  0x2c5
+#define linux_BTN_TRIGGER_HAPPY7  0x2c6
+#define linux_BTN_TRIGGER_HAPPY8  0x2c7
+#define linux_BTN_TRIGGER_HAPPY9  0x2c8
+#define linux_BTN_TRIGGER_HAPPY10 0x2c9
+#define linux_BTN_TRIGGER_HAPPY11 0x2ca
+#define linux_BTN_TRIGGER_HAPPY12 0x2cb
+#define linux_BTN_TRIGGER_HAPPY13 0x2cc
+#define linux_BTN_TRIGGER_HAPPY14 0x2cd
+#define linux_BTN_TRIGGER_HAPPY15 0x2ce
+#define linux_BTN_TRIGGER_HAPPY16 0x2cf
+#define linux_BTN_TRIGGER_HAPPY17 0x2d0
+#define linux_BTN_TRIGGER_HAPPY18 0x2d1
+#define linux_BTN_TRIGGER_HAPPY19 0x2d2
+#define linux_BTN_TRIGGER_HAPPY20 0x2d3
+#define linux_BTN_TRIGGER_HAPPY21 0x2d4
+#define linux_BTN_TRIGGER_HAPPY22 0x2d5
+#define linux_BTN_TRIGGER_HAPPY23 0x2d6
+#define linux_BTN_TRIGGER_HAPPY24 0x2d7
+#define linux_BTN_TRIGGER_HAPPY25 0x2d8
+#define linux_BTN_TRIGGER_HAPPY26 0x2d9
+#define linux_BTN_TRIGGER_HAPPY27 0x2da
+#define linux_BTN_TRIGGER_HAPPY28 0x2db
+#define linux_BTN_TRIGGER_HAPPY29 0x2dc
+#define linux_BTN_TRIGGER_HAPPY30 0x2dd
+#define linux_BTN_TRIGGER_HAPPY31 0x2de
+#define linux_BTN_TRIGGER_HAPPY32 0x2df
+#define linux_BTN_TRIGGER_HAPPY33 0x2e0
+#define linux_BTN_TRIGGER_HAPPY34 0x2e1
+#define linux_BTN_TRIGGER_HAPPY35 0x2e2
+#define linux_BTN_TRIGGER_HAPPY36 0x2e3
+#define linux_BTN_TRIGGER_HAPPY37 0x2e4
+#define linux_BTN_TRIGGER_HAPPY38 0x2e5
+#define linux_BTN_TRIGGER_HAPPY39 0x2e6
+#define linux_BTN_TRIGGER_HAPPY40 0x2e7
+
+#define linux_KEY_MIN_INTERESTING linux_KEY_MUTE
+#define linux_KEY_MAX             0x2ff
+#define linux_KEY_CNT             (linux_KEY_MAX + 1)
+
+#define linux_REL_X             0x00
+#define linux_REL_Y             0x01
+#define linux_REL_Z             0x02
+#define linux_REL_RX            0x03
+#define linux_REL_RY            0x04
+#define linux_REL_RZ            0x05
+#define linux_REL_HWHEEL        0x06
+#define linux_REL_DIAL          0x07
+#define linux_REL_WHEEL         0x08
+#define linux_REL_MISC          0x09
+#define linux_REL_RESERVED      0x0a
+#define linux_REL_WHEEL_HI_RES  0x0b
+#define linux_REL_HWHEEL_HI_RES 0x0c
+#define linux_REL_MAX           0x0f
+#define linux_REL_CNT           (linux_REL_MAX + 1)
+
+#define linux_ABS_X          0x00
+#define linux_ABS_Y          0x01
+#define linux_ABS_Z          0x02
+#define linux_ABS_RX         0x03
+#define linux_ABS_RY         0x04
+#define linux_ABS_RZ         0x05
+#define linux_ABS_THROTTLE   0x06
+#define linux_ABS_RUDDER     0x07
+#define linux_ABS_WHEEL      0x08
+#define linux_ABS_GAS        0x09
+#define linux_ABS_BRAKE      0x0a
+#define linux_ABS_HAT0X      0x10
+#define linux_ABS_HAT0Y      0x11
+#define linux_ABS_HAT1X      0x12
+#define linux_ABS_HAT1Y      0x13
+#define linux_ABS_HAT2X      0x14
+#define linux_ABS_HAT2Y      0x15
+#define linux_ABS_HAT3X      0x16
+#define linux_ABS_HAT3Y      0x17
+#define linux_ABS_PRESSURE   0x18
+#define linux_ABS_DISTANCE   0x19
+#define linux_ABS_TILT_X     0x1a
+#define linux_ABS_TILT_Y     0x1b
+#define linux_ABS_TOOL_WIDTH 0x1c
+
+#define linux_ABS_VOLUME 0x20
+
+#define linux_ABS_MISC 0x28
+
+#define linux_ABS_RESERVED 0x2e
+
+#define linux_ABS_MT_SLOT        0x2f
+#define linux_ABS_MT_TOUCH_MAJOR 0x30
+#define linux_ABS_MT_TOUCH_MINOR 0x31
+#define linux_ABS_MT_WIDTH_MAJOR 0x32
+#define linux_ABS_MT_WIDTH_MINOR 0x33
+#define linux_ABS_MT_ORIENTATION 0x34
+#define linux_ABS_MT_POSITION_X  0x35
+#define linux_ABS_MT_POSITION_Y  0x36
+#define linux_ABS_MT_TOOL_TYPE   0x37
+#define linux_ABS_MT_BLOB_ID     0x38
+#define linux_ABS_MT_TRACKING_ID 0x39
+#define linux_ABS_MT_PRESSURE    0x3a
+#define linux_ABS_MT_DISTANCE    0x3b
+#define linux_ABS_MT_TOOL_X      0x3c
+#define linux_ABS_MT_TOOL_Y      0x3d
+
+
+#define linux_ABS_MAX 0x3f
+#define linux_ABS_CNT (linux_ABS_MAX + 1)
+
+#define linux_SW_LID                  0x00
+#define linux_SW_TABLET_MODE          0x01
+#define linux_SW_HEADPHONE_INSERT     0x02
+#define linux_SW_RFKILL_ALL           0x03
+#define linux_SW_RADIO                linux_SW_RFKILL_ALL
+#define linux_SW_MICROPHONE_INSERT    0x04
+#define linux_SW_DOCK                 0x05
+#define linux_SW_LINEOUT_INSERT       0x06
+#define linux_SW_JACK_PHYSICAL_INSERT 0x07
+#define linux_SW_VIDEOOUT_INSERT      0x08
+#define linux_SW_CAMERA_LENS_COVER    0x09
+#define linux_SW_KEYPAD_SLIDE         0x0a
+#define linux_SW_FRONT_PROXIMITY      0x0b
+#define linux_SW_ROTATE_LOCK          0x0c
+#define linux_SW_LINEIN_INSERT        0x0d
+#define linux_SW_MUTE_DEVICE          0x0e
+#define linux_SW_PEN_INSERTED         0x0f
+#define linux_SW_MAX                  0x0f
+#define linux_SW_CNT                  (linux_SW_MAX + 1)
+
+#define linux_MSC_SERIAL    0x00
+#define linux_MSC_PULSELED  0x01
+#define linux_MSC_GESTURE   0x02
+#define linux_MSC_RAW       0x03
+#define linux_MSC_SCAN      0x04
+#define linux_MSC_TIMESTAMP 0x05
+#define linux_MSC_MAX       0x07
+#define linux_MSC_CNT       (linux_MSC_MAX + 1)
+
+#define linux_LED_NUML     0x00
+#define linux_LED_CAPSL    0x01
+#define linux_LED_SCROLLL  0x02
+#define linux_LED_COMPOSE  0x03
+#define linux_LED_KANA     0x04
+#define linux_LED_SLEEP    0x05
+#define linux_LED_SUSPEND  0x06
+#define linux_LED_MUTE     0x07
+#define linux_LED_MISC     0x08
+#define linux_LED_MAIL     0x09
+#define linux_LED_CHARGING 0x0a
+#define linux_LED_MAX      0x0f
+#define linux_LED_CNT      (linux_LED_MAX + 1)
+
+#define linux_REP_DELAY  0x00
+#define linux_REP_PERIOD 0x01
+#define linux_REP_MAX    0x01
+#define linux_REP_CNT    (linux_REP_MAX + 1)
+
+#define linux_SND_CLICK 0x00
+#define linux_SND_BELL  0x01
+#define linux_SND_TONE  0x02
+#define linux_SND_MAX   0x07
+#define linux_SND_CNT   (linux_SND_MAX + 1)
+
+//=============================================================================
+// evdev
+
+#define linux_EV_VERSION 0x010001
+
+#define linux_INPUT_KEYMAP_BY_INDEX (1 << 0)
+
+#define linux_EVIOCGVERSION linux_IOR('E', 0x01, int)
+#define linux_EVIOCGID      linux_IOR('E', 0x02, struct linux_input_id)
+#define linux_EVIOCGREP     linux_IOR('E', 0x03, unsigned int[2])
+#define linux_EVIOCSREP     linux_IOW('E', 0x03, unsigned int[2])
+
+#define linux_EVIOCGKEYCODE    linux_IOR('E', 0x04, unsigned int[2])
+#define linux_EVIOCGKEYCODE_V2 linux_IOR('E', 0x04, struct linux_input_keymap_entry)
+#define linux_EVIOCSKEYCODE    linux_IOW('E', 0x04, unsigned int[2])
+#define linux_EVIOCSKEYCODE_V2 linux_IOW('E', 0x04, struct linux_input_keymap_entry)
+
+#define linux_EVIOCGNAME(len) linux_IOC(linux_IOC_READ, 'E', 0x06, len)
+#define linux_EVIOCGPHYS(len) linux_IOC(linux_IOC_READ, 'E', 0x07, len)
+#define linux_EVIOCGUNIQ(len) linux_IOC(linux_IOC_READ, 'E', 0x08, len)
+#define linux_EVIOCGPROP(len) linux_IOC(linux_IOC_READ, 'E', 0x09, len)
+
+#define linux_EVIOCGMTSLOTS(len) linux_IOC(linux_IOC_READ, 'E', 0x0a, len)
+
+#define linux_EVIOCGKEY(len) linux_IOC(linux_IOC_READ, 'E', 0x18, len)
+#define linux_EVIOCGLED(len) linux_IOC(linux_IOC_READ, 'E', 0x19, len)
+#define linux_EVIOCGSND(len) linux_IOC(linux_IOC_READ, 'E', 0x1a, len)
+#define linux_EVIOCGSW(len)  linux_IOC(linux_IOC_READ, 'E', 0x1b, len)
+
+#define linux_EVIOCGBIT(ev,len) linux_IOC(linux_IOC_READ, 'E', 0x20 + (ev), len)
+#define linux_EVIOCGABS(abs)    linux_IOR('E', 0x40 + (abs), struct linux_input_absinfo)
+#define linux_EVIOCSABS(abs)    linux_IOW('E', 0xc0 + (abs), struct linux_input_absinfo)
+
+#define linux_EVIOCSFF      linux_IOW('E', 0x80, struct linux_ff_effect)
+#define linux_EVIOCRMFF     linux_IOW('E', 0x81, int)
+#define linux_EVIOCGEFFECTS linux_IOR('E', 0x84, int)
+
+#define linux_EVIOCGRAB   linux_IOW('E', 0x90, int)
+#define linux_EVIOCREVOKE linux_IOW('E', 0x91, int)
+#define linux_EVIOCGMASK  linux_IOR('E', 0x92, struct linux_input_mask)
+#define linux_EVIOCSMASK  linux_IOW('E', 0x93, struct linux_input_mask)
+
+#define linux_EVIOCSCLOCKID linux_IOW('E', 0xa0, int)
+
+#define linux_ID_BUS     0
+#define linux_ID_VENDOR  1
+#define linux_ID_PRODUCT 2
+#define linux_ID_VERSION 3
+
+#define linux_BUS_PCI       0x01
+#define linux_BUS_ISAPNP    0x02
+#define linux_BUS_USB       0x03
+#define linux_BUS_HIL       0x04
+#define linux_BUS_BLUETOOTH 0x05
+#define linux_BUS_VIRTUAL   0x06
+
+#define linux_BUS_ISA         0x10
+#define linux_BUS_I8042       0x11
+#define linux_BUS_XTKBD       0x12
+#define linux_BUS_RS232       0x13
+#define linux_BUS_GAMEPORT    0x14
+#define linux_BUS_PARPORT     0x15
+#define linux_BUS_AMIGA       0x16
+#define linux_BUS_ADB         0x17
+#define linux_BUS_I2C         0x18
+#define linux_BUS_HOST        0x19
+#define linux_BUS_GSC         0x1A
+#define linux_BUS_ATARI       0x1B
+#define linux_BUS_SPI         0x1C
+#define linux_BUS_RMI         0x1D
+#define linux_BUS_CEC         0x1E
+#define linux_BUS_INTEL_ISHTP 0x1F
+
+#define linux_MT_TOOL_FINGER 0x00
+#define linux_MT_TOOL_PEN    0x01
+#define linux_MT_TOOL_PALM   0x02
+#define linux_MT_TOOL_DIAL   0x0a
+#define linux_MT_TOOL_MAX    0x0f
+
+#define linux_FF_STATUS_STOPPED 0x00
+#define linux_FF_STATUS_PLAYING 0x01
+#define linux_FF_STATUS_MAX     0x01
+
+#define linux_FF_RUMBLE   0x50
+#define linux_FF_PERIODIC 0x51
+#define linux_FF_CONSTANT 0x52
+#define linux_FF_SPRING   0x53
+#define linux_FF_FRICTION 0x54
+#define linux_FF_DAMPER   0x55
+#define linux_FF_INERTIA  0x56
+#define linux_FF_RAMP     0x57
+
+#define linux_FF_EFFECT_MIN linux_FF_RUMBLE
+#define linux_FF_EFFECT_MAX linux_FF_RAMP
+
+#define linux_FF_SQUARE   0x58
+#define linux_FF_TRIANGLE 0x59
+#define linux_FF_SINE     0x5a
+#define linux_FF_SAW_UP   0x5b
+#define linux_FF_SAW_DOWN 0x5c
+#define linux_FF_CUSTOM   0x5d
+
+#define linux_FF_WAVEFORM_MIN linux_FF_SQUARE
+#define linux_FF_WAVEFORM_MAX linux_FF_CUSTOM
+
+#define linux_FF_GAIN       0x60
+#define linux_FF_AUTOCENTER 0x61
+
+#define linux_FF_MAX_EFFECTS linux_FF_GAIN
+
+#define linux_FF_MAX 0x7f
+#define linux_FF_CNT (linux_FF_MAX + 1)
+
+//=============================================================================
 // Architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)

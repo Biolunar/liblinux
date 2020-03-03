@@ -343,4 +343,15 @@ struct linux_termiox
 	uint16_t x_sflag;
 };
 
+//=============================================================================
+// evdev
+
+struct linux_input_event
+{
+	struct linux_timeval time;
+	uint16_t type;
+	uint16_t code;
+	int32_t value;
+};
+
 #endif // !HEADER_LIBLINUX_ARM_EABI_STRUCTS_H_INCLUDED

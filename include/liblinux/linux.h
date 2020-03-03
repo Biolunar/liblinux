@@ -890,18 +890,6 @@ typedef linux_kernel_old_uid_t linux_old_uid_t;
 typedef linux_kernel_old_gid_t linux_old_gid_t;
 #endif
 
-#if defined(LINUX_ARCH_ARM_EABI)
-#include "arm-eabi/structs.h"
-#elif defined(LINUX_ARCH_ARM64)
-#include "arm64/structs.h"
-#elif defined(LINUX_ARCH_X86)
-#include "x86/structs.h"
-#elif defined(LINUX_ARCH_X32)
-#include "x32/structs.h"
-#elif defined(LINUX_ARCH_X86_64)
-#include "x86_64/structs.h"
-#endif
-
 struct linux_iovec
 {
 	void* iov_base;
@@ -1123,6 +1111,18 @@ struct linux_kexec_segment
 	void const* mem;
 	linux_size_t memsz;
 };
+
+#if defined(LINUX_ARCH_ARM_EABI)
+#include "arm-eabi/structs.h"
+#elif defined(LINUX_ARCH_ARM64)
+#include "arm64/structs.h"
+#elif defined(LINUX_ARCH_X86)
+#include "x86/structs.h"
+#elif defined(LINUX_ARCH_X32)
+#include "x32/structs.h"
+#elif defined(LINUX_ARCH_X86_64)
+#include "x86_64/structs.h"
+#endif
 
 //=============================================================================
 // Deprecated types
@@ -2264,6 +2264,109 @@ struct linux_f_owner_ex
 {
 	int type;
 	linux_kernel_pid_t pid;
+};
+
+//=============================================================================
+// evdev
+
+struct linux_input_id
+{
+	uint16_t bustype;
+	uint16_t vendor;
+	uint16_t product;
+	uint16_t version;
+};
+struct linux_input_absinfo
+{
+	int32_t value;
+	int32_t minimum;
+	int32_t maximum;
+	int32_t fuzz;
+	int32_t flat;
+	int32_t resolution;
+};
+struct linux_input_keymap_entry
+{
+	uint8_t flags;
+	uint8_t len;
+	uint16_t index;
+	uint32_t keycode;
+	uint8_t scancode[32];
+};
+struct linux_input_mask
+{
+	uint32_t type;
+	uint32_t codes_size;
+	uint64_t codes_ptr;
+};
+struct linux_ff_replay
+{
+	uint16_t length;
+	uint16_t delay;
+};
+struct linux_ff_trigger
+{
+	uint16_t button;
+	uint16_t interval;
+};
+struct linux_ff_envelope
+{
+	uint16_t attack_length;
+	uint16_t attack_level;
+	uint16_t fade_length;
+	uint16_t fade_level;
+};
+struct linux_ff_constant_effect
+{
+	int16_t level;
+	struct linux_ff_envelope envelope;
+};
+struct linux_ff_ramp_effect
+{
+	int16_t start_level;
+	int16_t end_level;
+	struct linux_ff_envelope envelope;
+};
+struct linux_ff_condition_effect
+{
+	uint16_t right_saturation;
+	uint16_t left_saturation;
+	int16_t right_coeff;
+	int16_t left_coeff;
+	uint16_t deadband;
+	int16_t center;
+};
+struct linux_ff_periodic_effect
+{
+	uint16_t waveform;
+	uint16_t period;
+	int16_t magnitude;
+	int16_t offset;
+	uint16_t phase;
+	struct linux_ff_envelope envelope;
+	uint32_t custom_len;
+	int16_t* custom_data;
+};
+struct linux_ff_rumble_effect
+{
+	uint16_t strong_magnitude;
+	uint16_t weak_magnitude;
+};
+struct linux_ff_effect
+{
+	uint16_t type;
+	int16_t id;
+	uint16_t direction;
+	struct linux_ff_trigger trigger;
+	struct linux_ff_replay replay;
+	union
+	{
+		struct linux_ff_constant_effect constant;
+		struct linux_ff_ramp_effect ramp;
+		struct linux_ff_periodic_effect periodic;
+		struct linux_ff_condition_effect condition[2];
+		struct linux_ff_rumble_effect rumble;
+	} u;
 };
 
 //=============================================================================
