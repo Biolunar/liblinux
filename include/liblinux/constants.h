@@ -3788,6 +3788,39 @@ enum
 #define linux_FF_CNT (linux_FF_MAX + 1)
 
 //=============================================================================
+// uinput
+
+#define linux_UINPUT_VERSION        5
+#define linux_UINPUT_MAX_NAME_SIZE 80
+
+#define linux_UINPUT_IOCTL_BASE   'U'
+#define linux_UI_DEV_CREATE       linux_IO(linux_UINPUT_IOCTL_BASE, 1)
+#define linux_UI_DEV_DESTROY      linux_IO(linux_UINPUT_IOCTL_BASE, 2)
+#define linux_UI_DEV_SETUP        linux_IOW(linux_UINPUT_IOCTL_BASE, 3, struct linux_uinput_setup)
+#define linux_UI_ABS_SETUP        linux_IOW(linux_UINPUT_IOCTL_BASE, 4, struct linux_uinput_abs_setup)
+#define linux_UI_SET_EVBIT        linux_IOW(linux_UINPUT_IOCTL_BASE, 100, int)
+#define linux_UI_SET_KEYBIT       linux_IOW(linux_UINPUT_IOCTL_BASE, 101, int)
+#define linux_UI_SET_RELBIT       linux_IOW(linux_UINPUT_IOCTL_BASE, 102, int)
+#define linux_UI_SET_ABSBIT       linux_IOW(linux_UINPUT_IOCTL_BASE, 103, int)
+#define linux_UI_SET_MSCBIT       linux_IOW(linux_UINPUT_IOCTL_BASE, 104, int)
+#define linux_UI_SET_LEDBIT       linux_IOW(linux_UINPUT_IOCTL_BASE, 105, int)
+#define linux_UI_SET_SNDBIT       linux_IOW(linux_UINPUT_IOCTL_BASE, 106, int)
+#define linux_UI_SET_FFBIT        linux_IOW(linux_UINPUT_IOCTL_BASE, 107, int)
+#define linux_UI_SET_PHYS         linux_IOW(linux_UINPUT_IOCTL_BASE, 108, char*)
+#define linux_UI_SET_SWBIT        linux_IOW(linux_UINPUT_IOCTL_BASE, 109, int)
+#define linux_UI_SET_PROPBIT      linux_IOW(linux_UINPUT_IOCTL_BASE, 110, int)
+#define linux_UI_BEGIN_FF_UPLOAD  linux_IOWR(linux_UINPUT_IOCTL_BASE, 200, struct linux_uinput_ff_upload)
+#define linux_UI_END_FF_UPLOAD    linux_IOW(linux_UINPUT_IOCTL_BASE, 201, struct linux_uinput_ff_upload)
+#define linux_UI_BEGIN_FF_ERASE   linux_IOWR(linux_UINPUT_IOCTL_BASE, 202, struct linux_uinput_ff_erase)
+#define linux_UI_END_FF_ERASE     linux_IOW(linux_UINPUT_IOCTL_BASE, 203, struct linux_uinput_ff_erase)
+#define linux_UI_GET_SYSNAME(len) linux_IOC(linux_IOC_READ, linux_UINPUT_IOCTL_BASE, 44, len)
+#define linux_UI_GET_VERSION      linux_IOR(linux_UINPUT_IOCTL_BASE, 45, unsigned int)
+
+#define linux_EV_UINPUT    0x0101
+#define linux_UI_FF_UPLOAD 1
+#define linux_UI_FF_ERASE  2
+
+//=============================================================================
 // Architecture specific
 
 #if defined(LINUX_ARCH_ARM_EABI)

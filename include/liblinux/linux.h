@@ -2370,6 +2370,44 @@ struct linux_ff_effect
 };
 
 //=============================================================================
+// uinput
+
+struct linux_uinput_ff_upload
+{
+	uint32_t request_id;
+	int32_t retval;
+	struct linux_ff_effect effect;
+	struct linux_ff_effect old;
+};
+struct linux_uinput_ff_erase
+{
+	uint32_t request_id;
+	int32_t retval;
+	uint32_t effect_id;
+};
+struct linux_uinput_setup
+{
+	struct linux_input_id id;
+	char name[linux_UINPUT_MAX_NAME_SIZE];
+	uint32_t ff_effects_max;
+};
+struct linux_uinput_abs_setup
+{
+	uint16_t code;
+	struct linux_input_absinfo absinfo;
+};
+struct linux_uinput_user_dev
+{
+	char name[linux_UINPUT_MAX_NAME_SIZE];
+	struct linux_input_id id;
+	uint32_t ff_effects_max;
+	int32_t absmax[linux_ABS_CNT];
+	int32_t absmin[linux_ABS_CNT];
+	int32_t absfuzz[linux_ABS_CNT];
+	int32_t absflat[linux_ABS_CNT];
+};
+
+//=============================================================================
 // Generic syscalls
 
 //-----------------------------------------------------------------------------
