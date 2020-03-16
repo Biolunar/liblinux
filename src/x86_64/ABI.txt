@@ -11,6 +11,7 @@ Linux syscalls:
 syscall number: rax
 return value: rax
 parameter: rdi, rsi, rdx, r10, r8, r9
+scratch: rcx, r11
 
 Size/Alignment:
 ===============
