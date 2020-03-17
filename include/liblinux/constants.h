@@ -1225,6 +1225,1149 @@ enum linux_tpacket_versions
 #define linux_NLMSG_MIN_TYPE         0x10
 
 //-----------------------------------------------------------------------------
+// rtnetlink
+
+#define linux_RTNL_FAMILY_IPMR  128
+#define linux_RTNL_FAMILY_IP6MR 129
+#define linux_RTNL_FAMILY_MAX   129
+
+enum
+{
+	linux_RTM_BASE           = 16,
+	linux_RTM_NEWLINK        = 16,
+	linux_RTM_DELLINK,
+	linux_RTM_GETLINK,
+	linux_RTM_SETLINK,
+	linux_RTM_NEWADDR        = 20,
+	linux_RTM_DELADDR,
+	linux_RTM_GETADDR,
+	linux_RTM_NEWROUTE       = 24,
+	linux_RTM_DELROUTE,
+	linux_RTM_GETROUTE,
+	linux_RTM_NEWNEIGH       = 28,
+	linux_RTM_DELNEIGH,
+	linux_RTM_GETNEIGH,
+	linux_RTM_NEWRULE        = 32,
+	linux_RTM_DELRULE,
+	linux_RTM_GETRULE,
+	linux_RTM_NEWQDISC       = 36,
+	linux_RTM_DELQDISC,
+	linux_RTM_GETQDISC,
+	linux_RTM_NEWTCLASS      = 40,
+	linux_RTM_DELTCLASS,
+	linux_RTM_GETTCLASS,
+	linux_RTM_NEWTFILTER     = 44,
+	linux_RTM_DELTFILTER,
+	linux_RTM_GETTFILTER,
+	linux_RTM_NEWACTION      = 48,
+	linux_RTM_DELACTION,
+	linux_RTM_GETACTION,
+	linux_RTM_NEWPREFIX      = 52,
+	linux_RTM_GETMULTICAST   = 58,
+	linux_RTM_GETANYCAST     = 62,
+	linux_RTM_NEWNEIGHTBL    = 64,
+	linux_RTM_GETNEIGHTBL    = 66,
+	linux_RTM_SETNEIGHTBL,
+	linux_RTM_NEWNDUSEROPT   = 68,
+	linux_RTM_NEWADDRLABEL   = 72,
+	linux_RTM_DELADDRLABEL,
+	linux_RTM_GETADDRLABEL,
+	linux_RTM_GETDCB         = 78,
+	linux_RTM_SETDCB,
+	linux_RTM_NEWNETCONF     = 80,
+	linux_RTM_DELNETCONF,
+	linux_RTM_GETNETCONF     = 82,
+	linux_RTM_NEWMDB         = 84,
+	linux_RTM_DELMDB         = 85,
+	linux_RTM_GETMDB         = 86,
+	linux_RTM_NEWNSID        = 88,
+	linux_RTM_DELNSID        = 89,
+	linux_RTM_GETNSID        = 90,
+	linux_RTM_NEWSTATS       = 92,
+	linux_RTM_GETSTATS       = 94,
+	linux_RTM_NEWCACHEREPORT = 96,
+	linux_RTM_NEWCHAIN       = 100,
+	linux_RTM_DELCHAIN,
+	linux_RTM_GETCHAIN,
+	linux_RTM_NEWNEXTHOP     = 104,
+	linux_RTM_DELNEXTHOP,
+	linux_RTM_GETNEXTHOP,
+	linux_RTM_NEWLINKPROP    = 108,
+	linux_RTM_DELLINKPROP,
+	linux_RTM_GETLINKPROP,
+	linux__RTM_MAX,
+#define linux_RTM_MAX (((linux__RTM_MAX + 3) & ~3) - 1)
+};
+
+#define linux_RTM_NR_MSGTYPES (linux_RTM_MAX + 1 - linux_RTM_BASE)
+#define linux_RTM_NR_FAMILIES (linux_RTM_NR_MSGTYPES >> 2)
+#define linux_RTM_FAM(cmd)    (((cmd) - linux_RTM_BASE) >> 2)
+
+#define linux_RTA_ALIGNTO            4U
+#define linux_RTA_ALIGN(len)         (((len) + linux_RTA_ALIGNTO - 1) & ~(linux_RTA_ALIGNTO - 1))
+#define linux_RTA_OK(rta, len)       ((len) >= (int)sizeof(struct linux_rtattr) && (rta)->rta_len >= sizeof(struct linux_rtattr) && (rta)->rta_len <= (len))
+#define linux_RTA_NEXT(rta, attrlen) ((attrlen) -= linux_RTA_ALIGN((rta)->rta_len), (struct linux_rtattr*)(((char*)(rta)) + linux_RTA_ALIGN((rta)->rta_len)))
+#define linux_RTA_LENGTH(len)        (linux_RTA_ALIGN(sizeof(struct linux_rtattr)) + (len))
+#define linux_RTA_SPACE(len)         linux_RTA_ALIGN(linux_RTA_LENGTH(len))
+#define linux_RTA_DATA(rta)          ((void*)(((char*)(rta)) + linux_RTA_LENGTH(0)))
+#define linux_RTA_PAYLOAD(rta)       ((int)((rta)->rta_len) - linux_RTA_LENGTH(0))
+
+enum
+{
+	linux_RTN_UNSPEC,
+	linux_RTN_UNICAST,
+	linux_RTN_LOCAL,
+	linux_RTN_BROADCAST,
+	linux_RTN_ANYCAST,
+	linux_RTN_MULTICAST,
+	linux_RTN_BLACKHOLE,
+	linux_RTN_UNREACHABLE,
+	linux_RTN_PROHIBIT,
+	linux_RTN_THROW,
+	linux_RTN_NAT,
+	linux_RTN_XRESOLVE,
+	linux__RTN_MAX,
+#define linux_RTN_MAX (linux__RTN_MAX - 1)
+};
+
+#define linux_RTPROT_UNSPEC     0
+#define linux_RTPROT_REDIRECT   1
+#define linux_RTPROT_KERNEL     2
+#define linux_RTPROT_BOOT       3
+#define linux_RTPROT_STATIC     4
+#define linux_RTPROT_GATED      8
+#define linux_RTPROT_RA         9
+#define linux_RTPROT_MRT       10
+#define linux_RTPROT_ZEBRA     11
+#define linux_RTPROT_BIRD      12
+#define linux_RTPROT_DNROUTED  13
+#define linux_RTPROT_XORP      14
+#define linux_RTPROT_NTK       15
+#define linux_RTPROT_DHCP      16
+#define linux_RTPROT_MROUTED   17
+#define linux_RTPROT_BABEL     42
+#define linux_RTPROT_BGP      186
+#define linux_RTPROT_ISIS     187
+#define linux_RTPROT_OSPF     188
+#define linux_RTPROT_RIP      189
+#define linux_RTPROT_EIGRP    192
+
+enum linux_rt_scope_t
+{
+	linux_RT_SCOPE_UNIVERSE =   0,
+	linux_RT_SCOPE_SITE     = 200,
+	linux_RT_SCOPE_LINK     = 253,
+	linux_RT_SCOPE_HOST     = 254,
+	linux_RT_SCOPE_NOWHERE  = 255,
+};
+
+#define linux_RTM_F_NOTIFY       0x0100
+#define linux_RTM_F_CLONED       0x0200
+#define linux_RTM_F_EQUALIZE     0x0400
+#define linux_RTM_F_PREFIX       0x0800
+#define linux_RTM_F_LOOKUP_TABLE 0x1000
+#define linux_RTM_F_FIB_MATCH    0x2000
+
+enum linux_rt_class_t
+{
+	linux_RT_TABLE_UNSPEC  =   0,
+	linux_RT_TABLE_COMPAT  = 252,
+	linux_RT_TABLE_DEFAULT = 253,
+	linux_RT_TABLE_MAIN    = 254,
+	linux_RT_TABLE_LOCAL   = 255,
+#define linux_RT_TABLE_MAX 0xFFFFFFFF
+};
+
+enum linux_rtattr_type_t
+{
+	linux_RTA_UNSPEC,
+	linux_RTA_DST,
+	linux_RTA_SRC,
+	linux_RTA_IIF,
+	linux_RTA_OIF,
+	linux_RTA_GATEWAY,
+	linux_RTA_PRIORITY,
+	linux_RTA_PREFSRC,
+	linux_RTA_METRICS,
+	linux_RTA_MULTIPATH,
+	linux_RTA_PROTOINFO,
+	linux_RTA_FLOW,
+	linux_RTA_CACHEINFO,
+	linux_RTA_SESSION,
+	linux_RTA_MP_ALGO,
+	linux_RTA_TABLE,
+	linux_RTA_MARK,
+	linux_RTA_MFC_STATS,
+	linux_RTA_VIA,
+	linux_RTA_NEWDST,
+	linux_RTA_PREF,
+	linux_RTA_ENCAP_TYPE,
+	linux_RTA_ENCAP,
+	linux_RTA_EXPIRES,
+	linux_RTA_PAD,
+	linux_RTA_UID,
+	linux_RTA_TTL_PROPAGATE,
+	linux_RTA_IP_PROTO,
+	linux_RTA_SPORT,
+	linux_RTA_DPORT,
+	linux_RTA_NH_ID,
+	linux__RTA_MAX,
+#define linux_RTA_MAX (linux__RTA_MAX - 1)
+};
+
+#define linux_RTM_RTA(r)     ((struct linux_rtattr*)(((char*)(r)) + linux_NLMSG_ALIGN(sizeof(struct linux_rtmsg))))
+#define linux_RTM_PAYLOAD(n) linux_NLMSG_PAYLOAD(n, sizeof(struct linux_rtmsg))
+
+#define linux_RTNH_F_DEAD        1
+#define linux_RTNH_F_PERVASIVE   2
+#define linux_RTNH_F_ONLINK      4
+#define linux_RTNH_F_OFFLOAD     8
+#define linux_RTNH_F_LINKDOWN   16
+#define linux_RTNH_F_UNRESOLVED 32
+
+#define linux_RTNH_COMPARE_MASK (linux_RTNH_F_DEAD | linux_RTNH_F_LINKDOWN | linux_RTNH_F_OFFLOAD)
+
+#define RTNH_ALIGNTO       4
+#define RTNH_ALIGN(len)    (((len) + linux_RTNH_ALIGNTO - 1) & ~(linux_RTNH_ALIGNTO - 1))
+#define RTNH_OK(rtnh, len) ((rtnh)->rtnh_len >= sizeof(struct linux_rtnexthop) && ((int)(rtnh)->rtnh_len) <= (len))
+#define RTNH_NEXT(rtnh)    ((struct linux_rtnexthop*)(((char*)(rtnh)) + linux_RTNH_ALIGN((rtnh)->rtnh_len)))
+#define RTNH_LENGTH(len)   (linux_RTNH_ALIGN(sizeof(struct linux_rtnexthop)) + (len))
+#define RTNH_SPACE(len)    linux_RTNH_ALIGN(linux_RTNH_LENGTH(len))
+#define RTNH_DATA(rtnh)    ((struct linux_rtattr*)(((char*)(rtnh)) + linux_RTNH_LENGTH(0)))
+
+#define linux_RTNETLINK_HAVE_PEERINFO 1
+
+enum
+{
+	linux_RTAX_UNSPEC,
+	linux_RTAX_LOCK,
+	linux_RTAX_MTU,
+	linux_RTAX_WINDOW,
+	linux_RTAX_RTT,
+	linux_RTAX_RTTVAR,
+	linux_RTAX_SSTHRESH,
+	linux_RTAX_CWND,
+	linux_RTAX_ADVMSS,
+	linux_RTAX_REORDERING,
+	linux_RTAX_HOPLIMIT,
+	linux_RTAX_INITCWND,
+	linux_RTAX_FEATURES,
+	linux_RTAX_RTO_MIN,
+	linux_RTAX_INITRWND,
+	linux_RTAX_QUICKACK,
+	linux_RTAX_CC_ALGO,
+	linux_RTAX_FASTOPEN_NO_COOKIE,
+	linux__RTAX_MAX,
+#define linux_RTAX_MAX (linux__RTAX_MAX - 1)
+};
+
+#define linux_RTAX_FEATURE_ECN       (1 << 0)
+#define linux_RTAX_FEATURE_SACK      (1 << 1)
+#define linux_RTAX_FEATURE_TIMESTAMP (1 << 2)
+#define linux_RTAX_FEATURE_ALLFRAG   (1 << 3)
+
+#define linux_RTAX_FEATURE_MASK (linux_RTAX_FEATURE_ECN | linux_RTAX_FEATURE_SACK | linux_RTAX_FEATURE_TIMESTAMP | linux_RTAX_FEATURE_ALLFRAG)
+
+enum
+{
+	linux_PREFIX_UNSPEC,
+	linux_PREFIX_ADDRESS,
+	linux_PREFIX_CACHEINFO,
+	linux__PREFIX_MAX,
+#define linux_PREFIX_MAX (linux__PREFIX_MAX - 1)
+};
+
+#define TCM_IFINDEX_MAGIC_BLOCK (0xFFFFFFFFU)
+
+enum
+{
+	linux_TCA_UNSPEC,
+	linux_TCA_KIND,
+	linux_TCA_OPTIONS,
+	linux_TCA_STATS,
+	linux_TCA_XSTATS,
+	linux_TCA_RATE,
+	linux_TCA_FCNT,
+	linux_TCA_STATS2,
+	linux_TCA_STAB,
+	linux_TCA_PAD,
+	linux_TCA_DUMP_INVISIBLE,
+	linux_TCA_CHAIN,
+	linux_TCA_HW_OFFLOAD,
+	linux_TCA_INGRESS_BLOCK,
+	linux_TCA_EGRESS_BLOCK,
+	linux__TCA_MAX,
+#define linux_TCA_MAX (linux__TCA_MAX - 1)
+};
+
+#define linux_TCA_RTA(r)     ((struct linux_rtattr*)(((char*)(r)) + linux_NLMSG_ALIGN(sizeof(struct linux_tcmsg))))
+#define linux_TCA_PAYLOAD(n) linux_NLMSG_PAYLOAD(n, sizeof(struct linux_tcmsg))
+
+enum
+{
+	linux_NDUSEROPT_UNSPEC,
+	linux_NDUSEROPT_SRCADDR,
+	linux__NDUSEROPT_MAX,
+#define linux_NDUSEROPT_MAX (linux__NDUSEROPT_MAX - 1)
+};
+
+#define linux_RTMGRP_LINK          0x00001
+#define linux_RTMGRP_NOTIFY        0x00002
+#define linux_RTMGRP_NEIGH         0x00004
+#define linux_RTMGRP_TC            0x00008
+#define linux_RTMGRP_IPV4_IFADDR   0x00010
+#define linux_RTMGRP_IPV4_MROUTE   0x00020
+#define linux_RTMGRP_IPV4_ROUTE    0x00040
+#define linux_RTMGRP_IPV4_RULE     0x00080
+#define linux_RTMGRP_IPV6_IFADDR   0x00100
+#define linux_RTMGRP_IPV6_MROUTE   0x00200
+#define linux_RTMGRP_IPV6_ROUTE    0x00400
+#define linux_RTMGRP_IPV6_IFINFO   0x00800
+#define linux_RTMGRP_DECnet_IFADDR 0x01000
+#define linux_RTMGRP_DECnet_ROUTE  0x04000
+#define linux_RTMGRP_IPV6_PREFIX   0x20000
+
+enum linux_rtnetlink_groups
+{
+	linux_RTNLGRP_NONE,
+	linux_RTNLGRP_LINK,
+	linux_RTNLGRP_NOTIFY,
+	linux_RTNLGRP_NEIGH,
+	linux_RTNLGRP_TC,
+	linux_RTNLGRP_IPV4_IFADDR,
+	linux_RTNLGRP_IPV4_MROUTE,
+	linux_RTNLGRP_IPV4_ROUTE,
+	linux_RTNLGRP_IPV4_RULE,
+	linux_RTNLGRP_IPV6_IFADDR,
+	linux_RTNLGRP_IPV6_MROUTE,
+	linux_RTNLGRP_IPV6_ROUTE,
+	linux_RTNLGRP_IPV6_IFINFO,
+	linux_RTNLGRP_DECnet_IFADDR,
+	linux_RTNLGRP_NOP2,
+	linux_RTNLGRP_DECnet_ROUTE,
+	linux_RTNLGRP_DECnet_RULE,
+	linux_RTNLGRP_NOP4,
+	linux_RTNLGRP_IPV6_PREFIX,
+	linux_RTNLGRP_IPV6_RULE,
+	linux_RTNLGRP_ND_USEROPT,
+	linux_RTNLGRP_PHONET_IFADDR,
+	linux_RTNLGRP_PHONET_ROUTE,
+	linux_RTNLGRP_DCB,
+	linux_RTNLGRP_IPV4_NETCONF,
+	linux_RTNLGRP_IPV6_NETCONF,
+	linux_RTNLGRP_MDB,
+	linux_RTNLGRP_MPLS_ROUTE,
+	linux_RTNLGRP_NSID,
+	linux_RTNLGRP_MPLS_NETCONF,
+	linux_RTNLGRP_IPV4_MROUTE_R,
+	linux_RTNLGRP_IPV6_MROUTE_R,
+	linux_RTNLGRP_NEXTHOP,
+	linux__RTNLGRP_MAX,
+#define linux_RTNLGRP_MAX (linux__RTNLGRP_MAX - 1)
+};
+
+enum
+{
+	linux_TCA_ROOT_UNSPEC,
+	linux_TCA_ROOT_TAB,
+#define linux_TCA_ACT_TAB linux_TCA_ROOT_TAB
+#define linux_TCAA_MAX    linux_TCA_ROOT_TAB
+	linux_TCA_ROOT_FLAGS,
+	linux_TCA_ROOT_COUNT,
+	linux_TCA_ROOT_TIME_DELTA,
+	linux__TCA_ROOT_MAX,
+#define linux_TCA_ROOT_MAX (linux__TCA_ROOT_MAX - 1)
+};
+
+#define linux_TA_RTA(r)              ((struct linux_rtattr*)(((char*)(r)) + linux_NLMSG_ALIGN(sizeof(struct linux_tcamsg))))
+#define linux_TA_PAYLOAD(n)          linux_NLMSG_PAYLOAD(n, sizeof(struct linux_tcamsg))
+#define linux_TCA_FLAG_LARGE_DUMP_ON (1 << 0)
+
+#define linux_RTEXT_FILTER_VF                (1 << 0)
+#define linux_RTEXT_FILTER_BRVLAN            (1 << 1)
+#define linux_RTEXT_FILTER_BRVLAN_COMPRESSED (1 << 2)
+#define linux_RTEXT_FILTER_SKIP_STATS        (1 << 3)
+
+//-----------------------------------------------------------------------------
+// if_addr
+
+enum
+{
+	linux_IFA_UNSPEC,
+	linux_IFA_ADDRESS,
+	linux_IFA_LOCAL,
+	linux_IFA_LABEL,
+	linux_IFA_BROADCAST,
+	linux_IFA_ANYCAST,
+	linux_IFA_CACHEINFO,
+	linux_IFA_MULTICAST,
+	linux_IFA_FLAGS,
+	linux_IFA_RT_PRIORITY,
+	linux_IFA_TARGET_NETNSID,
+	linux__IFA_MAX,
+#define linux_IFA_MAX (linux__IFA_MAX - 1)
+};
+
+#define linux_IFA_F_SECONDARY 0x01
+#define linux_IFA_F_TEMPORARY linux_IFA_F_SECONDARY
+
+#define linux_IFA_F_NODAD          0x002
+#define linux_IFA_F_OPTIMISTIC     0x004
+#define linux_IFA_F_DADFAILED      0x008
+#define linux_IFA_F_HOMEADDRESS    0x010
+#define linux_IFA_F_DEPRECATED     0x020
+#define linux_IFA_F_TENTATIVE      0x040
+#define linux_IFA_F_PERMANENT      0x080
+#define linux_IFA_F_MANAGETEMPADDR 0x100
+#define linux_IFA_F_NOPREFIXROUTE  0x200
+#define linux_IFA_F_MCAUTOJOIN     0x400
+#define linux_IFA_F_STABLE_PRIVACY 0x800
+
+#define linux_IFA_RTA(r)     ((struct linux_rtattr*)(((char*)(r)) + linux_NLMSG_ALIGN(sizeof(struct linux_ifaddrmsg))))
+#define linux_IFA_PAYLOAD(n) linux_NLMSG_PAYLOAD(n, sizeof(struct linux_ifaddrmsg))
+
+//-----------------------------------------------------------------------------
+// if_link
+
+enum
+{
+	linux_IFLA_UNSPEC,
+	linux_IFLA_ADDRESS,
+	linux_IFLA_BROADCAST,
+	linux_IFLA_IFNAME,
+	linux_IFLA_MTU,
+	linux_IFLA_LINK,
+	linux_IFLA_QDISC,
+	linux_IFLA_STATS,
+	linux_IFLA_COST,
+	linux_IFLA_PRIORITY,
+	linux_IFLA_MASTER,
+	linux_IFLA_WIRELESS,
+	linux_IFLA_PROTINFO,
+	linux_IFLA_TXQLEN,
+	linux_IFLA_MAP,
+	linux_IFLA_WEIGHT,
+	linux_IFLA_OPERSTATE,
+	linux_IFLA_LINKMODE,
+	linux_IFLA_LINKINFO,
+	linux_IFLA_NET_NS_PID,
+	linux_IFLA_IFALIAS,
+	linux_IFLA_NUM_VF,
+	linux_IFLA_VFINFO_LIST,
+	linux_IFLA_STATS64,
+	linux_IFLA_VF_PORTS,
+	linux_IFLA_PORT_SELF,
+	linux_IFLA_AF_SPEC,
+	linux_IFLA_GROUP,
+	linux_IFLA_NET_NS_FD,
+	linux_IFLA_EXT_MASK,
+	linux_IFLA_PROMISCUITY,
+	linux_IFLA_NUM_TX_QUEUES,
+	linux_IFLA_NUM_RX_QUEUES,
+	linux_IFLA_CARRIER,
+	linux_IFLA_PHYS_PORT_ID,
+	linux_IFLA_CARRIER_CHANGES,
+	linux_IFLA_PHYS_SWITCH_ID,
+	linux_IFLA_LINK_NETNSID,
+	linux_IFLA_PHYS_PORT_NAME,
+	linux_IFLA_PROTO_DOWN,
+	linux_IFLA_GSO_MAX_SEGS,
+	linux_IFLA_GSO_MAX_SIZE,
+	linux_IFLA_PAD,
+	linux_IFLA_XDP,
+	linux_IFLA_EVENT,
+	linux_IFLA_NEW_NETNSID,
+	linux_IFLA_IF_NETNSID,
+	linux_IFLA_TARGET_NETNSID     = linux_IFLA_IF_NETNSID,
+	linux_IFLA_CARRIER_UP_COUNT,
+	linux_IFLA_CARRIER_DOWN_COUNT,
+	linux_IFLA_NEW_IFINDEX,
+	linux_IFLA_MIN_MTU,
+	linux_IFLA_MAX_MTU,
+	linux_IFLA_PROP_LIST,
+	linux_IFLA_ALT_IFNAME,
+	linux__IFLA_MAX,
+#define linux_IFLA_MAX (linux__IFLA_MAX - 1)
+};
+
+#define linux_IFLA_RTA(r)     ((struct linux_rtattr*)(((char*)(r)) + linux_NLMSG_ALIGN(sizeof(struct linux_ifinfomsg))))
+#define linux_IFLA_PAYLOAD(n) linux_NLMSG_PAYLOAD(n, sizeof(struct linux_ifinfomsg))
+
+enum
+{
+	linux_IFLA_INET_UNSPEC,
+	linux_IFLA_INET_CONF,
+	linux__IFLA_INET_MAX,
+#define linux_IFLA_INET_MAX (linux__IFLA_INET_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_INET6_UNSPEC,
+	linux_IFLA_INET6_FLAGS,
+	linux_IFLA_INET6_CONF,
+	linux_IFLA_INET6_STATS,
+	linux_IFLA_INET6_MCAST,
+	linux_IFLA_INET6_CACHEINFO,
+	linux_IFLA_INET6_ICMP6STATS,
+	linux_IFLA_INET6_TOKEN,
+	linux_IFLA_INET6_ADDR_GEN_MODE,
+	linux__IFLA_INET6_MAX,
+#define linux_IFLA_INET6_MAX (linux__IFLA_INET6_MAX - 1)
+};
+
+enum linux_in6_addr_gen_mode
+{
+	linux_IN6_ADDR_GEN_MODE_EUI64,
+	linux_IN6_ADDR_GEN_MODE_NONE,
+	linux_IN6_ADDR_GEN_MODE_STABLE_PRIVACY,
+	linux_IN6_ADDR_GEN_MODE_RANDOM,
+};
+
+enum
+{
+	linux_IFLA_BR_UNSPEC,
+	linux_IFLA_BR_FORWARD_DELAY,
+	linux_IFLA_BR_HELLO_TIME,
+	linux_IFLA_BR_MAX_AGE,
+	linux_IFLA_BR_AGEING_TIME,
+	linux_IFLA_BR_STP_STATE,
+	linux_IFLA_BR_PRIORITY,
+	linux_IFLA_BR_VLAN_FILTERING,
+	linux_IFLA_BR_VLAN_PROTOCOL,
+	linux_IFLA_BR_GROUP_FWD_MASK,
+	linux_IFLA_BR_ROOT_ID,
+	linux_IFLA_BR_BRIDGE_ID,
+	linux_IFLA_BR_ROOT_PORT,
+	linux_IFLA_BR_ROOT_PATH_COST,
+	linux_IFLA_BR_TOPOLOGY_CHANGE,
+	linux_IFLA_BR_TOPOLOGY_CHANGE_DETECTED,
+	linux_IFLA_BR_HELLO_TIMER,
+	linux_IFLA_BR_TCN_TIMER,
+	linux_IFLA_BR_TOPOLOGY_CHANGE_TIMER,
+	linux_IFLA_BR_GC_TIMER,
+	linux_IFLA_BR_GROUP_ADDR,
+	linux_IFLA_BR_FDB_FLUSH,
+	linux_IFLA_BR_MCAST_ROUTER,
+	linux_IFLA_BR_MCAST_SNOOPING,
+	linux_IFLA_BR_MCAST_QUERY_USE_IFADDR,
+	linux_IFLA_BR_MCAST_QUERIER,
+	linux_IFLA_BR_MCAST_HASH_ELASTICITY,
+	linux_IFLA_BR_MCAST_HASH_MAX,
+	linux_IFLA_BR_MCAST_LAST_MEMBER_CNT,
+	linux_IFLA_BR_MCAST_STARTUP_QUERY_CNT,
+	linux_IFLA_BR_MCAST_LAST_MEMBER_INTVL,
+	linux_IFLA_BR_MCAST_MEMBERSHIP_INTVL,
+	linux_IFLA_BR_MCAST_QUERIER_INTVL,
+	linux_IFLA_BR_MCAST_QUERY_INTVL,
+	linux_IFLA_BR_MCAST_QUERY_RESPONSE_INTVL,
+	linux_IFLA_BR_MCAST_STARTUP_QUERY_INTVL,
+	linux_IFLA_BR_NF_CALL_IPTABLES,
+	linux_IFLA_BR_NF_CALL_IP6TABLES,
+	linux_IFLA_BR_NF_CALL_ARPTABLES,
+	linux_IFLA_BR_VLAN_DEFAULT_PVID,
+	linux_IFLA_BR_PAD,
+	linux_IFLA_BR_VLAN_STATS_ENABLED,
+	linux_IFLA_BR_MCAST_STATS_ENABLED,
+	linux_IFLA_BR_MCAST_IGMP_VERSION,
+	linux_IFLA_BR_MCAST_MLD_VERSION,
+	linux_IFLA_BR_VLAN_STATS_PER_PORT,
+	linux_IFLA_BR_MULTI_BOOLOPT,
+	linux__IFLA_BR_MAX,
+#define linux_IFLA_BR_MAX (linux__IFLA_BR_MAX - 1)
+};
+
+enum
+{
+	linux_BRIDGE_MODE_UNSPEC,
+	linux_BRIDGE_MODE_HAIRPIN,
+};
+
+enum
+{
+	linux_IFLA_BRPORT_UNSPEC,
+	linux_IFLA_BRPORT_STATE,
+	linux_IFLA_BRPORT_PRIORITY,
+	linux_IFLA_BRPORT_COST,
+	linux_IFLA_BRPORT_MODE,
+	linux_IFLA_BRPORT_GUARD,
+	linux_IFLA_BRPORT_PROTECT,
+	linux_IFLA_BRPORT_FAST_LEAVE,
+	linux_IFLA_BRPORT_LEARNING,
+	linux_IFLA_BRPORT_UNICAST_FLOOD,
+	linux_IFLA_BRPORT_PROXYARP,
+	linux_IFLA_BRPORT_LEARNING_SYNC,
+	linux_IFLA_BRPORT_PROXYARP_WIFI,
+	linux_IFLA_BRPORT_ROOT_ID,
+	linux_IFLA_BRPORT_BRIDGE_ID,
+	linux_IFLA_BRPORT_DESIGNATED_PORT,
+	linux_IFLA_BRPORT_DESIGNATED_COST,
+	linux_IFLA_BRPORT_ID,
+	linux_IFLA_BRPORT_NO,
+	linux_IFLA_BRPORT_TOPOLOGY_CHANGE_ACK,
+	linux_IFLA_BRPORT_CONFIG_PENDING,
+	linux_IFLA_BRPORT_MESSAGE_AGE_TIMER,
+	linux_IFLA_BRPORT_FORWARD_DELAY_TIMER,
+	linux_IFLA_BRPORT_HOLD_TIMER,
+	linux_IFLA_BRPORT_FLUSH,
+	linux_IFLA_BRPORT_MULTICAST_ROUTER,
+	linux_IFLA_BRPORT_PAD,
+	linux_IFLA_BRPORT_MCAST_FLOOD,
+	linux_IFLA_BRPORT_MCAST_TO_UCAST,
+	linux_IFLA_BRPORT_VLAN_TUNNEL,
+	linux_IFLA_BRPORT_BCAST_FLOOD,
+	linux_IFLA_BRPORT_GROUP_FWD_MASK,
+	linux_IFLA_BRPORT_NEIGH_SUPPRESS,
+	linux_IFLA_BRPORT_ISOLATED,
+	linux_IFLA_BRPORT_BACKUP_PORT,
+	linux__IFLA_BRPORT_MAX,
+#define linux_IFLA_BRPORT_MAX (linux__IFLA_BRPORT_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_INFO_UNSPEC,
+	linux_IFLA_INFO_KIND,
+	linux_IFLA_INFO_DATA,
+	linux_IFLA_INFO_XSTATS,
+	linux_IFLA_INFO_SLAVE_KIND,
+	linux_IFLA_INFO_SLAVE_DATA,
+	linux__IFLA_INFO_MAX,
+#define linux_IFLA_INFO_MAX (linux__IFLA_INFO_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_VLAN_UNSPEC,
+	linux_IFLA_VLAN_ID,
+	linux_IFLA_VLAN_FLAGS,
+	linux_IFLA_VLAN_EGRESS_QOS,
+	linux_IFLA_VLAN_INGRESS_QOS,
+	linux_IFLA_VLAN_PROTOCOL,
+	linux__IFLA_VLAN_MAX,
+#define linux_IFLA_VLAN_MAX (linux__IFLA_VLAN_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_VLAN_QOS_UNSPEC,
+	linux_IFLA_VLAN_QOS_MAPPING,
+	linux__IFLA_VLAN_QOS_MAX,
+#define linux_IFLA_VLAN_QOS_MAX (linux__IFLA_VLAN_QOS_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_MACVLAN_UNSPEC,
+	linux_IFLA_MACVLAN_MODE,
+	linux_IFLA_MACVLAN_FLAGS,
+	linux_IFLA_MACVLAN_MACADDR_MODE,
+	linux_IFLA_MACVLAN_MACADDR,
+	linux_IFLA_MACVLAN_MACADDR_DATA,
+	linux_IFLA_MACVLAN_MACADDR_COUNT,
+	linux__IFLA_MACVLAN_MAX,
+#define linux_IFLA_MACVLAN_MAX (linux__IFLA_MACVLAN_MAX - 1)
+};
+
+enum linux_macvlan_mode
+{
+	linux_MACVLAN_MODE_PRIVATE  =  1,
+	linux_MACVLAN_MODE_VEPA     =  2,
+	linux_MACVLAN_MODE_BRIDGE   =  4,
+	linux_MACVLAN_MODE_PASSTHRU =  8,
+	linux_MACVLAN_MODE_SOURCE   = 16,
+};
+
+enum linux_macvlan_macaddr_mode
+{
+	linux_MACVLAN_MACADDR_ADD,
+	linux_MACVLAN_MACADDR_DEL,
+	linux_MACVLAN_MACADDR_FLUSH,
+	linux_MACVLAN_MACADDR_SET,
+};
+
+#define linux_MACVLAN_FLAG_NOPROMISC 1
+
+enum
+{
+	linux_IFLA_VRF_UNSPEC,
+	linux_IFLA_VRF_TABLE,
+	linux__IFLA_VRF_MAX,
+#define linux_IFLA_VRF_MAX (linux__IFLA_VRF_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_VRF_PORT_UNSPEC,
+	linux_IFLA_VRF_PORT_TABLE,
+	linux__IFLA_VRF_PORT_MAX,
+#define linux_IFLA_VRF_PORT_MAX (linux__IFLA_VRF_PORT_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_MACSEC_UNSPEC,
+	linux_IFLA_MACSEC_SCI,
+	linux_IFLA_MACSEC_PORT,
+	linux_IFLA_MACSEC_ICV_LEN,
+	linux_IFLA_MACSEC_CIPHER_SUITE,
+	linux_IFLA_MACSEC_WINDOW,
+	linux_IFLA_MACSEC_ENCODING_SA,
+	linux_IFLA_MACSEC_ENCRYPT,
+	linux_IFLA_MACSEC_PROTECT,
+	linux_IFLA_MACSEC_INC_SCI,
+	linux_IFLA_MACSEC_ES,
+	linux_IFLA_MACSEC_SCB,
+	linux_IFLA_MACSEC_REPLAY_PROTECT,
+	linux_IFLA_MACSEC_VALIDATION,
+	linux_IFLA_MACSEC_PAD,
+	linux__IFLA_MACSEC_MAX,
+#define linux_IFLA_MACSEC_MAX (linux__IFLA_MACSEC_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_XFRM_UNSPEC,
+	linux_IFLA_XFRM_LINK,
+	linux_IFLA_XFRM_IF_ID,
+	linux__IFLA_XFRM_MAX,
+#define linux_IFLA_XFRM_MAX (linux__IFLA_XFRM_MAX - 1)
+};
+
+enum linux_macsec_validation_type
+{
+	linux_MACSEC_VALIDATE_DISABLED = 0,
+	linux_MACSEC_VALIDATE_CHECK    = 1,
+	linux_MACSEC_VALIDATE_STRICT   = 2,
+	linux__MACSEC_VALIDATE_END,
+	linux_MACSEC_VALIDATE_MAX      = linux__MACSEC_VALIDATE_END - 1,
+};
+
+enum
+{
+	linux_IFLA_IPVLAN_UNSPEC,
+	linux_IFLA_IPVLAN_MODE,
+	linux_IFLA_IPVLAN_FLAGS,
+	linux__IFLA_IPVLAN_MAX,
+#define linux_IFLA_IPVLAN_MAX (linux__IFLA_IPVLAN_MAX - 1)
+};
+
+enum linux_ipvlan_mode
+{
+	linux_IPVLAN_MODE_L2  = 0,
+	linux_IPVLAN_MODE_L3,
+	linux_IPVLAN_MODE_L3S,
+	linux_IPVLAN_MODE_MAX,
+};
+
+#define linux_IPVLAN_F_PRIVATE 0x01
+#define linux_IPVLAN_F_VEPA    0x02
+
+enum
+{
+	linux_IFLA_VXLAN_UNSPEC,
+	linux_IFLA_VXLAN_ID,
+	linux_IFLA_VXLAN_GROUP,
+	linux_IFLA_VXLAN_LINK,
+	linux_IFLA_VXLAN_LOCAL,
+	linux_IFLA_VXLAN_TTL,
+	linux_IFLA_VXLAN_TOS,
+	linux_IFLA_VXLAN_LEARNING,
+	linux_IFLA_VXLAN_AGEING,
+	linux_IFLA_VXLAN_LIMIT,
+	linux_IFLA_VXLAN_PORT_RANGE,
+	linux_IFLA_VXLAN_PROXY,
+	linux_IFLA_VXLAN_RSC,
+	linux_IFLA_VXLAN_L2MISS,
+	linux_IFLA_VXLAN_L3MISS,
+	linux_IFLA_VXLAN_PORT,
+	linux_IFLA_VXLAN_GROUP6,
+	linux_IFLA_VXLAN_LOCAL6,
+	linux_IFLA_VXLAN_UDP_CSUM,
+	linux_IFLA_VXLAN_UDP_ZERO_CSUM6_TX,
+	linux_IFLA_VXLAN_UDP_ZERO_CSUM6_RX,
+	linux_IFLA_VXLAN_REMCSUM_TX,
+	linux_IFLA_VXLAN_REMCSUM_RX,
+	linux_IFLA_VXLAN_GBP,
+	linux_IFLA_VXLAN_REMCSUM_NOPARTIAL,
+	linux_IFLA_VXLAN_COLLECT_METADATA,
+	linux_IFLA_VXLAN_LABEL,
+	linux_IFLA_VXLAN_GPE,
+	linux_IFLA_VXLAN_TTL_INHERIT,
+	linux_IFLA_VXLAN_DF,
+	linux__IFLA_VXLAN_MAX
+#define linux_IFLA_VXLAN_MAX (linux__IFLA_VXLAN_MAX - 1)
+};
+
+enum linux_ifla_vxlan_df
+{
+	linux_VXLAN_DF_UNSET    = 0,
+	linux_VXLAN_DF_SET,
+	linux_VXLAN_DF_INHERIT,
+	linux__VXLAN_DF_END,
+	linux_VXLAN_DF_MAX      = linux__VXLAN_DF_END - 1,
+};
+
+enum
+{
+	linux_IFLA_GENEVE_UNSPEC,
+	linux_IFLA_GENEVE_ID,
+	linux_IFLA_GENEVE_REMOTE,
+	linux_IFLA_GENEVE_TTL,
+	linux_IFLA_GENEVE_TOS,
+	linux_IFLA_GENEVE_PORT,
+	linux_IFLA_GENEVE_COLLECT_METADATA,
+	linux_IFLA_GENEVE_REMOTE6,
+	linux_IFLA_GENEVE_UDP_CSUM,
+	linux_IFLA_GENEVE_UDP_ZERO_CSUM6_TX,
+	linux_IFLA_GENEVE_UDP_ZERO_CSUM6_RX,
+	linux_IFLA_GENEVE_LABEL,
+	linux_IFLA_GENEVE_TTL_INHERIT,
+	linux_IFLA_GENEVE_DF,
+	linux__IFLA_GENEVE_MAX,
+#define linux_IFLA_GENEVE_MAX (linux__IFLA_GENEVE_MAX - 1)
+};
+
+enum linux_ifla_geneve_df
+{
+	linux_GENEVE_DF_UNSET    = 0,
+	linux_GENEVE_DF_SET,
+	linux_GENEVE_DF_INHERIT,
+	linux__GENEVE_DF_END,
+	linux_GENEVE_DF_MAX      = linux__GENEVE_DF_END - 1,
+};
+
+enum
+{
+	linux_IFLA_PPP_UNSPEC,
+	linux_IFLA_PPP_DEV_FD,
+	linux__IFLA_PPP_MAX,
+#define linux_IFLA_PPP_MAX (linux__IFLA_PPP_MAX - 1)
+};
+
+enum linux_ifla_gtp_role
+{
+	linux_GTP_ROLE_GGSN = 0,
+	linux_GTP_ROLE_SGSN,
+};
+
+enum
+{
+	linux_IFLA_GTP_UNSPEC,
+	linux_IFLA_GTP_FD0,
+	linux_IFLA_GTP_FD1,
+	linux_IFLA_GTP_PDP_HASHSIZE,
+	linux_IFLA_GTP_ROLE,
+	linux__IFLA_GTP_MAX,
+#define linux_IFLA_GTP_MAX (linux__IFLA_GTP_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_BOND_UNSPEC,
+	linux_IFLA_BOND_MODE,
+	linux_IFLA_BOND_ACTIVE_SLAVE,
+	linux_IFLA_BOND_MIIMON,
+	linux_IFLA_BOND_UPDELAY,
+	linux_IFLA_BOND_DOWNDELAY,
+	linux_IFLA_BOND_USE_CARRIER,
+	linux_IFLA_BOND_ARP_INTERVAL,
+	linux_IFLA_BOND_ARP_IP_TARGET,
+	linux_IFLA_BOND_ARP_VALIDATE,
+	linux_IFLA_BOND_ARP_ALL_TARGETS,
+	linux_IFLA_BOND_PRIMARY,
+	linux_IFLA_BOND_PRIMARY_RESELECT,
+	linux_IFLA_BOND_FAIL_OVER_MAC,
+	linux_IFLA_BOND_XMIT_HASH_POLICY,
+	linux_IFLA_BOND_RESEND_IGMP,
+	linux_IFLA_BOND_NUM_PEER_NOTIF,
+	linux_IFLA_BOND_ALL_SLAVES_ACTIVE,
+	linux_IFLA_BOND_MIN_LINKS,
+	linux_IFLA_BOND_LP_INTERVAL,
+	linux_IFLA_BOND_PACKETS_PER_SLAVE,
+	linux_IFLA_BOND_AD_LACP_RATE,
+	linux_IFLA_BOND_AD_SELECT,
+	linux_IFLA_BOND_AD_INFO,
+	linux_IFLA_BOND_AD_ACTOR_SYS_PRIO,
+	linux_IFLA_BOND_AD_USER_PORT_KEY,
+	linux_IFLA_BOND_AD_ACTOR_SYSTEM,
+	linux_IFLA_BOND_TLB_DYNAMIC_LB,
+	linux_IFLA_BOND_PEER_NOTIF_DELAY,
+	linux__IFLA_BOND_MAX,
+#define linux_IFLA_BOND_MAX (linux__IFLA_BOND_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_BOND_AD_INFO_UNSPEC,
+	linux_IFLA_BOND_AD_INFO_AGGREGATOR,
+	linux_IFLA_BOND_AD_INFO_NUM_PORTS,
+	linux_IFLA_BOND_AD_INFO_ACTOR_KEY,
+	linux_IFLA_BOND_AD_INFO_PARTNER_KEY,
+	linux_IFLA_BOND_AD_INFO_PARTNER_MAC,
+	linux__IFLA_BOND_AD_INFO_MAX,
+#define linux_IFLA_BOND_AD_INFO_MAX (linux__IFLA_BOND_AD_INFO_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_BOND_SLAVE_UNSPEC,
+	linux_IFLA_BOND_SLAVE_STATE,
+	linux_IFLA_BOND_SLAVE_MII_STATUS,
+	linux_IFLA_BOND_SLAVE_LINK_FAILURE_COUNT,
+	linux_IFLA_BOND_SLAVE_PERM_HWADDR,
+	linux_IFLA_BOND_SLAVE_QUEUE_ID,
+	linux_IFLA_BOND_SLAVE_AD_AGGREGATOR_ID,
+	linux_IFLA_BOND_SLAVE_AD_ACTOR_OPER_PORT_STATE,
+	linux_IFLA_BOND_SLAVE_AD_PARTNER_OPER_PORT_STATE,
+	linux__IFLA_BOND_SLAVE_MAX,
+#define linux_IFLA_BOND_SLAVE_MAX (linux__IFLA_BOND_SLAVE_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_VF_INFO_UNSPEC,
+	linux_IFLA_VF_INFO,
+	linux__IFLA_VF_INFO_MAX,
+#define linux_IFLA_VF_INFO_MAX (linux__IFLA_VF_INFO_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_VF_UNSPEC,
+	linux_IFLA_VF_MAC,
+	linux_IFLA_VF_VLAN,
+	linux_IFLA_VF_TX_RATE,
+	linux_IFLA_VF_SPOOFCHK,
+	linux_IFLA_VF_LINK_STATE,
+	linux_IFLA_VF_RATE,
+	linux_IFLA_VF_RSS_QUERY_EN,
+	linux_IFLA_VF_STATS,
+	linux_IFLA_VF_TRUST,
+	linux_IFLA_VF_IB_NODE_GUID,
+	linux_IFLA_VF_IB_PORT_GUID,
+	linux_IFLA_VF_VLAN_LIST,
+	linux_IFLA_VF_BROADCAST,
+	linux__IFLA_VF_MAX,
+#define linux_IFLA_VF_MAX (linux__IFLA_VF_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_VF_VLAN_INFO_UNSPEC,
+	linux_IFLA_VF_VLAN_INFO,
+	linux__IFLA_VF_VLAN_INFO_MAX,
+#define linux_IFLA_VF_VLAN_INFO_MAX (linux__IFLA_VF_VLAN_INFO_MAX - 1)
+};
+
+#define linux_MAX_VLAN_LIST_LEN 1
+
+enum
+{
+	linux_IFLA_VF_LINK_STATE_AUTO,
+	linux_IFLA_VF_LINK_STATE_ENABLE,
+	linux_IFLA_VF_LINK_STATE_DISABLE,
+	linux__IFLA_VF_LINK_STATE_MAX,
+};
+
+enum
+{
+	linux_IFLA_VF_STATS_RX_PACKETS,
+	linux_IFLA_VF_STATS_TX_PACKETS,
+	linux_IFLA_VF_STATS_RX_BYTES,
+	linux_IFLA_VF_STATS_TX_BYTES,
+	linux_IFLA_VF_STATS_BROADCAST,
+	linux_IFLA_VF_STATS_MULTICAST,
+	linux_IFLA_VF_STATS_PAD,
+	linux_IFLA_VF_STATS_RX_DROPPED,
+	linux_IFLA_VF_STATS_TX_DROPPED,
+	linux__IFLA_VF_STATS_MAX,
+#define linux_IFLA_VF_STATS_MAX (linux__IFLA_VF_STATS_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_VF_PORT_UNSPEC,
+	linux_IFLA_VF_PORT,
+	linux__IFLA_VF_PORT_MAX,
+#define linux_IFLA_VF_PORT_MAX (linux__IFLA_VF_PORT_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_PORT_UNSPEC,
+	linux_IFLA_PORT_VF,
+	linux_IFLA_PORT_PROFILE,
+	linux_IFLA_PORT_VSI_TYPE,
+	linux_IFLA_PORT_INSTANCE_UUID,
+	linux_IFLA_PORT_HOST_UUID,
+	linux_IFLA_PORT_REQUEST,
+	linux_IFLA_PORT_RESPONSE,
+	linux__IFLA_PORT_MAX,
+#define linux_IFLA_PORT_MAX (linux__IFLA_PORT_MAX - 1)
+};
+
+#define linux_PORT_PROFILE_MAX 40
+#define linux_PORT_UUID_MAX    16
+#define linux_PORT_SELF_VF     -1
+
+enum
+{
+	linux_PORT_REQUEST_PREASSOCIATE    = 0,
+	linux_PORT_REQUEST_PREASSOCIATE_RR,
+	linux_PORT_REQUEST_ASSOCIATE,
+	linux_PORT_REQUEST_DISASSOCIATE,
+};
+
+enum
+{
+	linux_PORT_VDP_RESPONSE_SUCCESS                    = 0,
+	linux_PORT_VDP_RESPONSE_INVALID_FORMAT,
+	linux_PORT_VDP_RESPONSE_INSUFFICIENT_RESOURCES,
+	linux_PORT_VDP_RESPONSE_UNUSED_VTID,
+	linux_PORT_VDP_RESPONSE_VTID_VIOLATION,
+	linux_PORT_VDP_RESPONSE_VTID_VERSION_VIOALTION,
+	linux_PORT_VDP_RESPONSE_OUT_OF_SYNC,
+	linux_PORT_PROFILE_RESPONSE_SUCCESS                = 0x100,
+	linux_PORT_PROFILE_RESPONSE_INPROGRESS,
+	linux_PORT_PROFILE_RESPONSE_INVALID,
+	linux_PORT_PROFILE_RESPONSE_BADSTATE,
+	linux_PORT_PROFILE_RESPONSE_INSUFFICIENT_RESOURCES,
+	linux_PORT_PROFILE_RESPONSE_ERROR,
+};
+
+enum
+{
+	linux_IFLA_IPOIB_UNSPEC,
+	linux_IFLA_IPOIB_PKEY,
+	linux_IFLA_IPOIB_MODE,
+	linux_IFLA_IPOIB_UMCAST,
+	linux__IFLA_IPOIB_MAX,
+#define linux_IFLA_IPOIB_MAX (linux__IFLA_IPOIB_MAX - 1)
+};
+
+enum
+{
+	linux_IPOIB_MODE_DATAGRAM  = 0,
+	linux_IPOIB_MODE_CONNECTED = 1,
+};
+
+enum
+{
+	linux_IFLA_HSR_UNSPEC,
+	linux_IFLA_HSR_SLAVE1,
+	linux_IFLA_HSR_SLAVE2,
+	linux_IFLA_HSR_MULTICAST_SPEC,
+	linux_IFLA_HSR_SUPERVISION_ADDR,
+	linux_IFLA_HSR_SEQ_NR,
+	linux_IFLA_HSR_VERSION,
+	linux__IFLA_HSR_MAX,
+#define linux_IFLA_HSR_MAX (linux__IFLA_HSR_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_STATS_UNSPEC,
+	linux_IFLA_STATS_LINK_64,
+	linux_IFLA_STATS_LINK_XSTATS,
+	linux_IFLA_STATS_LINK_XSTATS_SLAVE,
+	linux_IFLA_STATS_LINK_OFFLOAD_XSTATS,
+	linux_IFLA_STATS_AF_SPEC,
+	linux__IFLA_STATS_MAX,
+#define linux_IFLA_STATS_MAX (linux__IFLA_STATS_MAX - 1)
+};
+
+#define linux_IFLA_STATS_FILTER_BIT(attr) (1 << (attr - 1))
+
+enum
+{
+	linux_LINK_XSTATS_TYPE_UNSPEC,
+	linux_LINK_XSTATS_TYPE_BRIDGE,
+	linux_LINK_XSTATS_TYPE_BOND,
+	linux__LINK_XSTATS_TYPE_MAX,
+#define linux_LINK_XSTATS_TYPE_MAX (linux__LINK_XSTATS_TYPE_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_OFFLOAD_XSTATS_UNSPEC,
+	linux_IFLA_OFFLOAD_XSTATS_CPU_HIT,
+	linux__IFLA_OFFLOAD_XSTATS_MAX,
+#define linux_IFLA_OFFLOAD_XSTATS_MAX (linux__IFLA_OFFLOAD_XSTATS_MAX - 1)
+};
+
+#define linux_XDP_FLAGS_UPDATE_IF_NOEXIST (1U << 0)
+#define linux_XDP_FLAGS_SKB_MODE          (1U << 1)
+#define linux_XDP_FLAGS_DRV_MODE          (1U << 2)
+#define linux_XDP_FLAGS_HW_MODE           (1U << 3)
+#define linux_XDP_FLAGS_MODES             (linux_XDP_FLAGS_SKB_MODE | linux_XDP_FLAGS_DRV_MODE | linux_XDP_FLAGS_HW_MODE)
+#define linux_XDP_FLAGS_MASK              (linux_XDP_FLAGS_UPDATE_IF_NOEXIST | linux_XDP_FLAGS_MODES)
+
+enum
+{
+	linux_XDP_ATTACHED_NONE = 0,
+	linux_XDP_ATTACHED_DRV,
+	linux_XDP_ATTACHED_SKB,
+	linux_XDP_ATTACHED_HW,
+	linux_XDP_ATTACHED_MULTI,
+};
+
+enum
+{
+	linux_IFLA_XDP_UNSPEC,
+	linux_IFLA_XDP_FD,
+	linux_IFLA_XDP_ATTACHED,
+	linux_IFLA_XDP_FLAGS,
+	linux_IFLA_XDP_PROG_ID,
+	linux_IFLA_XDP_DRV_PROG_ID,
+	linux_IFLA_XDP_SKB_PROG_ID,
+	linux_IFLA_XDP_HW_PROG_ID,
+	linux__IFLA_XDP_MAX,
+#define linux_IFLA_XDP_MAX (linux__IFLA_XDP_MAX - 1)
+};
+
+enum
+{
+	linux_IFLA_EVENT_NONE,
+	linux_IFLA_EVENT_REBOOT,
+	linux_IFLA_EVENT_FEATURES,
+	linux_IFLA_EVENT_BONDING_FAILOVER,
+	linux_IFLA_EVENT_NOTIFY_PEERS,
+	linux_IFLA_EVENT_IGMP_RESEND,
+	linux_IFLA_EVENT_BONDING_OPTIONS,
+};
+
+enum
+{
+	linux_IFLA_TUN_UNSPEC,
+	linux_IFLA_TUN_OWNER,
+	linux_IFLA_TUN_GROUP,
+	linux_IFLA_TUN_TYPE,
+	linux_IFLA_TUN_PI,
+	linux_IFLA_TUN_VNET_HDR,
+	linux_IFLA_TUN_PERSIST,
+	linux_IFLA_TUN_MULTI_QUEUE,
+	linux_IFLA_TUN_NUM_QUEUES,
+	linux_IFLA_TUN_NUM_DISABLED_QUEUES,
+	linux__IFLA_TUN_MAX,
+#define linux_IFLA_TUN_MAX (linux__IFLA_TUN_MAX - 1)
+};
+
+#define linux_RMNET_FLAGS_INGRESS_DEAGGREGATION (1U << 0)
+#define linux_RMNET_FLAGS_INGRESS_MAP_COMMANDS  (1U << 1)
+#define linux_RMNET_FLAGS_INGRESS_MAP_CKSUMV4   (1U << 2)
+#define linux_RMNET_FLAGS_EGRESS_MAP_CKSUMV4    (1U << 3)
+
+enum
+{
+	linux_IFLA_RMNET_UNSPEC,
+	linux_IFLA_RMNET_MUX_ID,
+	linux_IFLA_RMNET_FLAGS,
+	linux__IFLA_RMNET_MAX,
+#define linux_IFLA_RMNET_MAX (linux__IFLA_RMNET_MAX - 1)
+};
+
+//-----------------------------------------------------------------------------
 // Reliable datagram sockets
 
 #define linux_RDS_IB_ABI_VERSION 0x301
@@ -1458,6 +2601,41 @@ enum
 };
 
 #define linux_IFHWADDRLEN 6
+
+enum linux_netdev_priv_flags
+{
+	linux_IFF_802_1Q_VLAN           = 1 <<  0,
+	linux_IFF_EBRIDGE               = 1 <<  1,
+	linux_IFF_BONDING               = 1 <<  2,
+	linux_IFF_ISATAP                = 1 <<  3,
+	linux_IFF_WAN_HDLC              = 1 <<  4,
+	linux_IFF_XMIT_DST_RELEASE      = 1 <<  5,
+	linux_IFF_DONT_BRIDGE           = 1 <<  6,
+	linux_IFF_DISABLE_NETPOLL       = 1 <<  7,
+	linux_IFF_MACVLAN_PORT          = 1 <<  8,
+	linux_IFF_BRIDGE_PORT           = 1 <<  9,
+	linux_IFF_OVS_DATAPATH          = 1 << 10,
+	linux_IFF_TX_SKB_SHARING        = 1 << 11,
+	linux_IFF_UNICAST_FLT           = 1 << 12,
+	linux_IFF_TEAM_PORT             = 1 << 13,
+	linux_IFF_SUPP_NOFCS            = 1 << 14,
+	linux_IFF_LIVE_ADDR_CHANGE      = 1 << 15,
+	linux_IFF_MACVLAN               = 1 << 16,
+	linux_IFF_XMIT_DST_RELEASE_PERM = 1 << 17,
+	linux_IFF_L3MDEV_MASTER         = 1 << 18,
+	linux_IFF_NO_QUEUE              = 1 << 19,
+	linux_IFF_OPENVSWITCH           = 1 << 20,
+	linux_IFF_L3MDEV_SLAVE          = 1 << 21,
+	linux_IFF_TEAM                  = 1 << 22,
+	linux_IFF_RXFH_CONFIGURED       = 1 << 23,
+	linux_IFF_PHONY_HEADROOM        = 1 << 24,
+	linux_IFF_MACSEC                = 1 << 25,
+	linux_IFF_NO_RX_HANDLER         = 1 << 26,
+	linux_IFF_FAILOVER              = 1 << 27,
+	linux_IFF_FAILOVER_SLAVE        = 1 << 28,
+	linux_IFF_L3MDEV_RX_HANDLER     = 1 << 29,
+	linux_IFF_LIVE_RENAME_OK        = 1 << 30,
+};
 
 //=============================================================================
 // stat

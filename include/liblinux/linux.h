@@ -707,7 +707,7 @@ struct linux_vt_event
 	unsigned int event;
 	unsigned int oldev;
 	unsigned int newev;
-	unsigned int pad[4];
+	unsigned int _pad[4];
 };
 struct linux_vt_setactivate
 {
@@ -1777,6 +1777,324 @@ struct linux_nla_bitfield32
 };
 
 //-----------------------------------------------------------------------------
+// rtnetlink
+
+struct linux_rtattr
+{
+	unsigned short rta_len;
+	unsigned short rta_type;
+};
+struct linux_rtmsg
+{
+	unsigned char rtm_family;
+	unsigned char rtm_dst_len;
+	unsigned char rtm_src_len;
+	unsigned char rtm_tos;
+	unsigned char rtm_table;
+	unsigned char rtm_protocol;
+	unsigned char rtm_scope;
+	unsigned char rtm_type;
+	unsigned int rtm_flags;
+};
+struct linux_rtnexthop
+{
+	unsigned short rtnh_len;
+	unsigned char rtnh_flags;
+	unsigned char rtnh_hops;
+	int rtnh_ifindex;
+};
+struct linux_rtvia
+{
+	linux_kernel_sa_family_t rtvia_family;
+	uint8_t rtvia_addr[];
+};
+struct linux_rta_cacheinfo
+{
+	uint32_t rta_clntref;
+	uint32_t rta_lastuse;
+	int32_t rta_expires;
+	uint32_t rta_error;
+	uint32_t rta_used;
+	uint32_t rta_id;
+	uint32_t rta_ts;
+	uint32_t rta_tsage;
+};
+struct linux_rta_session
+{
+	uint8_t proto;
+	uint8_t _pad1;
+	uint16_t _pad2;
+	union
+	{
+		struct
+		{
+			uint16_t sport;
+			uint16_t dport;
+		} ports;
+		struct
+		{
+			uint8_t type;
+			uint8_t code;
+			uint16_t ident;
+		} icmpt;
+		uint32_t spi;
+	} u;
+};
+struct linux_rta_mfc_stats
+{
+	uint64_t mfcs_packets;
+	uint64_t mfcs_bytes;
+	uint64_t mfcs_wrong_if;
+};
+struct linux_rtgenmsg
+{
+	unsigned char rtgen_family;
+};
+struct linux_ifinfomsg
+{
+	unsigned char ifi_family;
+	unsigned char _ifi_pad;
+	unsigned short ifi_type;
+	int ifi_index;
+	unsigned int ifi_flags;
+	unsigned int ifi_change;
+};
+struct linux_prefixmsg
+{
+	unsigned char prefix_family;
+	unsigned char _prefix_pad1;
+	unsigned short _prefix_pad2;
+	int prefix_ifindex;
+	unsigned char prefix_type;
+	unsigned char prefix_len;
+	unsigned char prefix_flags;
+	unsigned char _prefix_pad3;
+};
+struct linux_prefix_cacheinfo
+{
+	uint32_t preferred_time;
+	uint32_t valid_time;
+};
+struct linux_tcmsg
+{
+	unsigned char tcm_family;
+	unsigned char tcm__pad1;
+	unsigned short tcm__pad2;
+	int tcm_ifindex;
+	uint32_t tcm_handle;
+	uint32_t tcm_parent;
+	uint32_t tcm_info;
+};
+struct linux_nduseroptmsg
+{
+	unsigned char nduseropt_family;
+	unsigned char _nduseropt_pad1;
+	unsigned short nduseropt_opts_len;
+	int nduseropt_ifindex;
+	uint8_t nduseropt_icmp_type;
+	uint8_t nduseropt_icmp_code;
+	unsigned short _nduseropt_pad2;
+	unsigned int _nduseropt_pad3;
+};
+struct linux_tcamsg
+{
+	unsigned char tca_family;
+	unsigned char _tca_pad1;
+	unsigned short _tca_pad2;
+};
+
+//-----------------------------------------------------------------------------
+// if_addr
+
+struct linux_ifaddrmsg
+{
+	uint8_t ifa_family;
+	uint8_t ifa_prefixlen;
+	uint8_t ifa_flags;
+	uint8_t ifa_scope;
+	uint32_t ifa_index;
+};
+struct linux_ifa_cacheinfo
+{
+	uint32_t ifa_prefered;
+	uint32_t ifa_valid;
+	uint32_t cstamp;
+	uint32_t tstamp;
+};
+
+//-----------------------------------------------------------------------------
+// if_link
+
+struct linux_rtnl_link_stats
+{
+	uint32_t rx_packets;
+	uint32_t tx_packets;
+	uint32_t rx_bytes;
+	uint32_t tx_bytes;
+	uint32_t rx_errors;
+	uint32_t tx_errors;
+	uint32_t rx_dropped;
+	uint32_t tx_dropped;
+	uint32_t multicast;
+	uint32_t collisions;
+	uint32_t rx_length_errors;
+	uint32_t rx_over_errors;
+	uint32_t rx_crc_errors;
+	uint32_t rx_frame_errors;
+	uint32_t rx_fifo_errors;
+	uint32_t rx_missed_errors;
+	uint32_t tx_aborted_errors;
+	uint32_t tx_carrier_errors;
+	uint32_t tx_fifo_errors;
+	uint32_t tx_heartbeat_errors;
+	uint32_t tx_window_errors;
+	uint32_t rx_compressed;
+	uint32_t tx_compressed;
+	uint32_t rx_nohandler;
+};
+struct linux_rtnl_link_stats64
+{
+	uint64_t rx_packets;
+	uint64_t tx_packets;
+	uint64_t rx_bytes;
+	uint64_t tx_bytes;
+	uint64_t rx_errors;
+	uint64_t tx_errors;
+	uint64_t rx_dropped;
+	uint64_t tx_dropped;
+	uint64_t multicast;
+	uint64_t collisions;
+	uint64_t rx_length_errors;
+	uint64_t rx_over_errors;
+	uint64_t rx_crc_errors;
+	uint64_t rx_frame_errors;
+	uint64_t rx_fifo_errors;
+	uint64_t rx_missed_errors;
+	uint64_t tx_aborted_errors;
+	uint64_t tx_carrier_errors;
+	uint64_t tx_fifo_errors;
+	uint64_t tx_heartbeat_errors;
+	uint64_t tx_window_errors;
+	uint64_t rx_compressed;
+	uint64_t tx_compressed;
+	uint64_t rx_nohandler;
+};
+struct linux_rtnl_link_ifmap
+{
+	uint64_t mem_start;
+	uint64_t mem_end;
+	uint64_t base_addr;
+	uint16_t irq;
+	uint8_t dma;
+	uint8_t port;
+};
+struct linux_ifla_bridge_id
+{
+	uint8_t prio[2];
+	uint8_t addr[6];
+};
+struct linux_ifla_cacheinfo
+{
+	uint32_t max_reasm_len;
+	uint32_t tstamp;
+	uint32_t reachable_time;
+	uint32_t retrans_time;
+};
+struct linux_ifla_vlan_flags
+{
+	uint32_t flags;
+	uint32_t mask;
+};
+struct linux_ifla_vlan_qos_mapping
+{
+	uint32_t from;
+	uint32_t to;
+};
+struct linux_ifla_vxlan_port_range
+{
+	uint16_t low; // Big endian
+	uint16_t high; // Big endian
+};
+struct linux_ifla_vf_mac
+{
+	uint32_t vf;
+	uint8_t mac[32];
+};
+struct linux_ifla_vf_broadcast
+{
+	uint8_t broadcast[32];
+};
+struct linux_ifla_vf_vlan
+{
+	uint32_t vf;
+	uint32_t vlan;
+	uint32_t qos;
+};
+struct linux_ifla_vf_vlan_info
+{
+	uint32_t vf;
+	uint32_t vlan;
+	uint32_t qos;
+	uint16_t vlan_proto; // Big endian
+};
+struct linux_ifla_vf_tx_rate
+{
+	uint32_t vf;
+	uint32_t rate;
+};
+struct linux_ifla_vf_rate
+{
+	uint32_t vf;
+	uint32_t min_tx_rate;
+	uint32_t max_tx_rate;
+};
+struct linux_ifla_vf_spoofchk
+{
+	uint32_t vf;
+	uint32_t setting;
+};
+struct linux_ifla_vf_guid
+{
+	uint32_t vf;
+	uint64_t guid;
+};
+struct linux_ifla_vf_link_state
+{
+	uint32_t vf;
+	uint32_t link_state;
+};
+struct linux_ifla_vf_rss_query_en
+{
+	uint32_t vf;
+	uint32_t setting;
+};
+struct linux_ifla_vf_trust
+{
+	uint32_t vf;
+	uint32_t setting;
+};
+struct linux_ifla_port_vsi
+{
+	uint8_t vsi_mgr_id;
+	uint8_t vsi_type_id[3];
+	uint8_t vsi_type_version;
+	uint8_t _pad[3];
+};
+struct linux_if_stats_msg
+{
+	uint8_t family;
+	uint8_t _pad1;
+	uint16_t _pad2;
+	uint32_t ifindex;
+	uint32_t filter_mask;
+};
+struct linux_ifla_rmnet_flags
+{
+	uint32_t flags;
+	uint32_t mask;
+};
+
+//-----------------------------------------------------------------------------
 // Reliable datagram sockets
 
 typedef uint8_t  linux_rds_tos_t;
@@ -2037,7 +2355,7 @@ struct linux_vsock_diag_req
 {
 	uint8_t sdiag_family;
 	uint8_t sdiag_protocol;
-	uint16_t pad;
+	uint16_t _pad;
 	uint32_t vdiag_states;
 	uint32_t vdiag_ino;
 	uint32_t vdiag_show;
