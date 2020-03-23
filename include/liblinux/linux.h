@@ -885,6 +885,10 @@ typedef linux_kernel_off_t   linux_off_t;
 typedef linux_kernel_time_t  linux_time_t;
 typedef linux_kernel_ulong_t linux_aio_context_t;
 
+#include "drm/drm.h"
+#include "drm/drm_mode.h"
+#include "drm/drm_fourcc.h"
+
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
 typedef linux_kernel_old_uid_t linux_old_uid_t;
 typedef linux_kernel_old_gid_t linux_old_gid_t;
