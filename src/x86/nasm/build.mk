@@ -3,6 +3,7 @@ asmsrc = \
          src/$(ARCH)/$(TOOL)/exit.asm\
          src/$(ARCH)/$(TOOL)/exit_group.asm\
          src/$(ARCH)/$(TOOL)/rt_sigreturn.asm\
+         src/$(ARCH)/$(TOOL)/set_gs.asm\
          src/$(ARCH)/$(TOOL)/sigreturn.asm\
          src/$(ARCH)/$(TOOL)/syscall0.asm\
          src/$(ARCH)/$(TOOL)/syscall1.asm\
