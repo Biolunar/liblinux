@@ -3,7 +3,7 @@
 
 TARGET = hello
 CC     = cc
-CFLAGS = -std=c11 -pedantic-errors -nostdlib -ffreestanding -fno-stack-protector -g -Wall -Wextra
+CFLAGS = -std=c11 -pedantic-errors -g -Wall -Wextra
 LDLIBS = -llinux
 
 all: $(TARGET)
@@ -12,4 +12,4 @@ clean:
 	rm -f $(TARGET)
 
 $(TARGET): main.c
-	$(CC) $(CFLAGS) -o $@ main.c $(LDLIBS)
+	$(CC) $(CFLAGS) -nostdlib -ffreestanding -static -fno-stack-protector -o $@ main.c $(LDLIBS)
