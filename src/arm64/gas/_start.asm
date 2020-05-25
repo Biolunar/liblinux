@@ -30,3 +30,6 @@ _start:
 	add x2, x2, #16
 
 	bl linux_start
+
+	/* Issue an invalid instruction because linux_start is not allowed to return. */
+	.inst 0xde00

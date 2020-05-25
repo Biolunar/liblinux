@@ -27,3 +27,6 @@ _start:
 	# Use the call instruction so that the rip register gets pushed onto the stack
 	# to correctly set up the stack frame for the C function.
 	call linux_start
+
+	# Issue an invalid instruction because linux_start is not allowed to return.
+	ud2

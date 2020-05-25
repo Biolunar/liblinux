@@ -26,4 +26,7 @@ _start:
 	add r1, sp, #4 /* argv */
 	add r2, r1, r0, lsl #3 /* envp */
 
-	b linux_start
+	bl linux_start
+
+	/* Issue an invalid instruction because linux_start is not allowed to return. */
+	udf
