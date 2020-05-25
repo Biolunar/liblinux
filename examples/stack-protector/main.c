@@ -7,7 +7,7 @@
 
 struct tls
 {
-	uintptr_t _pad[5];
+	linux_uword_t _pad[5];
 	uintptr_t canary;
 };
 
