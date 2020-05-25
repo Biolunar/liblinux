@@ -45,6 +45,7 @@ test: tests/error tests/compile $(tests)
 	@tests/run_tests.sh $(ARCH) $(INTERP)
 
 install: all
+	mkdir -p $(DSTDIR)$(PREFIX)/include $(DSTDIR)$(PREFIX)/lib
 	cp -r include/liblinux $(DSTDIR)$(PREFIX)/include
 	cp $(TARGET) $(DSTDIR)$(PREFIX)/lib
 
