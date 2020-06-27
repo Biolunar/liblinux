@@ -5389,7 +5389,7 @@ inline enum linux_error linux_unlink(char const* const pathname) // DEPRECATED: 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_mknod(char const* const filename, linux_umode_t const mode, unsigned int const dev)
+inline enum linux_error linux_mknod(char const* const filename, linux_umode_t const mode, unsigned int const dev) // DEPRECATED: use linux_mknodat
 {
 	linux_word_t const ret = linux_syscall3((uintptr_t)filename, mode, dev, linux_syscall_name_mknod);
 	if (linux_syscall_returned_error(ret))
@@ -5509,7 +5509,7 @@ inline enum linux_error linux_sysfs(int const option, linux_uword_t const arg1, 
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_getdents(linux_fd_t const fd, struct linux_dirent* const dirent, unsigned int const count, int* const result)
+inline enum linux_error linux_getdents(linux_fd_t const fd, struct linux_dirent* const dirent, unsigned int const count, int* const result) // DEPRECATED: use linux_getdents64
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)dirent, count, linux_syscall_name_getdents);
 	if (linux_syscall_returned_error(ret))

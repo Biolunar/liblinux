@@ -52,6 +52,34 @@
 #define linux_AT_VECTOR_SIZE_BASE 20
 
 //=============================================================================
+// fs_types
+
+#define linux_S_DT_SHIFT 12
+#define linux_S_DT(mode) (((mode) & linux_S_IFMT) >> linux_S_DT_SHIFT)
+#define linux_S_DT_MASK  (linux_S_IFMT >> linux_S_DT_SHIFT)
+
+#define linux_DT_UNKNOWN  0
+#define linux_DT_FIFO     1
+#define linux_DT_CHR      2
+#define linux_DT_DIR      4
+#define linux_DT_BLK      6
+#define linux_DT_REG      8
+#define linux_DT_LNK     10
+#define linux_DT_SOCK    12
+#define linux_DT_WHT     14
+#define linux_DT_MAX     (linux_S_DT_MASK + 1)
+
+#define linux_FT_UNKNOWN  0
+#define linux_FT_REG_FILE 1
+#define linux_FT_DIR      2
+#define linux_FT_CHRDEV   3
+#define linux_FT_BLKDEV   4
+#define linux_FT_FIFO     5
+#define linux_FT_SOCK     6
+#define linux_FT_SYMLINK  7
+#define linux_FT_MAX      8
+
+//=============================================================================
 // reboot
 
 #define	linux_LINUX_REBOOT_MAGIC1  0xfee1dead
