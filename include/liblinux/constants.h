@@ -52,6 +52,25 @@
 #define linux_AT_VECTOR_SIZE_BASE 20
 
 //=============================================================================
+// limits
+
+#define linux_NR_OPEN 1024
+
+#define linux_NGROUPS_MAX     65536
+#define linux_ARG_MAX        131072
+#define linux_LINK_MAX          127
+#define linux_MAX_CANON         255
+#define linux_MAX_INPUT         255
+#define linux_NAME_MAX          255
+#define linux_PATH_MAX         4096
+#define linux_PIPE_BUF         4096
+#define linux_XATTR_NAME_MAX    255
+#define linux_XATTR_SIZE_MAX  65536
+#define linux_XATTR_LIST_MAX  65536
+
+#define linux_RTSIG_MAX 32
+
+//=============================================================================
 // fs_types
 
 #define linux_S_DT_SHIFT 12
