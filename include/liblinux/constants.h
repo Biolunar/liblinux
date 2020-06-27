@@ -52,6 +52,24 @@
 #define linux_AT_VECTOR_SIZE_BASE 20
 
 //=============================================================================
+// reboot
+
+#define	linux_LINUX_REBOOT_MAGIC1  0xfee1dead
+#define	linux_LINUX_REBOOT_MAGIC2  672274793
+#define	linux_LINUX_REBOOT_MAGIC2A 85072278
+#define	linux_LINUX_REBOOT_MAGIC2B 369367448
+#define	linux_LINUX_REBOOT_MAGIC2C 537993216
+
+#define	linux_LINUX_REBOOT_CMD_RESTART    0x01234567
+#define	linux_LINUX_REBOOT_CMD_HALT       0xCDEF0123
+#define	linux_LINUX_REBOOT_CMD_CAD_ON     0x89ABCDEF
+#define	linux_LINUX_REBOOT_CMD_CAD_OFF    0x00000000
+#define	linux_LINUX_REBOOT_CMD_POWER_OFF  0x4321FEDC
+#define	linux_LINUX_REBOOT_CMD_RESTART2   0xA1B2C3D4
+#define	linux_LINUX_REBOOT_CMD_SW_SUSPEND 0xD000FCE2
+#define	linux_LINUX_REBOOT_CMD_KEXEC      0x45584543
+
+//=============================================================================
 // access
 
 enum // Kernel sources do not explicitly define these constants. They correspond to S_IXOTH, S_IWOTH and S_IROTH.
