@@ -551,6 +551,9 @@ enum
 	linux_syscall_name_fspick                       = 433,
 	linux_syscall_name_pidfd_open                   = 434,
 	linux_syscall_name_clone3                       = 435,
+	// (unused)
+	linux_syscall_name_openat2                      = 437,
+	linux_syscall_name_pidfd_getfd                  = 438,
 
 	linux_syscall_name_breakpoint                   = 0x0f0000 + 1,
 	linux_syscall_name_cacheflush                   = 0x0f0000 + 2,

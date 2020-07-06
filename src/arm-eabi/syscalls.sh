@@ -380,6 +380,8 @@ SYSCALLS="fork\
           fspick\
           pidfd_open\
           clone3\
+          openat2\
+          pidfd_getfd\
           breakpoint\
           cacheflush\
           usr26\

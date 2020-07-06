@@ -327,7 +327,9 @@ csrc = \
        src/fsmount.c\
        src/fspick.c\
        src/pidfd_open.c\
-       src/clone3.c
+       src/clone3.c\
+       src/openat2.c\
+       src/pidfd_getfd.c
 
 tests = \
         tests/syscalls/read\
@@ -657,4 +659,6 @@ tests = \
         tests/syscalls/fsmount\
         tests/syscalls/fspick\
         tests/syscalls/pidfd_open\
-        tests/syscalls/clone3
+        tests/syscalls/clone3\
+        tests/syscalls/openat2\
+        tests/syscalls/pidfd_getfd

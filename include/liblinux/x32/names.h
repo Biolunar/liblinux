@@ -380,6 +380,9 @@ enum
 	linux_syscall_name_fspick                 = LINUX_X32_SYSCALL_BIT + 433,
 	linux_syscall_name_pidfd_open             = LINUX_X32_SYSCALL_BIT + 434,
 	linux_syscall_name_clone3                 = LINUX_X32_SYSCALL_BIT + 435,
+	// (unused)
+	linux_syscall_name_openat2                = LINUX_X32_SYSCALL_BIT + 437,
+	linux_syscall_name_pidfd_getfd            = LINUX_X32_SYSCALL_BIT + 438,
 
 	linux_syscall_name_rt_sigaction           = LINUX_X32_SYSCALL_BIT + 512,
 	linux_syscall_name_rt_sigreturn           = LINUX_X32_SYSCALL_BIT + 513,

@@ -382,6 +382,8 @@ csrc = \
        src/fspick.c\
        src/pidfd_open.c\
        src/clone3.c\
+       src/openat2.c\
+       src/pidfd_getfd.c\
        src/breakpoint.c\
        src/cacheflush.c\
        src/usr26.c\
@@ -772,6 +774,8 @@ tests = \
         tests/syscalls/fspick\
         tests/syscalls/pidfd_open\
         tests/syscalls/clone3\
+        tests/syscalls/openat2\
+        tests/syscalls/pidfd_getfd\
         tests/syscalls/breakpoint\
         tests/syscalls/cacheflush\
         tests/syscalls/usr26\

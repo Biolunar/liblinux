@@ -52,6 +52,15 @@
 #define linux_AT_VECTOR_SIZE_BASE 20
 
 //=============================================================================
+// openat2
+
+#define linux_RESOLVE_NO_XDEV       0x01
+#define linux_RESOLVE_NO_MAGICLINKS 0x02
+#define linux_RESOLVE_NO_SYMLINKS   0x04
+#define linux_RESOLVE_BENEATH       0x08
+#define linux_RESOLVE_IN_ROOT       0x10
+
+//=============================================================================
 // limits
 
 #define linux_NR_OPEN 1024

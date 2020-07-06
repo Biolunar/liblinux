@@ -378,6 +378,9 @@ enum
 	linux_syscall_name_fspick                 = 433,
 	linux_syscall_name_pidfd_open             = 434,
 	linux_syscall_name_clone3                 = 435,
+	// (unused)
+	linux_syscall_name_openat2                = 437,
+	linux_syscall_name_pidfd_getfd            = 438,
 };
 
 #endif // !HEADER_LIBLINUX_X86_64_NAMES_H_INCLUDED

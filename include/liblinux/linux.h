@@ -857,6 +857,12 @@ struct linux_fsxattr
 	uint32_t fsx_cowextsize;
 	unsigned char fsx_pad[8];
 };
+struct linux_open_how
+{
+	uint64_t flags;
+	uint64_t mode;
+	uint64_t resolve;
+};
 
 //=============================================================================
 // Architecture specific types
@@ -3162,6 +3168,15 @@ inline enum linux_error linux_openat(linux_fd_t const dfd, char const* const fil
 		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_openat2(linux_fd_t const dfd, char const* const filename, struct linux_open_how* const how, linux_size_t const usize, linux_fd_t* const result)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (uintptr_t)how, usize, linux_syscall_name_openat2);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
 inline enum linux_error linux_name_to_handle_at(linux_fd_t const dfd, char const* const name, struct linux_file_handle* const handle, int* const mnt_id, int const flag)
 {
 	linux_word_t const ret = linux_syscall5((uint32_t)dfd, (uintptr_t)name, (uintptr_t)handle, (uintptr_t)mnt_id, (unsigned int)flag, linux_syscall_name_name_to_handle_at);
@@ -3812,6 +3827,10 @@ inline enum linux_error linux_rt_tgsigqueueinfo(linux_pid_t const tgid, linux_pi
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
+//-----------------------------------------------------------------------------
+// pidfd
+
 inline enum linux_error linux_pidfd_open(linux_pid_t pid, unsigned int flags, linux_fd_t* result)
 {
 	linux_word_t const ret = linux_syscall2((unsigned int)pid, flags, linux_syscall_name_pidfd_open);
@@ -3826,6 +3845,15 @@ inline enum linux_error linux_pidfd_send_signal(linux_fd_t const pidfd, int cons
 	linux_word_t const ret = linux_syscall4((uint32_t)pidfd, (unsigned int)sig, (uintptr_t)info, flags, linux_syscall_name_pidfd_send_signal);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_pidfd_getfd(linux_pid_t const pidfd, linux_fd_t const fd, unsigned int const flags, linux_fd_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)pidfd, (unsigned int)fd, flags, linux_syscall_name_pidfd_getfd);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
 

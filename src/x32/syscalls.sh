@@ -325,4 +325,6 @@ SYSCALLS="read\
           fsmount\
           fspick\
           pidfd_open\
-          clone3"
+          clone3\
+          openat2\
+          pidfd_getfd"
