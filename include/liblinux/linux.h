@@ -1010,6 +1010,7 @@ struct linux_sched_param
 {
 	int sched_priority;
 };
+#if defined(LINUX_ENABLE_REMOVED)
 struct linux_sysctl_args
 {
 	int* name;
@@ -1020,6 +1021,7 @@ struct linux_sysctl_args
 	linux_size_t newlen;
 	unsigned long _unused[4];
 };
+#endif
 struct linux_kernel_timex_timeval
 {
 	linux_kernel_time64_t tv_sec;
@@ -5555,13 +5557,15 @@ inline enum linux_error linux_select(int const n, linux_fd_set* const inp, linux
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_sysctl(struct linux_sysctl_args* const args)
+#if defined(LINUX_ENABLE_REMOVED)
+inline enum linux_error linux_sysctl(struct linux_sysctl_args* const args) // REMOVED in Linux 5.5: use the /proc/sys interface
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)args, linux_syscall_name_sysctl);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+#endif
 inline enum linux_error linux_poll(struct linux_pollfd* const ufds, unsigned int const nfds, int const timeout_msecs, int* const result)
 {
 	linux_word_t const ret = linux_syscall3((uintptr_t)ufds, nfds, (unsigned int)timeout_msecs, linux_syscall_name_poll);
