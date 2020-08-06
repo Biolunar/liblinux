@@ -64,7 +64,7 @@ uninstall:
 
 .SUFFIXES: .c .o
 .c.o:
-	$(CC) $(CFLAGS) -nostdlib -ffreestanding -MMD -c -I include -o $@ $<
+	$(CC) $(CFLAGS) -DLINUX_ENABLE_REMOVED -nostdlib -ffreestanding -MMD -c -I include -o $@ $<
 
 $(TARGET): $(asmobj) $(cobj)
 	$(AR) $(ARFLAGS) $@ $(asmobj) $(cobj)

@@ -1,6 +1,7 @@
 #ifndef HEADER_LIBLINUX_TESTS_SYSCALLS_TEST_H_INCLUDED
 #define HEADER_LIBLINUX_TESTS_SYSCALLS_TEST_H_INCLUDED
 
+#define LINUX_ENABLE_REMOVED
 #include <liblinux/start.h>
 #include <liblinux/linux.h>
 
