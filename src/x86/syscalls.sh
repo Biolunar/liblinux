@@ -401,4 +401,5 @@ SYSCALLS="fork\
           pidfd_open\
           clone3\
           openat2\
-          pidfd_getfd"
+          pidfd_getfd\
+          faccessat2"

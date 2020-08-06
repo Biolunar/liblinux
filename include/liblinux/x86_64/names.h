@@ -381,6 +381,7 @@ enum
 	// (unused)
 	linux_syscall_name_openat2                = 437,
 	linux_syscall_name_pidfd_getfd            = 438,
+	linux_syscall_name_faccessat2             = 439,
 };
 
 #endif // !HEADER_LIBLINUX_X86_64_NAMES_H_INCLUDED

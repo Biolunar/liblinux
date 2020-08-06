@@ -403,7 +403,8 @@ csrc = \
        src/pidfd_open.c\
        src/clone3.c\
        src/openat2.c\
-       src/pidfd_getfd.c
+       src/pidfd_getfd.c\
+       src/faccessat2.c
 
 tests = \
         tests/syscalls/fork\
@@ -809,4 +810,5 @@ tests = \
         tests/syscalls/pidfd_open\
         tests/syscalls/clone3\
         tests/syscalls/openat2\
-        tests/syscalls/pidfd_getfd
+        tests/syscalls/pidfd_getfd\
+        tests/syscalls/faccessat2

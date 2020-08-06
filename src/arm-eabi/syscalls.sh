@@ -382,6 +382,7 @@ SYSCALLS="fork\
           clone3\
           openat2\
           pidfd_getfd\
+	  faccessat2\
           breakpoint\
           cacheflush\
           usr26\

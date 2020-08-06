@@ -388,6 +388,7 @@ static void test_arm_eabi(void)
 	linux_clone3(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
+	linux_faccessat2(0, 0, 0, 0);
 	linux_breakpoint();
 	linux_cacheflush(0, 0, 0);
 	linux_usr26();
@@ -688,6 +689,7 @@ static void test_arm64(void)
 	linux_clone3(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
+	linux_faccessat2(0, 0, 0, 0);
 }
 #endif
 
@@ -1098,6 +1100,7 @@ static void test_x86(void)
 	linux_clone3(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
+	linux_faccessat2(0, 0, 0, 0);
 }
 #endif
 
@@ -1434,6 +1437,7 @@ static void test_x32_and_x86_64(void)
 	linux_clone3(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
+	linux_faccessat2(0, 0, 0, 0);
 }
 #endif
 

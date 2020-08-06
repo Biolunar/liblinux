@@ -259,6 +259,7 @@ enum // Kernel sources do not explicitly define these constants. They correspond
 
 #define linux_AT_FDCWD              -100
 #define linux_AT_SYMLINK_NOFOLLOW   0x0100
+#define linux_AT_EACCESS            0x0200
 #define linux_AT_REMOVEDIR          0x0200
 #define linux_AT_SYMLINK_FOLLOW     0x0400
 #define linux_AT_NO_AUTOMOUNT       0x0800
@@ -267,6 +268,7 @@ enum // Kernel sources do not explicitly define these constants. They correspond
 #define linux_AT_STATX_SYNC_AS_STAT 0x0000
 #define linux_AT_STATX_FORCE_SYNC   0x2000
 #define linux_AT_STATX_DONT_SYNC    0x4000
+#define linux_AT_RECURSIVE          0x8000
 
 //=============================================================================
 // scheduler

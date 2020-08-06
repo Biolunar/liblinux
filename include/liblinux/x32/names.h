@@ -383,6 +383,7 @@ enum
 	// (unused)
 	linux_syscall_name_openat2                = LINUX_X32_SYSCALL_BIT + 437,
 	linux_syscall_name_pidfd_getfd            = LINUX_X32_SYSCALL_BIT + 438,
+	linux_syscall_name_faccessat2             = LINUX_X32_SYSCALL_BIT + 439,
 
 	linux_syscall_name_rt_sigaction           = LINUX_X32_SYSCALL_BIT + 512,
 	linux_syscall_name_rt_sigreturn           = LINUX_X32_SYSCALL_BIT + 513,

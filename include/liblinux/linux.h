@@ -3133,6 +3133,13 @@ inline enum linux_error linux_faccessat(linux_fd_t const dfd, char const* const 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_faccessat2(linux_fd_t const dfd, char const* const filename, int const mode, int const flags)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (unsigned int)mode, (unsigned int)flags, linux_syscall_name_faccessat2);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
 inline enum linux_error linux_fchmod(linux_fd_t const fd, linux_umode_t const mode)
 {
 	linux_word_t const ret = linux_syscall2((uint32_t)fd, mode, linux_syscall_name_fchmod);
