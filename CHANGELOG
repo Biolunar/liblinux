@@ -1,3 +1,13 @@
+master
+======
+
+- Added all new syscalls up to Linux 5.8.
+- Added new types and constants for some syscalls.
+- Added examples how to use the library.
+- Added safety code after _start to prevent executing random memory.
+- Minor improvements to the Makefile.
+- Removed linux_sysctl syscall.
+
 0.6.0
 =====
 
