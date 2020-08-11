@@ -139,10 +139,10 @@ enum // Kernel sources do not explicitly define these constants. They correspond
 //=============================================================================
 // signals
 
-#define linux_NSIG    64
+#define linux_NSIG 64
 
-#define linux_SIG_DFL ((linux_sighandler_t)0)
-#define linux_SIG_IGN ((linux_sighandler_t)1)
+#define linux_SIG_DFL ((linux_sighandler_t) 0)
+#define linux_SIG_IGN ((linux_sighandler_t) 1)
 #define linux_SIG_ERR ((linux_sighandler_t)-1)
 
 //=============================================================================
