@@ -52,6 +52,37 @@
 #define linux_AT_VECTOR_SIZE_BASE 20
 
 //=============================================================================
+// ioprio
+
+#define linux_IOPRIO_CLASS_SHIFT             (13)
+#define linux_IOPRIO_PRIO_MASK               ((1UL << linux_IOPRIO_CLASS_SHIFT) - 1)
+
+#define linux_IOPRIO_PRIO_CLASS(mask)        ((mask) >> linux_IOPRIO_CLASS_SHIFT)
+#define linux_IOPRIO_PRIO_DATA(mask)         ((mask) & linux_IOPRIO_PRIO_MASK)
+#define linux_IOPRIO_PRIO_VALUE(class, data) (((class) << linux_IOPRIO_CLASS_SHIFT) | data)
+
+#define linux_ioprio_valid(mask)             (linux_IOPRIO_PRIO_CLASS((mask)) != linux_IOPRIO_CLASS_NONE)
+
+enum
+{
+	linux_IOPRIO_CLASS_NONE,
+	linux_IOPRIO_CLASS_RT,
+	linux_IOPRIO_CLASS_BE,
+	linux_IOPRIO_CLASS_IDLE,
+};
+
+#define linux_IOPRIO_BE_NR (8)
+
+enum
+{
+	linux_IOPRIO_WHO_PROCESS = 1,
+	linux_IOPRIO_WHO_PGRP,
+	linux_IOPRIO_WHO_USER,
+};
+
+#define linux_IOPRIO_NORM (4)
+
+//=============================================================================
 // openat2
 
 #define linux_RESOLVE_NO_XDEV       0x01
