@@ -463,7 +463,7 @@ struct linux_io_uring_sqe
 	{
 		uint64_t addr;
 		uint64_t splice_off_in;
-	}
+	};
 	uint32_t len;
 	union
 	{
@@ -489,7 +489,7 @@ struct linux_io_uring_sqe
 			{
 				uint16_t buf_index;
 				uint16_t buf_group;
-			} __attribute__((packed));
+			};
 			uint16_t personality;
 			int32_t splice_fd_in;
 		};
