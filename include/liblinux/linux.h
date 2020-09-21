@@ -459,7 +459,11 @@ struct linux_io_uring_sqe
 		uint64_t off;
 		uint64_t addr2;
 	};
-	uint64_t addr;
+	union
+	{
+		uint64_t addr;
+		uint64_t splice_off_in;
+	}
 	uint32_t len;
 	union
 	{
@@ -471,11 +475,24 @@ struct linux_io_uring_sqe
 		uint32_t timeout_flags;
 		uint32_t accept_flags;
 		uint32_t cancel_flags;
+		uint32_t open_flags;
+		uint32_t statx_flags;
+		uint32_t fadvise_advice;
+		uint32_t splice_flags;
 	};
 	uint64_t user_data;
 	union
 	{
-		uint16_t buf_index;
+		struct
+		{
+			union
+			{
+				uint16_t buf_index;
+				uint16_t buf_group;
+			} __attribute__((packed));
+			uint16_t personality;
+			int32_t splice_fd_in;
+		};
 		uint64_t _pad2[3];
 	};
 };
@@ -494,8 +511,8 @@ struct linux_io_sqring_offsets
 	uint32_t flags;
 	uint32_t dropped;
 	uint32_t array;
-	uint32_t resv1;
-	uint64_t resv2;
+	uint32_t _resv1;
+	uint64_t _resv2;
 };
 struct linux_io_cqring_offsets
 {
@@ -505,7 +522,9 @@ struct linux_io_cqring_offsets
 	uint32_t ring_entries;
 	uint32_t overflow;
 	uint32_t cqes;
-	uint64_t resv[2];
+	uint32_t flags;
+	uint32_t _resv1;
+	uint64_t _resv2;
 };
 struct linux_io_uring_params
 {
@@ -515,7 +534,8 @@ struct linux_io_uring_params
 	uint32_t sq_thread_cpu;
 	uint32_t sq_thread_idle;
 	uint32_t features;
-	uint32_t resv[4];
+	uint32_t wq_fd;
+	uint32_t _resv[3];
 	struct linux_io_sqring_offsets sq_off;
 	struct linux_io_cqring_offsets cq_off;
 };
@@ -524,6 +544,21 @@ struct linux_io_uring_files_update
 	uint32_t offset;
 	uint32_t resv;
 	alignas(8) uint64_t fds;
+};
+struct linux_io_uring_probe_op
+{
+	uint8_t op;
+	uint8_t resv;
+	uint16_t flags;
+	uint32_t _resv2;
+};
+struct linux_io_uring_probe
+{
+	uint8_t last_op;
+	uint8_t ops_len;
+	uint16_t _resv;
+	uint32_t _resv2[3];
+	struct linux_io_uring_probe_op ops[];
 };
 struct linux_winsize
 {

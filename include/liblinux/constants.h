@@ -4092,15 +4092,28 @@ enum
 //=============================================================================
 // io_uring
 
-#define linux_IOSQE_FIXED_FILE  (1U << 0)
-#define linux_IOSQE_IO_DRAIN    (1U << 1)
-#define linux_IOSQE_IO_LINK     (1U << 2)
-#define linux_IOSQE_IO_HARDLINK (1U << 3)
+enum
+{
+	linux_IOSQE_FIXED_FILE_BIT,
+	linux_IOSQE_IO_DRAIN_BIT,
+	linux_IOSQE_IO_LINK_BIT,
+	linux_IOSQE_IO_HARDLINK_BIT,
+	linux_IOSQE_ASYNC_BIT,
+	linux_IOSQE_BUFFER_SELECT_BIT,
+};
+#define linux_IOSQE_FIXED_FILE    (1U << linux_IOSQE_FIXED_FILE_BIT)
+#define linux_IOSQE_IO_DRAIN      (1U << linux_IOSQE_IO_DRAIN_BIT)
+#define linux_IOSQE_IO_LINK       (1U << linux_IOSQE_IO_LINK_BIT)
+#define linux_IOSQE_IO_HARDLINK   (1U << linux_IOSQE_IO_HARDLINK_BIT)
+#define linux_IOSQE_ASYNC         (1U << linux_IOSQE_ASYNC_BIT)
+#define linux_IOSQE_BUFFER_SELECT (1U << linux_IOSQE_BUFFER_SELECT_BIT)
 
-#define linux_IORING_SETUP_IOPOLL (1U << 0)
-#define linux_IORING_SETUP_SQPOLL (1U << 1)
-#define linux_IORING_SETUP_SQ_AFF (1U << 2)
-#define linux_IORING_SETUP_CQSIZE (1U << 3)
+#define linux_IORING_SETUP_IOPOLL    (1U << 0)
+#define linux_IORING_SETUP_SQPOLL    (1U << 1)
+#define linux_IORING_SETUP_SQ_AFF    (1U << 2)
+#define linux_IORING_SETUP_CQSIZE    (1U << 3)
+#define linux_IORING_SETUP_CLAMP     (1U << 4)
+#define linux_IORING_SETUP_ATTACH_WQ (1U << 5)
 
 enum
 {
@@ -4121,6 +4134,23 @@ enum
 	linux_IORING_OP_ASYNC_CANCEL,
 	linux_IORING_OP_LINK_TIMEOUT,
 	linux_IORING_OP_CONNECT,
+	linux_IORING_OP_FALLOCATE,
+	linux_IORING_OP_OPENAT,
+	linux_IORING_OP_CLOSE,
+	linux_IORING_OP_FILES_UPDATE,
+	linux_IORING_OP_STATX,
+	linux_IORING_OP_READ,
+	linux_IORING_OP_WRITE,
+	linux_IORING_OP_FADVISE,
+	linux_IORING_OP_MADVISE,
+	linux_IORING_OP_SEND,
+	linux_IORING_OP_RECV,
+	linux_IORING_OP_OPENAT2,
+	linux_IORING_OP_EPOLL_CTL,
+	linux_IORING_OP_SPLICE,
+	linux_IORING_OP_PROVIDE_BUFFERS,
+	linux_IORING_OP_REMOVE_BUFFERS,
+	linux_IORING_OP_TEE,
 
 	linux_IORING_OP_LAST,
 };
@@ -4129,26 +4159,42 @@ enum
 
 #define linux_IORING_TIMEOUT_ABS (1U << 0)
 
+#define linux_SPLICE_F_FD_IN_FIXED (1U << 31)
+
+#define linux_IORING_CQE_F_BUFFER (1U << 0)
+
 #define linux_IORING_OFF_SQ_RING 0ULL
 #define linux_IORING_OFF_CQ_RING 0x8000000ULL
 #define linux_IORING_OFF_SQES    0x10000000ULL
 
 #define linux_IORING_SQ_NEED_WAKEUP (1U << 0)
+#define linux_IORING_SQ_CQ_OVERFLOW (1U << 1)
+
+#define linux_IORING_CQ_EVENTFD_DISABLED (1U << 0)
 
 #define linux_IORING_ENTER_GETEVENTS (1U << 0)
 #define linux_IORING_ENTER_SQ_WAKEUP (1U << 1)
 
-#define linux_IORING_FEAT_SINGLE_MMAP   (1U << 0)
-#define linux_IORING_FEAT_NODROP        (1U << 1)
-#define linux_IORING_FEAT_SUBMIT_STABLE (1U << 2)
+#define linux_IORING_FEAT_SINGLE_MMAP     (1U << 0)
+#define linux_IORING_FEAT_NODROP          (1U << 1)
+#define linux_IORING_FEAT_SUBMIT_STABLE   (1U << 2)
+#define linux_IORING_FEAT_RW_CUR_POS      (1U << 3)
+#define linux_IORING_FEAT_CUR_PERSONALITY (1U << 4)
+#define linux_IORING_FEAT_FAST_POLL       (1U << 5)
 
-#define linux_IORING_REGISTER_BUFFERS      0
-#define linux_IORING_UNREGISTER_BUFFERS    1
-#define linux_IORING_REGISTER_FILES        2
-#define linux_IORING_UNREGISTER_FILES      3
-#define linux_IORING_REGISTER_EVENTFD      4
-#define linux_IORING_UNREGISTER_EVENTFD    5
-#define linux_IORING_REGISTER_FILES_UPDATE 6
+#define linux_IORING_REGISTER_BUFFERS        0
+#define linux_IORING_UNREGISTER_BUFFERS      1
+#define linux_IORING_REGISTER_FILES          2
+#define linux_IORING_UNREGISTER_FILES        3
+#define linux_IORING_REGISTER_EVENTFD        4
+#define linux_IORING_UNREGISTER_EVENTFD      5
+#define linux_IORING_REGISTER_FILES_UPDATE   6
+#define linux_IORING_REGISTER_EVENTFD_ASYNC  7
+#define linux_IORING_REGISTER_PROBE          8
+#define linux_IORING_REGISTER_PERSONALITY    9
+#define linux_IORING_UNREGISTER_PERSONALITY 10
+
+#define linux_IO_URING_OP_SUPPORTED (1U << 0)
 
 //=============================================================================
 // Input event codes
