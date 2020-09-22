@@ -4162,6 +4162,10 @@ enum
 #define linux_SPLICE_F_FD_IN_FIXED (1U << 31)
 
 #define linux_IORING_CQE_F_BUFFER (1U << 0)
+enum
+{
+	linux_IORING_CQE_BUFFER_SHIFT = 16,
+};
 
 #define linux_IORING_OFF_SQ_RING 0ULL
 #define linux_IORING_OFF_CQ_RING 0x8000000ULL
