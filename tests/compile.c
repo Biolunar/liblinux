@@ -387,6 +387,7 @@ static void test_arm_eabi(void)
 	linux_fspick(0, 0, 0, 0);
 	linux_pidfd_open(0, 0, 0);
 	linux_clone3(0, 0, 0);
+	linux_close_range(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
@@ -688,6 +689,7 @@ static void test_arm64(void)
 	linux_fspick(0, 0, 0, 0);
 	linux_pidfd_open(0, 0, 0);
 	linux_clone3(0, 0, 0);
+	linux_close_range(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
@@ -1099,6 +1101,7 @@ static void test_x86(void)
 	linux_fspick(0, 0, 0, 0);
 	linux_pidfd_open(0, 0, 0);
 	linux_clone3(0, 0, 0);
+	linux_close_range(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
@@ -1436,6 +1439,7 @@ static void test_x32_and_x86_64(void)
 	linux_fspick(0, 0, 0, 0);
 	linux_pidfd_open(0, 0, 0);
 	linux_clone3(0, 0, 0);
+	linux_close_range(0, 0, 0);
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);

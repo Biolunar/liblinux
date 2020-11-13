@@ -73,7 +73,7 @@
 #define linux_SIGPOLL   linux_SIGIO
 #define linux_SIGPWR    30
 #define linux_SIGSYS    31
-#define	linux_SIGUNUSED 31
+#define linux_SIGUNUSED 31
 #define linux_SIGRTMIN  32
 #define linux_SIGRTMAX  64
 

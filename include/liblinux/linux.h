@@ -3018,6 +3018,13 @@ inline enum linux_error linux_close(linux_fd_t const fd)
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_close_range(linux_fd_t const fd, linux_fd_t const max_fd, unsigned int const flags)
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uint32_t)max_fd, flags, linux_syscall_name_close_range);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
 
 //-----------------------------------------------------------------------------
 // inotify

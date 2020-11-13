@@ -400,6 +400,7 @@ SYSCALLS="fork\
           fspick\
           pidfd_open\
           clone3\
+          close_range\
           openat2\
           pidfd_getfd\
           faccessat2"
