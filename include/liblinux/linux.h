@@ -47,8 +47,6 @@ typedef int32_t linux_wd_t;
 //=============================================================================
 // Generic types
 
-typedef unsigned int           linux_kernel_uid32_t;
-typedef unsigned int           linux_kernel_gid32_t;
 typedef long long              linux_kernel_time64_t;
 typedef int                    linux_kernel_timer_t;
 typedef int                    linux_kernel_clockid_t;
@@ -59,9 +57,9 @@ typedef int                    linux_key_t;
 typedef int                    linux_mqd_t;
 typedef int                    linux_pid_t;
 typedef long long              linux_loff_t;
-typedef linux_kernel_uid32_t   linux_uid_t;
-typedef linux_kernel_gid32_t   linux_gid_t;
-typedef linux_kernel_uid32_t   linux_qid_t;
+typedef unsigned int           linux_uid_t;
+typedef unsigned int           linux_gid_t;
+typedef linux_uid_t            linux_qid_t;
 typedef int                    linux_rwf_t;
 typedef linux_kernel_clockid_t linux_clockid_t;
 typedef linux_kernel_timer_t   linux_timer_t;
@@ -922,11 +920,6 @@ typedef linux_kernel_ulong_t linux_aio_context_t;
 #include "drm/drm.h"
 #include "drm/drm_mode.h"
 #include "drm/drm_fourcc.h"
-
-#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
-typedef linux_kernel_old_uid_t linux_old_uid_t;
-typedef linux_kernel_old_gid_t linux_old_gid_t;
-#endif
 
 struct linux_iovec
 {

@@ -65,7 +65,7 @@ union linux_sifields
 	struct
 	{
 		linux_pid_t pid;
-		linux_kernel_uid32_t uid;
+		linux_uid_t uid;
 	} kill;
 	struct
 	{
@@ -77,13 +77,13 @@ union linux_sifields
 	struct
 	{
 		linux_pid_t pid;
-		linux_kernel_uid32_t uid;
+		linux_uid_t uid;
 		linux_sigval_t sigval;
 	} rt;
 	struct
 	{
 		linux_pid_t pid;
-		linux_kernel_uid32_t uid;
+		linux_uid_t uid;
 		int status;
 		linux_kernel_clock_t utime;
 		linux_kernel_clock_t stime;
@@ -143,10 +143,10 @@ struct linux_sigaction
 struct linux_ipc64_perm
 {
 	linux_key_t key;
-	linux_kernel_uid32_t uid;
-	linux_kernel_gid32_t gid;
-	linux_kernel_uid32_t cuid;
-	linux_kernel_gid32_t cgid;
+	linux_uid_t uid;
+	linux_gid_t gid;
+	linux_uid_t cuid;
+	linux_gid_t cgid;
 	linux_kernel_mode_t mode;
 	//unsigned char _pad1[4 - sizeof(linux_kernel_mode_t)];
 	unsigned short seq;

@@ -22,8 +22,6 @@
 typedef int                  linux_kernel_daddr_t;
 typedef long                 linux_kernel_long_t;
 typedef unsigned long        linux_kernel_ulong_t;
-typedef unsigned short       linux_kernel_uid_t;
-typedef unsigned short       linux_kernel_gid_t;
 typedef unsigned short       linux_kernel_mode_t;
 typedef unsigned short       linux_kernel_ipc_pid_t;
 typedef unsigned int         linux_kernel_size_t;
@@ -33,8 +31,8 @@ typedef linux_kernel_ulong_t linux_kernel_ino_t;
 typedef uint32_t             linux_statfs_word;
 typedef linux_signalfn_t*    linux_sighandler_t;
 
-typedef linux_kernel_uid_t   linux_kernel_old_uid_t;
-typedef linux_kernel_gid_t   linux_kernel_old_gid_t;
+typedef unsigned short       linux_old_uid_t;
+typedef unsigned short       linux_old_gid_t;
 typedef unsigned long        linux_old_sigset_t;
 
 #endif // !HEADER_LIBLINUX_ARM_EABI_TYPES_H_INCLUDED
