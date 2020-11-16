@@ -74,7 +74,7 @@ union linux_sifields
 {
 	struct
 	{
-		linux_kernel_pid_t pid;
+		linux_pid_t pid;
 		linux_kernel_uid32_t uid;
 	} kill;
 	struct
@@ -86,13 +86,13 @@ union linux_sifields
 	} timer;
 	struct
 	{
-		linux_kernel_pid_t pid;
+		linux_pid_t pid;
 		linux_kernel_uid32_t uid;
 		linux_sigval_t sigval;
 	} rt;
 	struct
 	{
-		linux_kernel_pid_t pid;
+		linux_pid_t pid;
 		linux_kernel_uid32_t uid;
 		int status;
 		linux_kernel_clock_t utime;
@@ -178,8 +178,8 @@ struct linux_shmid64_ds
 	unsigned long shm_dtime_high;
 	unsigned long shm_ctime;
 	unsigned long shm_ctime_high;
-	linux_kernel_pid_t shm_cpid;
-	linux_kernel_pid_t shm_lpid;
+	linux_pid_t shm_cpid;
+	linux_pid_t shm_lpid;
 	unsigned long shm_nattch;
 	unsigned long _unused4;
 	unsigned long _unused5;
@@ -196,8 +196,8 @@ struct linux_msqid64_ds
 	unsigned long msg_cbytes;
 	unsigned long msg_qnum;
 	unsigned long  msg_qbytes;
-	linux_kernel_pid_t msg_lspid;
-	linux_kernel_pid_t msg_lrpid;
+	linux_pid_t msg_lspid;
+	linux_pid_t msg_lrpid;
 	unsigned long _unused4;
 	unsigned long _unused5;
 };
@@ -299,7 +299,7 @@ struct linux_flock
 	short l_whence;
 	linux_kernel_off_t l_start;
 	linux_kernel_off_t l_len;
-	linux_kernel_pid_t l_pid;
+	linux_pid_t l_pid;
 };
 struct linux_flock64
 {
@@ -307,7 +307,7 @@ struct linux_flock64
 	short l_whence;
 	linux_kernel_loff_t l_start;
 	linux_kernel_loff_t l_len;
-	linux_kernel_pid_t l_pid;
+	linux_pid_t l_pid;
 };
 
 //=============================================================================

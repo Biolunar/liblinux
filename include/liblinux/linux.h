@@ -49,7 +49,6 @@ typedef int32_t linux_wd_t;
 
 typedef unsigned int           linux_kernel_uid32_t;
 typedef unsigned int           linux_kernel_gid32_t;
-typedef int                    linux_kernel_pid_t;
 typedef long long              linux_kernel_loff_t;
 typedef long long              linux_kernel_time64_t;
 typedef int                    linux_kernel_timer_t;
@@ -60,7 +59,7 @@ typedef unsigned int           linux_poll_t;
 typedef int32_t                linux_key_serial_t;
 typedef int                    linux_key_t;
 typedef int                    linux_mqd_t;
-typedef linux_kernel_pid_t     linux_pid_t;
+typedef int                    linux_pid_t;
 typedef linux_kernel_loff_t    linux_loff_t;
 typedef linux_kernel_uid32_t   linux_uid_t;
 typedef linux_kernel_gid32_t   linux_gid_t;
@@ -2624,7 +2623,7 @@ struct linux_serial_iso7816
 struct linux_f_owner_ex
 {
 	int type;
-	linux_kernel_pid_t pid;
+	linux_pid_t pid;
 };
 
 //=============================================================================
