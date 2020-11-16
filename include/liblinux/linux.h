@@ -78,7 +78,7 @@ typedef unsigned int           linux_speed_t;
 typedef struct
 {
 	unsigned long fds_bits[1024 / (8 * sizeof(long))];
-} linux_kernel_fd_set;
+} linux_fd_set;
 struct linux_pollfd
 {
 	linux_fd_t fd;
@@ -613,8 +613,6 @@ struct linux_old_utsname
 	char machine[65];
 };
 #endif
-
-typedef linux_kernel_fd_set linux_fd_set;
 
 //=============================================================================
 // KD ioctls
