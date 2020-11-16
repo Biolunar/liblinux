@@ -67,7 +67,7 @@ union linux_sifields
 	} kill;
 	struct
 	{
-		linux_kernel_timer_t tid;
+		linux_timer_t tid;
 		int overrun;
 		linux_sigval_t sigval;
 		int _sys_private;
