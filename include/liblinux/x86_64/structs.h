@@ -246,8 +246,8 @@ struct linux_flock64
 {
 	short l_type;
 	short l_whence;
-	linux_kernel_loff_t l_start;
-	linux_kernel_loff_t l_len;
+	linux_loff_t l_start;
+	linux_loff_t l_len;
 	linux_pid_t l_pid;
 };
 

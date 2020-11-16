@@ -49,7 +49,6 @@ typedef int32_t linux_wd_t;
 
 typedef unsigned int           linux_kernel_uid32_t;
 typedef unsigned int           linux_kernel_gid32_t;
-typedef long long              linux_kernel_loff_t;
 typedef long long              linux_kernel_time64_t;
 typedef int                    linux_kernel_timer_t;
 typedef int                    linux_kernel_clockid_t;
@@ -59,7 +58,7 @@ typedef int32_t                linux_key_serial_t;
 typedef int                    linux_key_t;
 typedef int                    linux_mqd_t;
 typedef int                    linux_pid_t;
-typedef linux_kernel_loff_t    linux_loff_t;
+typedef long long              linux_loff_t;
 typedef linux_kernel_uid32_t   linux_uid_t;
 typedef linux_kernel_gid32_t   linux_gid_t;
 typedef linux_kernel_uid32_t   linux_qid_t;
