@@ -72,6 +72,10 @@ typedef unsigned int           linux_speed_t;
 
 typedef struct
 {
+	int val[2];
+} linux_fsid_t;
+typedef struct
+{
 	unsigned long fds_bits[1024 / (8 * sizeof(long))];
 } linux_fd_set;
 struct linux_pollfd

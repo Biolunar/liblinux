@@ -20,10 +20,6 @@
 #include <stdint.h>
 #include <stdalign.h>
 
-typedef struct
-{
-	int val[2];
-} linux_kernel_fsid_t;
 struct linux_stat
 {
 	unsigned long st_dev;
@@ -54,7 +50,7 @@ struct linux_statfs
 	linux_statfs_word f_bavail;
 	linux_statfs_word f_files;
 	linux_statfs_word f_ffree;
-	linux_kernel_fsid_t f_fsid;
+	linux_fsid_t f_fsid;
 	linux_statfs_word f_namelen;
 	linux_statfs_word f_frsize;
 	linux_statfs_word f_flags;
@@ -297,7 +293,7 @@ struct linux_statfs64
 	uint64_t f_bavail;
 	uint64_t f_files;
 	uint64_t f_ffree;
-	linux_kernel_fsid_t f_fsid;
+	linux_fsid_t f_fsid;
 	linux_statfs_word f_namelen;
 	linux_statfs_word f_frsize;
 	linux_statfs_word f_flags;
