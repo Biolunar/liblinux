@@ -47,28 +47,27 @@ typedef int32_t linux_wd_t;
 //=============================================================================
 // Generic types
 
-typedef long long              linux_kernel_time64_t;
-typedef int                    linux_kernel_timer_t;
-typedef int                    linux_kernel_clockid_t;
-typedef unsigned short         linux_umode_t;
-typedef unsigned int           linux_poll_t;
-typedef int32_t                linux_key_serial_t;
-typedef int                    linux_key_t;
-typedef int                    linux_mqd_t;
-typedef int                    linux_pid_t;
-typedef long long              linux_loff_t;
-typedef unsigned int           linux_uid_t;
-typedef unsigned int           linux_gid_t;
-typedef linux_uid_t            linux_qid_t;
-typedef int                    linux_rwf_t;
-typedef linux_kernel_clockid_t linux_clockid_t;
-typedef linux_kernel_timer_t   linux_timer_t;
-typedef void                   linux_signalfn_t(int);
-typedef void                   linux_restorefn_t(void);
-typedef linux_restorefn_t*     linux_sigrestore_t;
-typedef int32_t                linux_old_time32_t;
-typedef unsigned char          linux_cc_t;
-typedef unsigned int           linux_speed_t;
+typedef long long            linux_kernel_time64_t;
+typedef int                  linux_kernel_timer_t;
+typedef unsigned short       linux_umode_t;
+typedef unsigned int         linux_poll_t;
+typedef int32_t              linux_key_serial_t;
+typedef int                  linux_key_t;
+typedef int                  linux_mqd_t;
+typedef int                  linux_pid_t;
+typedef long long            linux_loff_t;
+typedef unsigned int         linux_uid_t;
+typedef unsigned int         linux_gid_t;
+typedef linux_uid_t          linux_qid_t;
+typedef int                  linux_rwf_t;
+typedef int                  linux_clockid_t;
+typedef linux_kernel_timer_t linux_timer_t;
+typedef void                 linux_signalfn_t(int);
+typedef void                 linux_restorefn_t(void);
+typedef linux_restorefn_t*   linux_sigrestore_t;
+typedef int32_t              linux_old_time32_t;
+typedef unsigned char        linux_cc_t;
+typedef unsigned int         linux_speed_t;
 
 typedef struct
 {
