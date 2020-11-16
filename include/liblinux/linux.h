@@ -52,7 +52,6 @@ typedef unsigned int           linux_kernel_gid32_t;
 typedef long long              linux_kernel_loff_t;
 typedef long long              linux_kernel_time64_t;
 typedef int                    linux_kernel_timer_t;
-typedef int                    linux_kernel_rwf_t;
 typedef int                    linux_kernel_clockid_t;
 typedef unsigned short         linux_umode_t;
 typedef unsigned int           linux_poll_t;
@@ -64,7 +63,7 @@ typedef linux_kernel_loff_t    linux_loff_t;
 typedef linux_kernel_uid32_t   linux_uid_t;
 typedef linux_kernel_gid32_t   linux_gid_t;
 typedef linux_kernel_uid32_t   linux_qid_t;
-typedef linux_kernel_rwf_t     linux_rwf_t;
+typedef int                    linux_rwf_t;
 typedef linux_kernel_clockid_t linux_clockid_t;
 typedef linux_kernel_timer_t   linux_timer_t;
 typedef void                   linux_signalfn_t(int);
@@ -105,9 +104,9 @@ struct linux_iocb
 	uint64_t aio_data;
 #ifdef LINUX_ENDIAN_LITTLE
 	uint32_t aio_key;
-	linux_kernel_rwf_t aio_rw_flags;
+	linux_rwf_t aio_rw_flags;
 #else
-	linux_kernel_rwf_t aio_rw_flags;
+	linux_rwf_t aio_rw_flags;
 	uint32_t aio_key;
 #endif
 	uint16_t aio_lio_opcode;
@@ -464,7 +463,7 @@ struct linux_io_uring_sqe
 	uint32_t len;
 	union
 	{
-		linux_kernel_rwf_t rw_flags;
+		linux_rwf_t rw_flags;
 		uint32_t fsync_flags;
 		uint16_t poll_events;
 		uint32_t sync_range_flags;

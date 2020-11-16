@@ -4082,11 +4082,11 @@ enum
 #define linux_SYNC_FILE_RANGE_WAIT_AFTER     4
 #define linux_SYNC_FILE_RANGE_WRITE_AND_WAIT (linux_SYNC_FILE_RANGE_WRITE | linux_SYNC_FILE_RANGE_WAIT_BEFORE | linux_SYNC_FILE_RANGE_WAIT_AFTER)
 
-#define linux_RWF_HIPRI     ((linux_kernel_rwf_t)0x00000001)
-#define linux_RWF_DSYNC     ((linux_kernel_rwf_t)0x00000002)
-#define linux_RWF_SYNC      ((linux_kernel_rwf_t)0x00000004)
-#define linux_RWF_NOWAIT    ((linux_kernel_rwf_t)0x00000008)
-#define linux_RWF_APPEND    ((linux_kernel_rwf_t)0x00000010)
+#define linux_RWF_HIPRI     ((linux_rwf_t)0x00000001)
+#define linux_RWF_DSYNC     ((linux_rwf_t)0x00000002)
+#define linux_RWF_SYNC      ((linux_rwf_t)0x00000004)
+#define linux_RWF_NOWAIT    ((linux_rwf_t)0x00000008)
+#define linux_RWF_APPEND    ((linux_rwf_t)0x00000010)
 #define linux_RWF_SUPPORTED (linux_RWF_HIPRI | linux_RWF_DSYNC | linux_RWF_SYNC | linux_RWF_NOWAIT | linux_RWF_APPEND)
 
 //=============================================================================
