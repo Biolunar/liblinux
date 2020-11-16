@@ -81,7 +81,7 @@ and needs hacks to work for example in different threads. For consistency this
 library always returns an error code for the syscall wrappers.
 
 Q:
-Why are the definitions of all functions split into separat compilation units?
+Why are the definitions of all functions split into separate compilation units?
 
 A:
 That is being done because of how the linker works. For every function that is
