@@ -1045,12 +1045,12 @@ struct linux_sysctl_args
 	unsigned long _unused[4];
 };
 #endif
-struct linux_kernel_timex_timeval
+struct linux_timex_timeval
 {
 	linux_kernel_time64_t tv_sec;
 	long long tv_usec;
 };
-struct linux_kernel_timex
+struct linux_timex
 {
 	unsigned int modes;
 	int :32;
@@ -1063,7 +1063,7 @@ struct linux_kernel_timex
 	long long constant;
 	long long precision;
 	long long tolerance;
-	struct linux_kernel_timex_timeval time;
+	struct linux_timex_timeval time;
 	long long tick;
 	long long ppsfreq;
 	long long jitter;
@@ -3639,7 +3639,7 @@ inline enum linux_error linux_clock_nanosleep(linux_clockid_t const which_clock,
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_clock_adjtime(linux_clockid_t const which_clock, struct linux_kernel_timex* const ktx, int* const result)
+inline enum linux_error linux_clock_adjtime(linux_clockid_t const which_clock, struct linux_timex* const ktx, int* const result)
 {
 	linux_word_t const ret = linux_syscall2((unsigned int)which_clock, (uintptr_t)ktx, linux_syscall_name_clock_adjtime);
 	if (linux_syscall_returned_error(ret))
@@ -5338,7 +5338,7 @@ inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, lin
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_adjtimex(struct linux_kernel_timex* const txc_p, int* const result)
+inline enum linux_error linux_adjtimex(struct linux_timex* const txc_p, int* const result)
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)txc_p, linux_syscall_name_adjtimex);
 	if (linux_syscall_returned_error(ret))
