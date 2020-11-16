@@ -47,8 +47,6 @@ typedef int32_t linux_wd_t;
 //=============================================================================
 // Generic types
 
-typedef int                    linux_kernel_key_t;
-typedef int                    linux_kernel_mqd_t;
 typedef unsigned int           linux_kernel_uid32_t;
 typedef unsigned int           linux_kernel_gid32_t;
 typedef int                    linux_kernel_pid_t;
@@ -60,7 +58,8 @@ typedef int                    linux_kernel_clockid_t;
 typedef unsigned short         linux_umode_t;
 typedef unsigned int           linux_poll_t;
 typedef int32_t                linux_key_serial_t;
-typedef linux_kernel_key_t     linux_key_t;
+typedef int                    linux_key_t;
+typedef int                    linux_mqd_t;
 typedef linux_kernel_pid_t     linux_pid_t;
 typedef linux_kernel_loff_t    linux_loff_t;
 typedef linux_kernel_uid32_t   linux_uid_t;
@@ -69,7 +68,6 @@ typedef linux_kernel_uid32_t   linux_qid_t;
 typedef linux_kernel_rwf_t     linux_rwf_t;
 typedef linux_kernel_clockid_t linux_clockid_t;
 typedef linux_kernel_timer_t   linux_timer_t;
-typedef linux_kernel_mqd_t     linux_mqd_t;
 typedef void                   linux_signalfn_t(int);
 typedef void                   linux_restorefn_t(void);
 typedef linux_restorefn_t*     linux_sigrestore_t;

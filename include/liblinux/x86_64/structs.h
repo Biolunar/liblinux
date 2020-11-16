@@ -142,7 +142,7 @@ struct linux_sigaction
 };
 struct linux_ipc64_perm
 {
-	linux_kernel_key_t key;
+	linux_key_t key;
 	linux_kernel_uid32_t uid;
 	linux_kernel_gid32_t gid;
 	linux_kernel_uid32_t cuid;
