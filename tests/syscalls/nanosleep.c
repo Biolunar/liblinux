@@ -2,7 +2,7 @@
 
 static enum TestResult test_available(void)
 {
-	struct linux_kernel_timespec const t = { .tv_nsec = 1 };
+	struct linux_timespec const t = { .tv_nsec = 1 };
 	if (linux_nanosleep(&t, 0) == linux_ENOSYS)
 		return TEST_NOT_SUPPORTED;
 

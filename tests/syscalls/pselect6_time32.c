@@ -2,7 +2,7 @@
 
 static enum TestResult test_available(void)
 {
-	struct linux_old_timespec32 t =
+	struct linux_timespec32 t =
 	{
 		.tv_sec = 0,
 		.tv_nsec = 0,

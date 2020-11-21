@@ -2,7 +2,7 @@
 
 static enum TestResult test_available(void)
 {
-	struct linux_kernel_timespec const ts = {.tv_nsec = 1};
+	struct linux_timespec const ts = {.tv_nsec = 1};
 	if (linux_clock_nanosleep(linux_CLOCK_MONOTONIC, 0, &ts, 0) == linux_ENOSYS)
 		return TEST_NOT_SUPPORTED;
 
@@ -11,8 +11,8 @@ static enum TestResult test_available(void)
 
 static enum TestResult test_correct_usage(void)
 {
-	struct linux_kernel_timespec const ts = {.tv_nsec = 1};
-	struct linux_kernel_timespec rem = {.tv_nsec = 0};
+	struct linux_timespec const ts = {.tv_nsec = 1};
+	struct linux_timespec rem = {.tv_nsec = 0};
 	if (linux_clock_nanosleep(linux_CLOCK_MONOTONIC, 0, &ts, &rem))
 		return TEST_FAILURE;
 

@@ -26,7 +26,7 @@ typedef unsigned int         linux_kernel_mode_t;
 typedef int                  linux_kernel_ipc_pid_t;
 typedef unsigned int         linux_kernel_size_t;
 typedef int                  linux_kernel_ssize_t;
-typedef linux_kernel_long_t  linux_kernel_suseconds_t;
+typedef linux_kernel_long_t  linux_suseconds_t;
 typedef linux_kernel_ulong_t linux_kernel_ino_t;
 typedef uint32_t             linux_statfs_word;
 typedef linux_signalfn_t*    linux_sighandler_t;

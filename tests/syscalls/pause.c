@@ -17,7 +17,7 @@ static enum TestResult test_available(void)
 	if (linux_rt_sigaction(linux_SIGALRM, &sa, 0, sizeof(linux_sigset_t)))
 		return TEST_OTHER_FAILURE;
 
-	struct linux_itimerval const t = { .it_value = { .tv_usec = 50 * 1000 } }; // 50ms
+	struct linux_old_itimerval const t = { .it_value = { .tv_usec = 50 * 1000 } }; // 50ms
 	if (linux_setitimer(linux_ITIMER_REAL, &t, 0))
 		return TEST_OTHER_FAILURE;
 

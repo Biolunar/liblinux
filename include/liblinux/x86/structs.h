@@ -397,7 +397,8 @@ struct linux_termiox
 
 struct linux_input_event
 {
-	struct linux_timeval time;
+	linux_kernel_ulong_t sec;
+	linux_kernel_ulong_t usec;
 	uint16_t type;
 	uint16_t code;
 	int32_t value;

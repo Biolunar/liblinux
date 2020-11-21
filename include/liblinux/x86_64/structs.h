@@ -154,9 +154,9 @@ struct linux_shmid64_ds
 {
 	struct linux_ipc64_perm shm_perm;
 	linux_size_t shm_segsz;
-	linux_kernel_time_t shm_atime;
-	linux_kernel_time_t shm_dtime;
-	linux_kernel_time_t shm_ctime;
+	linux_kernel_long_t shm_atime;
+	linux_kernel_long_t shm_dtime;
+	linux_kernel_long_t shm_ctime;
 	linux_pid_t shm_cpid;
 	linux_pid_t shm_lpid;
 	unsigned long shm_nattch;
@@ -166,9 +166,9 @@ struct linux_shmid64_ds
 struct linux_msqid64_ds
 {
 	struct linux_ipc64_perm msg_perm;
-	linux_kernel_time_t msg_stime;
-	linux_kernel_time_t msg_rtime;
-	linux_kernel_time_t msg_ctime;
+	linux_kernel_long_t msg_stime;
+	linux_kernel_long_t msg_rtime;
+	linux_kernel_long_t msg_ctime;
 	linux_kernel_ulong_t msg_cbytes;
 	linux_kernel_ulong_t msg_qnum;
 	linux_kernel_ulong_t msg_qbytes;
@@ -286,7 +286,8 @@ struct linux_termiox
 
 struct linux_input_event
 {
-	struct linux_timeval time;
+	linux_kernel_ulong_t sec;
+	linux_kernel_ulong_t usec;
 	uint16_t type;
 	uint16_t code;
 	int32_t value;
