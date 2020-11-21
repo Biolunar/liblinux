@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_NAMES_H_INCLUDED
-#define HEADER_LIBLINUX_NAMES_H_INCLUDED
+.section .text
 
-#include "version.h"
-#include "arch.h"
+.global _start
+_start:
+	ld a0, 0(sp) /* argc */
+	addi a1, sp, 8 /* argv */
 
-#if defined(LINUX_ARCH_ARM_EABI)
-#include "arm-eabi/names.h"
-#elif defined(LINUX_ARCH_ARM64)
-#include "arm64/names.h"
-#elif defined(LINUX_ARCH_RISCV32)
-#include "riscv32/names.h"
-#elif defined(LINUX_ARCH_RISCV64)
-#include "riscv64/names.h"
-#elif defined(LINUX_ARCH_X86)
-#include "x86/names.h"
-#elif defined(LINUX_ARCH_X32)
-#include "x32/names.h"
-#elif defined(LINUX_ARCH_X86_64)
-#include "x86_64/names.h"
-#endif
+	/* envp */
+	addi t0, a0, 1
+	slli t0, t0, 3
+	add a2, a1, t0
 
-#endif // !HEADER_LIBLINUX_NAMES_H_INCLUDED
+	/* Tail call sets the return address to 0, which will segfault if linux_start returns somehow. */
+	tail linux_start

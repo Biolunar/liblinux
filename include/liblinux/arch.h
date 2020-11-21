@@ -24,6 +24,8 @@
 // If no arch was selected, autodetect it.
 #if !defined(LINUX_ARCH_ARM_EABI) && \
     !defined(LINUX_ARCH_ARM64)    && \
+    !defined(LINUX_ARCH_RISCV32)  && \
+    !defined(LINUX_ARCH_RISCV64)  && \
     !defined(LINUX_ARCH_X86)      && \
     !defined(LINUX_ARCH_X32)      && \
     !defined(LINUX_ARCH_X86_64)
@@ -34,6 +36,14 @@
 
 #ifdef __aarch64__
 #define LINUX_ARCH_ARM64
+#endif
+
+#ifdef __riscv
+#if __riscv_xlen == 32
+#define LINUX_ARCH_RISCV32
+#elif __riscv_xlen == 64
+#define LINUX_ARCH_RISCV64
+#endif
 #endif
 
 #ifdef __i386__
@@ -56,6 +66,14 @@
 typedef int32_t  linux_word_t;
 typedef uint32_t linux_uword_t;
 #elif defined(LINUX_ARCH_ARM64)
+#define LINUX_BITS_PER_LONG 64
+typedef int64_t  linux_word_t;
+typedef uint64_t linux_uword_t;
+#elif defined(LINUX_ARCH_RISCV32)
+#define LINUX_BITS_PER_LONG 32
+typedef int32_t  linux_word_t;
+typedef uint32_t linux_uword_t;
+#elif defined(LINUX_ARCH_RISCV64)
 #define LINUX_BITS_PER_LONG 64
 typedef int64_t  linux_word_t;
 typedef uint64_t linux_uword_t;

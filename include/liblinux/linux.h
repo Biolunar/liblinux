@@ -965,6 +965,10 @@ struct linux_open_how
 #include "arm-eabi/types.h"
 #elif defined(LINUX_ARCH_ARM64)
 #include "arm64/types.h"
+#elif defined(LINUX_ARCH_RISCV32)
+#include "riscv32/types.h"
+#elif defined(LINUX_ARCH_RISCV64)
+#include "riscv64/types.h"
 #elif defined(LINUX_ARCH_X86)
 #include "x86/types.h"
 #elif defined(LINUX_ARCH_X32)
@@ -1132,6 +1136,10 @@ struct linux_kexec_segment
 #include "arm-eabi/structs.h"
 #elif defined(LINUX_ARCH_ARM64)
 #include "arm64/structs.h"
+#elif defined(LINUX_ARCH_RISCV32)
+#include "riscv32/structs.h"
+#elif defined(LINUX_ARCH_RISCV64)
+#include "riscv64/structs.h"
 #elif defined(LINUX_ARCH_X86)
 #include "x86/structs.h"
 #elif defined(LINUX_ARCH_X32)
@@ -3082,9 +3090,9 @@ inline enum linux_error linux_linkat(linux_fd_t const olddfd, char const* const 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_renameat(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname) // DEPRECATED: use linux_renameat2
+inline enum linux_error linux_renameat2(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname, unsigned int const flags)
 {
-	linux_word_t const ret = linux_syscall4((uint32_t)olddfd, (uintptr_t)oldname, (uint32_t)newdfd, (uintptr_t)newname, linux_syscall_name_renameat);
+	linux_word_t const ret = linux_syscall5((uint32_t)olddfd, (uintptr_t)oldname, (uint32_t)newdfd, (uintptr_t)newname, flags, linux_syscall_name_renameat2);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -3119,13 +3127,6 @@ inline enum linux_error linux_readlinkat(linux_fd_t const dfd, char const* const
 		return (enum linux_error)-ret;
 	if (result)
 		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_renameat2(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname, unsigned int const flags)
-{
-	linux_word_t const ret = linux_syscall5((uint32_t)olddfd, (uintptr_t)oldname, (uint32_t)newdfd, (uintptr_t)newname, flags, linux_syscall_name_renameat2);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 
@@ -4572,7 +4573,7 @@ inline enum linux_error linux_waitid(int const which, linux_pid_t const upid, st
 }
 inline enum linux_error linux_clone(linux_uword_t const clone_flags, linux_uword_t const newsp, int* const parent_tidptr, int* const child_tidptr, linux_uword_t const tls, linux_word_t* const result)
 {
-#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86)
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86)
 	linux_word_t const ret = linux_syscall5(clone_flags, newsp, (uintptr_t)parent_tidptr, tls, (uintptr_t)child_tidptr, linux_syscall_name_clone);
 #else
 	linux_word_t const ret = linux_syscall5(clone_flags, newsp, (uintptr_t)parent_tidptr, (uintptr_t)child_tidptr, tls, linux_syscall_name_clone);
@@ -5112,7 +5113,17 @@ inline enum linux_error linux_rseq(struct linux_rseq* const rseq, uint32_t const
 //=============================================================================
 // Architecture specific syscalls
 
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_renameat(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname) // DEPRECATED: use linux_renameat2
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)olddfd, (uintptr_t)oldname, (uint32_t)newdfd, (uintptr_t)newname, linux_syscall_name_renameat);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline enum linux_error linux_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_msgctl);
@@ -5289,7 +5300,17 @@ inline enum linux_error linux_get_tls(linux_uword_t* const result)
 }
 #endif
 
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86)
+#if defined(LINUX_ARCH_RISCV64)
+inline enum linux_error linux_riscv_flush_icache(uintptr_t const start, uintptr_t const end, uintptr_t const flags)
+{
+	linux_word_t const ret = linux_syscall3(start, end, flags, linux_syscall_name_riscv_flush_icache);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86)
 inline enum linux_error linux_fadvise64_64(linux_fd_t const fd, linux_loff_t const offset, linux_loff_t const len, int const advice)
 {
 #if defined(LINUX_ARCH_X86)
@@ -5303,7 +5324,7 @@ inline enum linux_error linux_fadvise64_64(linux_fd_t const fd, linux_loff_t con
 }
 #endif
 
-#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline enum linux_error linux_semop(int const semid, struct linux_sembuf* const tsops, unsigned int const nsops)
 {
 	linux_word_t const ret = linux_syscall3((unsigned int)semid, (uintptr_t)tsops, nsops, linux_syscall_name_semop);
@@ -5329,7 +5350,7 @@ inline enum linux_error linux_kexec_file_load(linux_fd_t const kernel_fd, linux_
 }
 #endif
 
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
 {
 	linux_word_t const ret = linux_syscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents);

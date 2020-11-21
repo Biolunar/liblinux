@@ -14,26 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_NAMES_H_INCLUDED
-#define HEADER_LIBLINUX_NAMES_H_INCLUDED
+.section .text
 
-#include "version.h"
-#include "arch.h"
-
-#if defined(LINUX_ARCH_ARM_EABI)
-#include "arm-eabi/names.h"
-#elif defined(LINUX_ARCH_ARM64)
-#include "arm64/names.h"
-#elif defined(LINUX_ARCH_RISCV32)
-#include "riscv32/names.h"
-#elif defined(LINUX_ARCH_RISCV64)
-#include "riscv64/names.h"
-#elif defined(LINUX_ARCH_X86)
-#include "x86/names.h"
-#elif defined(LINUX_ARCH_X32)
-#include "x32/names.h"
-#elif defined(LINUX_ARCH_X86_64)
-#include "x86_64/names.h"
-#endif
-
-#endif // !HEADER_LIBLINUX_NAMES_H_INCLUDED
+.global linux_syscall0
+linux_syscall0:
+	mv a7, a0
+	ecall
+	ret

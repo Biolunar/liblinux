@@ -5162,6 +5162,10 @@ enum
 #include "arm-eabi/constants.h"
 #elif defined(LINUX_ARCH_ARM64)
 #include "arm64/constants.h"
+#elif defined(LINUX_ARCH_RISCV32)
+#include "riscv32/constants.h"
+#elif defined(LINUX_ARCH_RISCV64)
+#include "riscv64/constants.h"
 #elif defined(LINUX_ARCH_X86)
 #include "x86/constants.h"
 #elif defined(LINUX_ARCH_X32)
