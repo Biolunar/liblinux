@@ -130,25 +130,25 @@
 #define linux_PROT_GROWSDOWN 0x01000000
 #define linux_PROT_GROWSUP   0x02000000
 
-#define linux_MAP_SHARED          0x000001
-#define linux_MAP_PRIVATE         0x000002
-#define linux_MAP_SHARED_VALIDATE 0x000003
-#define linux_MAP_TYPE            0x00000f
-#define linux_MAP_FIXED           0x000010
-#define linux_MAP_ANONYMOUS       0x000020
-#define linux_MAP_UNINITIALIZED   0x000000
-#define linux_MAP_GROWSDOWN       0x000100
-#define linux_MAP_DENYWRITE       0x000800
-#define linux_MAP_EXECUTABLE      0x001000
-#define linux_MAP_LOCKED          0x002000
-#define linux_MAP_NORESERVE       0x004000
-#define linux_MAP_POPULATE        0x008000
-#define linux_MAP_NONBLOCK        0x010000
-#define linux_MAP_STACK           0x020000
-#define linux_MAP_HUGETLB         0x040000
-#define linux_MAP_SYNC            0x080000
-#define linux_MAP_FIXED_NOREPLACE 0x100000
-#define linux_MAP_FILE            0x000000
+#define linux_MAP_SHARED          0x0000001
+#define linux_MAP_PRIVATE         0x0000002
+#define linux_MAP_SHARED_VALIDATE 0x0000003
+#define linux_MAP_TYPE            0x000000f
+#define linux_MAP_FIXED           0x0000010
+#define linux_MAP_ANONYMOUS       0x0000020
+#define linux_MAP_GROWSDOWN       0x0000100
+#define linux_MAP_DENYWRITE       0x0000800
+#define linux_MAP_EXECUTABLE      0x0001000
+#define linux_MAP_LOCKED          0x0002000
+#define linux_MAP_NORESERVE       0x0004000
+#define linux_MAP_POPULATE        0x0008000
+#define linux_MAP_NONBLOCK        0x0010000
+#define linux_MAP_STACK           0x0020000
+#define linux_MAP_HUGETLB         0x0040000
+#define linux_MAP_SYNC            0x0080000
+#define linux_MAP_FIXED_NOREPLACE 0x0100000
+#define linux_MAP_UNINITIALIZED   0x4000000
+#define linux_MAP_FILE            0x0000000
 
 //-----------------------------------------------------------------------------
 // mlockall
