@@ -22,8 +22,8 @@
 typedef int               linux_daddr_t;
 typedef unsigned int      linux_mode_t;
 typedef int               linux_ipc_pid_t; // unused
-typedef unsigned int      linux_kernel_size_t;
-typedef int               linux_kernel_ssize_t;
+typedef unsigned int      linux_size_t;
+typedef int               linux_ssize_t;
 typedef linux_word_t      linux_suseconds_t;
 typedef linux_uword_t     linux_ino_t;
 typedef uint32_t          linux_statfs_word;

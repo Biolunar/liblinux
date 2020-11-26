@@ -985,8 +985,6 @@ struct linux_open_how
 typedef linux_word_t         linux_kernel_off_t;
 typedef linux_word_t         linux_old_time_t;
 typedef linux_word_t         linux_kernel_clock_t;
-typedef linux_kernel_size_t  linux_size_t;
-typedef linux_kernel_ssize_t linux_ssize_t;
 typedef linux_kernel_off_t   linux_off_t;
 typedef linux_uword_t        linux_aio_context_t;
 
@@ -1017,7 +1015,7 @@ struct linux_old_itimerval
 struct linux_iovec
 {
 	void* iov_base;
-	linux_kernel_size_t iov_len;
+	linux_size_t iov_len;
 };
 struct linux_new_utsname
 {
@@ -1195,9 +1193,9 @@ struct linux_user_msghdr
 	void* msg_name;
 	int msg_namelen;
 	struct linux_iovec* msg_iov;
-	linux_kernel_size_t msg_iovlen;
+	linux_size_t msg_iovlen;
 	void* msg_control;
-	linux_kernel_size_t msg_controllen;
+	linux_size_t msg_controllen;
 	unsigned int msg_flags;
 };
 struct linux_mmsghdr

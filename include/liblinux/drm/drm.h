@@ -70,17 +70,17 @@ struct linux_drm_version
 	int version_major;
 	int version_minor;
 	int version_patchlevel;
-	linux_kernel_size_t name_len;
+	linux_size_t name_len;
 	char* name;
-	linux_kernel_size_t date_len;
+	linux_size_t date_len;
 	char* date;
-	linux_kernel_size_t desc_len;
+	linux_size_t desc_len;
 	char* desc;
 };
 
 struct linux_drm_unique
 {
-	linux_kernel_size_t unique_len;
+	linux_size_t unique_len;
 	char* unique;
 };
 
