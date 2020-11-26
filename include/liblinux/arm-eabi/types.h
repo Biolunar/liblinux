@@ -23,7 +23,7 @@ typedef int                  linux_daddr_t;
 typedef long                 linux_kernel_long_t;
 typedef unsigned long        linux_kernel_ulong_t;
 typedef unsigned short       linux_mode_t;
-typedef unsigned short       linux_kernel_ipc_pid_t;
+typedef unsigned short       linux_ipc_pid_t; // unused
 typedef unsigned int         linux_kernel_size_t;
 typedef int                  linux_kernel_ssize_t;
 typedef linux_kernel_long_t  linux_suseconds_t;
