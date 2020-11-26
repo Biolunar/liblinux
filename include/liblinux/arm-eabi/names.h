@@ -265,7 +265,7 @@ enum
 	linux_syscall_name_writev                       = 146,
 	linux_syscall_name_getsid                       = 147,
 	linux_syscall_name_fdatasync                    = 148,
-	linux_syscall_name_sysctl                       = 149,
+	// linux_syscall_name_sysctl                    = 149, // unimplemented
 	linux_syscall_name_mlock                        = 150,
 	linux_syscall_name_munlock                      = 151,
 	linux_syscall_name_mlockall                     = 152,

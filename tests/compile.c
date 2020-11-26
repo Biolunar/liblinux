@@ -1,4 +1,3 @@
-#define LINUX_ENABLE_REMOVED
 #include <liblinux/start.h>
 #include <liblinux/linux.h>
 

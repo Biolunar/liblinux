@@ -184,7 +184,7 @@ enum
 	linux_syscall_name_vhangup                = 153,
 	linux_syscall_name_modify_ldt             = 154,
 	linux_syscall_name_pivot_root             = 155,
-	linux_syscall_name_sysctl                 = 156,
+	// linux_syscall_name_sysctl              = 156, // unimplemented
 	linux_syscall_name_prctl                  = 157,
 	linux_syscall_name_arch_prctl             = 158,
 	linux_syscall_name_adjtimex               = 159,

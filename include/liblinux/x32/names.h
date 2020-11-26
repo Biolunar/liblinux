@@ -186,7 +186,7 @@ enum
 	linux_syscall_name_vhangup                = LINUX_X32_SYSCALL_BIT + 153,
 	linux_syscall_name_modify_ldt             = LINUX_X32_SYSCALL_BIT + 154,
 	linux_syscall_name_pivot_root             = LINUX_X32_SYSCALL_BIT + 155,
-	linux_syscall_name_sysctl                 = LINUX_X32_SYSCALL_BIT + 156,
+	// linux_syscall_name_sysctl              = LINUX_X32_SYSCALL_BIT + 156, // unimplemented
 	linux_syscall_name_prctl                  = LINUX_X32_SYSCALL_BIT + 157,
 	linux_syscall_name_arch_prctl             = LINUX_X32_SYSCALL_BIT + 158,
 	linux_syscall_name_adjtimex               = LINUX_X32_SYSCALL_BIT + 159,
