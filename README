@@ -10,6 +10,8 @@ SUPPORTED ARCHITECTURES
 Currently supported are:
 - arm-eabi
 - arm64
+- riscv32
+- riscv64
 - x86
 - x32
 - x86_64
@@ -18,6 +20,7 @@ SUPPORTED ASSEMBLERS
 --------------------
 
 arm-eabi, arm64: gas (GNU Assembler)
+riscv32, riscv64: gas (GNU Assembler)
 x86, x32 and x86_64: NASM (Netwide Assembler), gas (GNU Assembler)
 
 BUILDING & INSTALLATION
