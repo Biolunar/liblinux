@@ -153,7 +153,6 @@ csrc = \
        src/vhangup.c\
        src/modify_ldt.c\
        src/pivot_root.c\
-       src/sysctl.c\
        src/prctl.c\
        src/arch_prctl.c\
        src/adjtimex.c\
@@ -487,7 +486,6 @@ tests = \
         tests/syscalls/vhangup\
         tests/syscalls/modify_ldt\
         tests/syscalls/pivot_root\
-        tests/syscalls/sysctl\
         tests/syscalls/prctl\
         tests/syscalls/arch_prctl\
         tests/syscalls/adjtimex\

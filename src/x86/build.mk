@@ -133,7 +133,6 @@ csrc = \
        src/writev.c\
        src/getsid.c\
        src/fdatasync.c\
-       src/sysctl.c\
        src/mlock.c\
        src/munlock.c\
        src/mlockall.c\
@@ -541,7 +540,6 @@ tests = \
         tests/syscalls/writev\
         tests/syscalls/getsid\
         tests/syscalls/fdatasync\
-        tests/syscalls/sysctl\
         tests/syscalls/mlock\
         tests/syscalls/munlock\
         tests/syscalls/mlockall\

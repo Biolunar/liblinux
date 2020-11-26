@@ -10,7 +10,6 @@ master
 - Improved various types, i.e. got rid of the "_kernel_" part of the name.
 - Added riscv32 architecture.
 - Added riscv64 architecture.
-- Removed sysctl syscall.
 
 0.6.0
 =====

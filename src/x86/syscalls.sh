@@ -131,7 +131,6 @@ SYSCALLS="fork\
           writev\
           getsid\
           fdatasync\
-          sysctl\
           mlock\
           munlock\
           mlockall\

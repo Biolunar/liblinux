@@ -107,7 +107,6 @@ SYSCALLS="fork\
           writev\
           getsid\
           fdatasync\
-          sysctl\
           mlock\
           munlock\
           mlockall\
@@ -287,7 +286,7 @@ SYSCALLS="fork\
           set_robust_list\
           get_robust_list\
           splice\
-          sync_file_range2\
+          sync_file_range\
           tee\
           vmsplice\
           move_pages\

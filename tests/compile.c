@@ -113,7 +113,6 @@ static void test_arm_eabi(void)
 	linux_writev(0, 0, 0, 0);
 	linux_getsid(0, 0);
 	linux_fdatasync(0);
-	linux_sysctl(0);
 	linux_mlock(0, 0);
 	linux_munlock(0, 0);
 	linux_mlockall(0);
@@ -293,7 +292,7 @@ static void test_arm_eabi(void)
 	linux_set_robust_list(0, 0);
 	linux_get_robust_list(0, 0, 0);
 	linux_splice(0, 0, 0, 0, 0, 0, 0);
-	linux_sync_file_range2(0, 0, 0, 0);
+	linux_sync_file_range(0, 0, 0, 0);
 	linux_tee(0, 0, 0, 0, 0);
 	linux_vmsplice(0, 0, 0, 0, 0);
 	linux_move_pages(0, 0, 0, 0, 0, 0);
@@ -1417,7 +1416,6 @@ static void test_x86(void)
 	linux_writev(0, 0, 0, 0);
 	linux_getsid(0, 0);
 	linux_fdatasync(0);
-	linux_sysctl(0);
 	linux_mlock(0, 0);
 	linux_munlock(0, 0);
 	linux_mlockall(0);
@@ -1849,7 +1847,6 @@ static void test_x32_and_x86_64(void)
 	linux_vhangup();
 	linux_modify_ldt(0, 0, 0, 0);
 	linux_pivot_root(0, 0);
-	linux_sysctl(0);
 	linux_prctl(0, 0, 0, 0, 0, 0);
 	linux_arch_prctl(0, 0);
 	linux_adjtimex(0, 0);

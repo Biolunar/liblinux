@@ -28,6 +28,7 @@
  * Architectures with 32 bit word sizes require you to split 64 bit arguments
  * into two 32 bit arguments.
  */
+// TODO: How does this handle different byte orders?
 #if defined(LINUX_ARCH_ARM_EABI) || \
     defined(LINUX_ARCH_RISCV32)  || \
     defined(LINUX_ARCH_X86)

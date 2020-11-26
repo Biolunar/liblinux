@@ -151,7 +151,6 @@ SYSCALLS="read\
           vhangup\
           modify_ldt\
           pivot_root\
-          sysctl\
           prctl\
           arch_prctl\
           adjtimex\

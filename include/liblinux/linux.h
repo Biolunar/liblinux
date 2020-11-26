@@ -3109,7 +3109,7 @@ inline enum linux_error linux_fallocate(linux_fd_t const fd, int const mode, lin
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_faccessat(linux_fd_t const dfd, char const* const filename, int const mode)
+inline enum linux_error linux_faccessat(linux_fd_t const dfd, char const* const filename, int const mode) // DEPRECATED: use linux_faccessat2
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)dfd, (uintptr_t)filename, (unsigned int)mode, linux_syscall_name_faccessat);
 	if (linux_syscall_returned_error(ret))
@@ -3123,7 +3123,7 @@ inline enum linux_error linux_faccessat2(linux_fd_t const dfd, char const* const
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_fchmod(linux_fd_t const fd, linux_umode_t const mode)
+inline enum linux_error linux_fchmod(linux_fd_t const fd, linux_umode_t const mode) // DEPRECATED: use linux_fchmodat
 {
 	linux_word_t const ret = linux_syscall2((uint32_t)fd, mode, linux_syscall_name_fchmod);
 	if (linux_syscall_returned_error(ret))
@@ -3144,14 +3144,14 @@ inline enum linux_error linux_fchownat(linux_fd_t const dfd, char const* const f
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_fchown(linux_fd_t const fd, linux_uid_t const user, linux_gid_t const group)
+inline enum linux_error linux_fchown(linux_fd_t const fd, linux_uid_t const user, linux_gid_t const group) // DEPRECATED: use linux_fchownat
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, user, group, linux_syscall_name_fchown);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_openat(linux_fd_t const dfd, char const* const filename, int const flags, linux_umode_t const mode, linux_fd_t* const result)
+inline enum linux_error linux_openat(linux_fd_t const dfd, char const* const filename, int const flags, linux_umode_t const mode, linux_fd_t* const result) // DEPRECATED: use linux_openat2
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (unsigned int)flags, mode, linux_syscall_name_openat);
 	if (linux_syscall_returned_error(ret))
@@ -4774,6 +4774,19 @@ inline enum linux_error linux_fdatasync(linux_fd_t const fd)
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_sync_file_range(linux_fd_t const fd, unsigned int const flags, linux_loff_t const offset, linux_loff_t const nbytes)
+{
+#if defined(LINUX_ARCH_ARM_EABI)
+	linux_word_t const ret = linux_syscall6((uint32_t)fd, flags, LINUX_EXPAND(offset), LINUX_EXPAND(nbytes), linux_syscall_name_sync_file_range2);
+#elif defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_X86)
+	linux_word_t const ret = linux_syscall6((uint32_t)fd, LINUX_EXPAND(offset), LINUX_EXPAND(nbytes), flags, linux_syscall_name_sync_file_range);
+#else
+	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uint64_t)offset, (uint64_t)nbytes, flags, linux_syscall_name_sync_file_range);
+#endif
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
 inline enum linux_error linux_utimensat(linux_fd_t const dfd, char const* const filename, struct linux_timespec* const utimes, int const flags)
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (uintptr_t)utimes, (unsigned int)flags, linux_syscall_name_utimensat);
@@ -5124,17 +5137,6 @@ inline enum linux_error linux_shmctl(int const shmid, int const cmd, struct linu
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_sync_file_range(linux_fd_t const fd, linux_loff_t const offset, linux_loff_t const nbytes, unsigned int const flags)
-{
-#if defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_X86)
-	linux_word_t const ret = linux_syscall6((uint32_t)fd, LINUX_EXPAND(offset), LINUX_EXPAND(nbytes), flags, linux_syscall_name_sync_file_range);
-#else
-	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uint64_t)offset, (uint64_t)nbytes, flags, linux_syscall_name_sync_file_range);
-#endif
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -5168,13 +5170,6 @@ inline enum linux_error linux_old_shmctl(int const shmid, int const cmd, struct 
 inline enum linux_error linux_semtimedop_time32(int const semid, struct linux_sembuf* const tsems, unsigned int const nsops, struct linux_timespec32 const* const timeout)
 {
 	linux_word_t const ret = linux_syscall4((unsigned int)semid, (uintptr_t)tsems, nsops, (uintptr_t)timeout, linux_syscall_name_semtimedop_time32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_sync_file_range2(linux_fd_t const fd, unsigned int const flags, linux_loff_t const offset, linux_loff_t const nbytes)
-{
-	linux_word_t const ret = linux_syscall6((uint32_t)fd, flags, LINUX_EXPAND(offset), LINUX_EXPAND(nbytes), linux_syscall_name_sync_file_range2);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;

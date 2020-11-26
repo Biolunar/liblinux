@@ -109,7 +109,6 @@ csrc = \
        src/writev.c\
        src/getsid.c\
        src/fdatasync.c\
-       src/sysctl.c\
        src/mlock.c\
        src/munlock.c\
        src/mlockall.c\
@@ -289,7 +288,7 @@ csrc = \
        src/set_robust_list.c\
        src/get_robust_list.c\
        src/splice.c\
-       src/sync_file_range2.c\
+       src/sync_file_range.c\
        src/tee.c\
        src/vmsplice.c\
        src/move_pages.c\
@@ -503,7 +502,6 @@ tests = \
         tests/syscalls/writev\
         tests/syscalls/getsid\
         tests/syscalls/fdatasync\
-        tests/syscalls/sysctl\
         tests/syscalls/mlock\
         tests/syscalls/munlock\
         tests/syscalls/mlockall\
@@ -683,7 +681,7 @@ tests = \
         tests/syscalls/set_robust_list\
         tests/syscalls/get_robust_list\
         tests/syscalls/splice\
-        tests/syscalls/sync_file_range2\
+        tests/syscalls/sync_file_range\
         tests/syscalls/tee\
         tests/syscalls/vmsplice\
         tests/syscalls/move_pages\
