@@ -1178,8 +1178,7 @@ struct linux_sel_arg_struct
 //=============================================================================
 // Socket
 
-typedef unsigned short           linux_kernel_sa_family_t;
-typedef linux_kernel_sa_family_t linux_sa_family_t;
+typedef unsigned short linux_sa_family_t;
 
 struct linux_sockaddr
 {
@@ -1207,7 +1206,7 @@ struct linux_mmsghdr
 
 struct linux_sockaddr_un
 {
-	linux_kernel_sa_family_t sun_family;
+	linux_sa_family_t sun_family;
 	char sun_path[108];
 };
 
@@ -1245,8 +1244,8 @@ struct linux_ip_msfilter
 };
 struct linux_kernel_sockaddr_storage
 {
-	alignas(struct linux_sockaddr*) linux_kernel_sa_family_t ss_family;
-	char _data[128 - sizeof(linux_kernel_sa_family_t)];
+	alignas(struct linux_sockaddr*) linux_sa_family_t ss_family;
+	char _data[128 - sizeof(linux_sa_family_t)];
 };
 _Static_assert(alignof(struct linux_kernel_sockaddr_storage) == alignof(struct linux_sockaddr*), "struct linux_kernel_sockaddr_storage is misaligned");
 struct linux_group_req
@@ -1276,10 +1275,10 @@ struct linux_in_pktinfo
 };
 struct linux_sockaddr_in
 {
-	linux_kernel_sa_family_t sin_family;
+	linux_sa_family_t sin_family;
 	uint16_t sin_port;
 	struct linux_in_addr sin_addr;
-	unsigned char _pad[sizeof(struct linux_sockaddr) - sizeof(linux_kernel_sa_family_t) - sizeof(uint16_t) - sizeof(struct linux_in_addr)];
+	unsigned char _pad[sizeof(struct linux_sockaddr) - sizeof(linux_sa_family_t) - sizeof(uint16_t) - sizeof(struct linux_in_addr)];
 };
 _Static_assert(sizeof(struct linux_sockaddr_in) == sizeof(struct linux_sockaddr), "struct linux_sockaddr_in has wrong size");
 struct linux_sock_extended_err
@@ -1456,7 +1455,7 @@ struct linux_atalk_addr
 };
 struct linux_sockaddr_at
 {
-	linux_kernel_sa_family_t sat_family;
+	linux_sa_family_t sat_family;
 	uint8_t sat_port;
 	struct linux_atalk_addr sat_addr;
 	char sat_zero[8];
@@ -1632,7 +1631,7 @@ typedef struct
 } linux_ax25_address;
 struct linux_sockaddr_ax25
 {
-	linux_kernel_sa_family_t sax25_family;
+	linux_sa_family_t sax25_family;
 	linux_ax25_address sax25_call;
 	int sax25_ndigis;
 };
@@ -1703,7 +1702,7 @@ struct linux_x25_address
 };
 struct linux_sockaddr_x25
 {
-	linux_kernel_sa_family_t sx25_family;
+	linux_sa_family_t sx25_family;
 	struct linux_x25_address sx25_addr;
 };
 struct linux_x25_subscrip_struct
@@ -1757,7 +1756,7 @@ struct linux_x25_subaddr
 
 struct linux_sockaddr_nl
 {
-	linux_kernel_sa_family_t nl_family;
+	linux_sa_family_t nl_family;
 	unsigned short nl_pad;
 	uint32_t nl_pid;
 	uint32_t nl_groups;
@@ -1835,7 +1834,7 @@ struct linux_rtnexthop
 };
 struct linux_rtvia
 {
-	linux_kernel_sa_family_t rtvia_family;
+	linux_sa_family_t rtvia_family;
 	uint8_t rtvia_addr[];
 };
 struct linux_rta_cacheinfo
@@ -2375,7 +2374,7 @@ struct linux_rds_zcopy_cookies
 
 struct linux_sockaddr_vm
 {
-	linux_kernel_sa_family_t svm_family;
+	linux_sa_family_t svm_family;
 	unsigned short svm_reserved1;
 	unsigned int svm_port;
 	unsigned int svm_cid;
