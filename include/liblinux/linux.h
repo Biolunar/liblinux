@@ -1242,30 +1242,30 @@ struct linux_ip_msfilter
 	uint32_t imsf_numsrc;
 	uint32_t imsf_slist[];
 };
-struct linux_kernel_sockaddr_storage
+struct linux_sockaddr_storage
 {
 	alignas(struct linux_sockaddr*) linux_sa_family_t ss_family;
 	char _data[128 - sizeof(linux_sa_family_t)];
 };
-_Static_assert(alignof(struct linux_kernel_sockaddr_storage) == alignof(struct linux_sockaddr*), "struct linux_kernel_sockaddr_storage is misaligned");
+_Static_assert(alignof(struct linux_sockaddr_storage) == alignof(struct linux_sockaddr*), "struct linux_sockaddr_storage is misaligned");
 struct linux_group_req
 {
 	uint32_t gr_interface;
-	struct linux_kernel_sockaddr_storage gr_group;
+	struct linux_sockaddr_storage gr_group;
 };
 struct linux_group_source_req
 {
 	uint32_t gsr_interface;
-	struct linux_kernel_sockaddr_storage gsr_group;
-	struct linux_kernel_sockaddr_storage gsr_source;
+	struct linux_sockaddr_storage gsr_group;
+	struct linux_sockaddr_storage gsr_source;
 };
 struct linux_group_filter
 {
 	uint32_t gf_interface;
-	struct linux_kernel_sockaddr_storage gf_group;
+	struct linux_sockaddr_storage gf_group;
 	uint32_t gf_fmode;
 	uint32_t gf_numsrc;
-	struct linux_kernel_sockaddr_storage gf_slist[];
+	struct linux_sockaddr_storage gf_slist[];
 };
 struct linux_in_pktinfo
 {
@@ -2307,7 +2307,7 @@ struct linux_rds_get_mr_args
 };
 struct linux_rds_get_mr_for_dest_args
 {
-	struct linux_kernel_sockaddr_storage dest_addr;
+	struct linux_sockaddr_storage dest_addr;
 	struct linux_rds_iovec vec;
 	uint64_t cookie_addr;
 	uint64_t flags;
@@ -6603,7 +6603,7 @@ static inline size_t linux_IP_MSFILTER_SIZE(size_t numsrc)
 
 static inline size_t linux_GROUP_FILTER_SIZE(size_t numsrc)
 {
-	return sizeof(struct linux_group_filter) - sizeof(struct linux_kernel_sockaddr_storage) + numsrc * sizeof(struct linux_kernel_sockaddr_storage);
+	return sizeof(struct linux_group_filter) - sizeof(struct linux_sockaddr_storage) + numsrc * sizeof(struct linux_sockaddr_storage);
 }
 
 static inline bool linux_IN_CLASSA(uint32_t const addr)
