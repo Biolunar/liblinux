@@ -91,8 +91,8 @@ union linux_sifields
 		linux_pid_t pid;
 		linux_uid_t uid;
 		int status;
-		linux_kernel_clock_t utime;
-		linux_kernel_clock_t stime;
+		linux_clock_t utime;
+		linux_clock_t stime;
 	} sigchld;
 	struct
 	{

@@ -63,7 +63,7 @@ typedef unsigned int       linux_gid_t;
 typedef linux_uid_t        linux_qid_t;
 typedef int                linux_rwf_t;
 typedef int                linux_clockid_t;
-typedef linux_word_t       linux_kernel_clock_t;
+typedef linux_word_t       linux_clock_t;
 typedef int                linux_timer_t;
 typedef void               linux_signalfn_t(int);
 typedef void               linux_restorefn_t(void);
@@ -143,10 +143,10 @@ struct linux_rlimit
 };
 struct linux_tms
 {
-	linux_kernel_clock_t tms_utime;
-	linux_kernel_clock_t tms_stime;
-	linux_kernel_clock_t tms_cutime;
-	linux_kernel_clock_t tms_cstime;
+	linux_clock_t tms_utime;
+	linux_clock_t tms_stime;
+	linux_clock_t tms_cutime;
+	linux_clock_t tms_cstime;
 };
 typedef struct linux_user_cap_header_struct
 {
