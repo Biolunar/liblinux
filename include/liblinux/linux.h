@@ -49,24 +49,28 @@ typedef int32_t linux_wd_t;
 // Generic types
 
 typedef long long          linux_time64_t;
+typedef linux_word_t       linux_old_time_t;
 typedef unsigned short     linux_umode_t;
 typedef unsigned int       linux_poll_t;
 typedef int32_t            linux_key_serial_t;
 typedef int                linux_key_t;
 typedef int                linux_mqd_t;
 typedef int                linux_pid_t;
+typedef linux_word_t       linux_off_t;
 typedef long long          linux_loff_t;
 typedef unsigned int       linux_uid_t;
 typedef unsigned int       linux_gid_t;
 typedef linux_uid_t        linux_qid_t;
 typedef int                linux_rwf_t;
 typedef int                linux_clockid_t;
+typedef linux_word_t       linux_kernel_clock_t;
 typedef int                linux_timer_t;
 typedef void               linux_signalfn_t(int);
 typedef void               linux_restorefn_t(void);
 typedef linux_restorefn_t* linux_sigrestore_t;
 typedef unsigned char      linux_cc_t;
 typedef unsigned int       linux_speed_t;
+typedef linux_uword_t      linux_aio_context_t;
 
 struct linux_timespec
 {
@@ -78,6 +82,83 @@ struct linux_itimerspec
 	struct linux_timespec it_interval;
 	struct linux_timespec it_value;
 };
+struct linux_utimbuf
+{
+	linux_old_time_t actime;
+	linux_old_time_t modtime;
+};
+struct linux_old_timespec
+{
+	linux_old_time_t tv_sec;
+	long tv_nsec;
+};
+struct linux_sched_param
+{
+	int sched_priority;
+};
+struct linux_mq_attr
+{
+	linux_word_t mq_flags;
+	linux_word_t mq_maxmsg;
+	linux_word_t mq_msgsize;
+	linux_word_t mq_curmsgs;
+	linux_word_t _reserved[4];
+};
+struct linux_new_utsname
+{
+	char sysname[65];
+	char nodename[65];
+	char release[65];
+	char version[65];
+	char machine[65];
+	char domainname[65];
+};
+struct linux_timezone
+{
+	int tz_minuteswest;
+	int tz_dsttime;
+};
+struct linux_sembuf
+{
+	unsigned short sem_num;
+	short sem_op;
+	short sem_flg;
+};
+struct linux_msgbuf
+{
+	linux_word_t mtype;
+	char mtext[];
+};
+struct linux_dirent
+{
+	unsigned long d_ino;
+	unsigned long d_off;
+	unsigned short d_reclen;
+	char d_name[];
+};
+struct linux_rlimit
+{
+	linux_uword_t rlim_cur;
+	linux_uword_t rlim_max;
+};
+struct linux_tms
+{
+	linux_kernel_clock_t tms_utime;
+	linux_kernel_clock_t tms_stime;
+	linux_kernel_clock_t tms_cutime;
+	linux_kernel_clock_t tms_cstime;
+};
+typedef struct linux_user_cap_header_struct
+{
+	uint32_t version;
+	int pid;
+} *linux_cap_user_header_t;
+typedef struct linux_user_cap_data_struct
+{
+	uint32_t effective;
+	uint32_t permitted;
+	uint32_t inheritable;
+} *linux_cap_user_data_t;
 typedef struct
 {
 	int val[2];
@@ -101,6 +182,22 @@ typedef union linux_sigval
 	int sival_int;
 	void* sival_ptr;
 } linux_sigval_t;
+typedef struct linux_sigevent
+{
+	linux_sigval_t sigev_value;
+	int sigev_signo;
+	int sigev_notify;
+	union
+	{
+		int _pad[(64 - (sizeof(int) * 2 + sizeof(linux_sigval_t))) / sizeof(int)];
+		int tid;
+		struct
+		{
+			void (*function)(linux_sigval_t);
+			void *attribute;
+		} sigev_thread;
+	} sigev_un;
+} linux_sigevent_t;
 struct linux_io_event
 {
 	uint64_t data;
@@ -982,26 +1079,10 @@ struct linux_open_how
 //=============================================================================
 // Architecture dependent types
 
-typedef linux_word_t         linux_kernel_off_t;
-typedef linux_word_t         linux_old_time_t;
-typedef linux_word_t         linux_kernel_clock_t;
-typedef linux_kernel_off_t   linux_off_t;
-typedef linux_uword_t        linux_aio_context_t;
-
 #include "drm/drm.h"
 #include "drm/drm_mode.h"
 #include "drm/drm_fourcc.h"
 
-struct linux_utimbuf
-{
-	linux_old_time_t actime;
-	linux_old_time_t modtime;
-};
-struct linux_old_timespec
-{
-	linux_old_time_t tv_sec;
-	long tv_nsec;
-};
 struct linux_old_timeval
 {
 	linux_word_t tv_sec;
@@ -1017,61 +1098,6 @@ struct linux_iovec
 	void* iov_base;
 	linux_size_t iov_len;
 };
-struct linux_new_utsname
-{
-	char sysname[65];
-	char nodename[65];
-	char release[65];
-	char version[65];
-	char machine[65];
-	char domainname[65];
-};
-struct linux_timezone
-{
-	int tz_minuteswest;
-	int tz_dsttime;
-};
-struct linux_sembuf
-{
-	unsigned short sem_num;
-	short sem_op;
-	short sem_flg;
-};
-struct linux_msgbuf
-{
-	linux_word_t mtype;
-	char mtext[];
-};
-struct linux_dirent
-{
-	unsigned long d_ino;
-	unsigned long d_off;
-	unsigned short d_reclen;
-	char d_name[];
-};
-struct linux_rlimit
-{
-	linux_uword_t rlim_cur;
-	linux_uword_t rlim_max;
-};
-struct linux_tms
-{
-	linux_kernel_clock_t tms_utime;
-	linux_kernel_clock_t tms_stime;
-	linux_kernel_clock_t tms_cutime;
-	linux_kernel_clock_t tms_cstime;
-};
-typedef struct linux_user_cap_header_struct
-{
-	uint32_t version;
-	int pid;
-} *linux_cap_user_header_t;
-typedef struct linux_user_cap_data_struct
-{
-	uint32_t effective;
-	uint32_t permitted;
-	uint32_t inheritable;
-} *linux_cap_user_data_t;
 struct linux_ustat
 {
 	linux_daddr_t f_tfree;
@@ -1079,38 +1105,10 @@ struct linux_ustat
 	char f_fname[6];
 	char f_fpack[6];
 };
-struct linux_sched_param
-{
-	int sched_priority;
-};
 struct linux_aio_sigset
 {
 	linux_sigset_t const* sigmask;
 	linux_size_t sigsetsize;
-};
-typedef struct linux_sigevent
-{
-	linux_sigval_t sigev_value;
-	int sigev_signo;
-	int sigev_notify;
-	union
-	{
-		int _pad[(64 - (sizeof(int) * 2 + sizeof(linux_sigval_t))) / sizeof(int)];
-		int tid;
-		struct
-		{
-			void (*function)(linux_sigval_t);
-			void *attribute;
-		} sigev_thread;
-	} sigev_un;
-} linux_sigevent_t;
-struct linux_mq_attr
-{
-	linux_word_t mq_flags;
-	linux_word_t mq_maxmsg;
-	linux_word_t mq_msgsize;
-	linux_word_t mq_curmsgs;
-	linux_word_t _reserved[4];
 };
 struct linux_kexec_segment
 {
@@ -1119,23 +1117,6 @@ struct linux_kexec_segment
 	void const* mem;
 	linux_size_t memsz;
 };
-
-#if defined(LINUX_ARCH_ARM_EABI)
-#include "arm-eabi/structs.h"
-#elif defined(LINUX_ARCH_ARM64)
-#include "arm64/structs.h"
-#elif defined(LINUX_ARCH_RISCV32)
-#include "riscv32/structs.h"
-#elif defined(LINUX_ARCH_RISCV64)
-#include "riscv64/structs.h"
-#elif defined(LINUX_ARCH_X86)
-#include "x86/structs.h"
-#elif defined(LINUX_ARCH_X32)
-#include "x32/structs.h"
-#elif defined(LINUX_ARCH_X86_64)
-#include "x86_64/structs.h"
-#endif
-
 struct linux_rusage
 {
 	struct linux_old_timeval ru_utime;
@@ -1155,6 +1136,23 @@ struct linux_rusage
 	linux_word_t ru_nvcsw;
 	linux_word_t ru_nivcsw;
 };
+
+
+#if defined(LINUX_ARCH_ARM_EABI)
+#include "arm-eabi/structs.h"
+#elif defined(LINUX_ARCH_ARM64)
+#include "arm64/structs.h"
+#elif defined(LINUX_ARCH_RISCV32)
+#include "riscv32/structs.h"
+#elif defined(LINUX_ARCH_RISCV64)
+#include "riscv64/structs.h"
+#elif defined(LINUX_ARCH_X86)
+#include "x86/structs.h"
+#elif defined(LINUX_ARCH_X32)
+#include "x32/structs.h"
+#elif defined(LINUX_ARCH_X86_64)
+#include "x86_64/structs.h"
+#endif
 
 //=============================================================================
 // Deprecated types
