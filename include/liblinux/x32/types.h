@@ -22,7 +22,7 @@
 typedef int                  linux_daddr_t;
 typedef long long            linux_kernel_long_t;
 typedef unsigned long long   linux_kernel_ulong_t;
-typedef unsigned int         linux_kernel_mode_t;
+typedef unsigned int         linux_mode_t;
 typedef int                  linux_kernel_ipc_pid_t;
 typedef unsigned int         linux_kernel_size_t;
 typedef int                  linux_kernel_ssize_t;

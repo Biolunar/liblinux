@@ -157,8 +157,8 @@ struct linux_ipc64_perm
 	linux_gid_t gid;
 	linux_uid_t cuid;
 	linux_gid_t cgid;
-	linux_kernel_mode_t mode;
-	unsigned char _pad1[4 - sizeof(linux_kernel_mode_t)];
+	linux_mode_t mode;
+	unsigned char _pad1[4 - sizeof(linux_mode_t)];
 	unsigned short seq;
 	unsigned short _pad2;
 	linux_kernel_ulong_t _unused1;
