@@ -1074,7 +1074,7 @@ typedef struct linux_user_cap_data_struct
 } *linux_cap_user_data_t;
 struct linux_ustat
 {
-	linux_kernel_daddr_t f_tfree;
+	linux_daddr_t f_tfree;
 	linux_kernel_ino_t f_tinode;
 	char f_fname[6];
 	char f_fpack[6];

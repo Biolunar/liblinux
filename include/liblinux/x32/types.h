@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-typedef int                  linux_kernel_daddr_t;
+typedef int                  linux_daddr_t;
 typedef long long            linux_kernel_long_t;
 typedef unsigned long long   linux_kernel_ulong_t;
 typedef unsigned int         linux_kernel_mode_t;
