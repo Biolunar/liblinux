@@ -3432,16 +3432,16 @@ inline enum linux_error linux_futex(uint32_t* const uaddr, int const op, uint32_
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_get_robust_list(int const pid, struct linux_robust_list_head** const head_ptr, linux_size_t* const len_ptr)
+inline enum linux_error linux_set_robust_list(struct linux_robust_list_head* const head, linux_size_t const len)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pid, (uintptr_t)head_ptr, (uintptr_t)len_ptr, linux_syscall_name_get_robust_list);
+	linux_word_t const ret = linux_syscall2((uintptr_t)head, len, linux_syscall_name_set_robust_list);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_set_robust_list(struct linux_robust_list_head* const head, linux_size_t const len)
+inline enum linux_error linux_get_robust_list(int const pid, struct linux_robust_list_head** const head_ptr, linux_size_t* const len_ptr)
 {
-	linux_word_t const ret = linux_syscall2((uintptr_t)head, len, linux_syscall_name_set_robust_list);
+	linux_word_t const ret = linux_syscall3((unsigned int)pid, (uintptr_t)head_ptr, (uintptr_t)len_ptr, linux_syscall_name_get_robust_list);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -3789,7 +3789,7 @@ inline enum linux_error linux_rt_sigtimedwait(linux_sigset_t const* const uthese
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_rt_sigqueueinfo(linux_pid_t const pid, int const sig, linux_siginfo_t* const uinfo)
+inline enum linux_error linux_rt_sigqueueinfo(linux_pid_t const pid, int const sig, linux_siginfo_t* const uinfo) // DEPRECATED: use linux_rt_tgsigqueueinfo
 {
 	linux_word_t const ret = linux_syscall3((unsigned int)pid, (unsigned int)sig, (uintptr_t)uinfo, linux_syscall_name_rt_sigqueueinfo);
 	if (linux_syscall_returned_error(ret))
@@ -4173,6 +4173,15 @@ inline enum linux_error linux_listen(linux_fd_t const fd, int const backlog)
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_accept4(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, int const flags, linux_fd_t* const result)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, (unsigned int)flags, linux_syscall_name_accept4);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
 inline enum linux_error linux_connect(linux_fd_t const fd, struct linux_sockaddr const* const uservaddr, int const addrlen)
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)uservaddr, (unsigned int)addrlen, linux_syscall_name_connect);
@@ -4249,15 +4258,6 @@ inline enum linux_error linux_recvmsg(linux_fd_t const fd, struct linux_user_msg
 		return (enum linux_error)-ret;
 	if (result)
 		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_accept4(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, int const flags, linux_fd_t* const result)
-{
-	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, (unsigned int)flags, linux_syscall_name_accept4);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_recvmmsg(linux_fd_t const fd, struct linux_mmsghdr* const mmsg, unsigned int const vlen, unsigned int const flags, struct linux_timespec* const timeout, int* const result)
@@ -5034,6 +5034,32 @@ inline enum linux_error linux_rseq(struct linux_rseq* const rseq, uint32_t const
 //=============================================================================
 // Architecture specific syscalls
 
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_semop(int const semid, struct linux_sembuf* const tsops, unsigned int const nsops)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)semid, (uintptr_t)tsops, nsops, linux_syscall_name_semop);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_accept(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, linux_fd_t* const result) // DEPRECATED: use linux_accept4
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, linux_syscall_name_accept);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_kexec_file_load(linux_fd_t const kernel_fd, linux_fd_t const initrd_fd, linux_uword_t const cmdline_len, char const* const cmdline_ptr, linux_uword_t const flags)
+{
+	linux_word_t const ret = linux_syscall5((uint32_t)kernel_fd, (uint32_t)initrd_fd, cmdline_len, (uintptr_t)cmdline_ptr, flags, linux_syscall_name_kexec_file_load);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline enum linux_error linux_newfstat(linux_fd_t const fd, struct linux_stat* const statbuf) // DEPRECATED: use linux_statx
 {
@@ -5097,230 +5123,6 @@ inline enum linux_error linux_wait4(linux_pid_t const upid, int* const stat_addr
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
-#endif
-
-#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_renameat(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname) // DEPRECATED: use linux_renameat2
-{
-	linux_word_t const ret = linux_syscall4((uint32_t)olddfd, (uintptr_t)oldname, (uint32_t)newdfd, (uintptr_t)newname, linux_syscall_name_renameat);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_msgctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_semctl(int const semid, int const semnum, int const cmd, linux_uword_t const arg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall4((unsigned int)semid, (unsigned int)semnum, (unsigned int)cmd, arg, linux_syscall_name_semctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_shmctl(int const shmid, int const cmd, struct linux_shmid64_ds* const buf, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_shmctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM_EABI)
-inline enum linux_error linux_old_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_old_msgctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_old_semctl(int const semid, int const semnum, int const cmd, linux_uword_t const arg, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall4((unsigned int)semid, (unsigned int)semnum, (unsigned int)cmd, arg, linux_syscall_name_old_semctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_old_shmctl(int const shmid, int const cmd, struct linux_shmid64_ds* const buf, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_old_shmctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_semtimedop_time32(int const semid, struct linux_sembuf* const tsems, unsigned int const nsops, struct linux_timespec32 const* const timeout)
-{
-	linux_word_t const ret = linux_syscall4((unsigned int)semid, (uintptr_t)tsems, nsops, (uintptr_t)timeout, linux_syscall_name_semtimedop_time32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_arm_fadvise64_64(linux_fd_t const fd, int const advice, linux_loff_t const offset, linux_loff_t const len)
-{
-	linux_word_t const ret = linux_syscall6((uint32_t)fd, (unsigned int)advice, LINUX_EXPAND(offset), LINUX_EXPAND(len), linux_syscall_name_arm_fadvise64_64);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_pciconfig_iobase(linux_word_t const which, linux_uword_t const bus, linux_uword_t const devfn, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((linux_uword_t)which, bus, devfn, linux_syscall_name_pciconfig_iobase);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_pciconfig_read(linux_uword_t const bus, linux_uword_t const dfn, linux_uword_t const off, linux_uword_t const len, void* const buf)
-{
-	linux_word_t const ret = linux_syscall5(bus, dfn, off, len, (uintptr_t)buf, linux_syscall_name_pciconfig_read);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_pciconfig_write(linux_uword_t const bus, linux_uword_t const dfn, linux_uword_t const off, linux_uword_t const len, void* const buf)
-{
-	linux_word_t const ret = linux_syscall5(bus, dfn, off, len, (uintptr_t)buf, linux_syscall_name_pciconfig_write);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_send(linux_fd_t const fd, void* const buff, linux_size_t const len, unsigned int const flags, int* const result)
-{
-	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uintptr_t)buff, len, flags, linux_syscall_name_send);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_recv(linux_fd_t const fd, void* const ubuf, linux_size_t const size, unsigned int const flags, int* const result)
-{
-	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uintptr_t)ubuf, size, flags, linux_syscall_name_recv);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_breakpoint(void)
-{
-	linux_word_t const ret = linux_syscall0(linux_syscall_name_breakpoint);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_cacheflush(linux_uword_t const start, linux_uword_t const end, int const flags)
-{
-	linux_word_t const ret = linux_syscall3(start, end, (unsigned int)flags, linux_syscall_name_cacheflush);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_usr26(void)
-{
-	linux_word_t const ret = linux_syscall0(linux_syscall_name_usr26);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_usr32(void)
-{
-	linux_word_t const ret = linux_syscall0(linux_syscall_name_usr32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_set_tls(linux_uword_t const val)
-{
-	linux_word_t const ret = linux_syscall1(val, linux_syscall_name_set_tls);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_get_tls(linux_uword_t* const result)
-{
-	linux_word_t const ret = linux_syscall0(linux_syscall_name_get_tls);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_uword_t)ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86)
-inline enum linux_error linux_fadvise64_64(linux_fd_t const fd, linux_loff_t const offset, linux_loff_t const len, int const advice)
-{
-#if defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_X86)
-	linux_word_t const ret = linux_syscall6((uint32_t)fd, LINUX_EXPAND(offset), LINUX_EXPAND(len), (unsigned int)advice, linux_syscall_name_fadvise64_64);
-#else
-	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uint64_t)offset, (uint64_t)len, (unsigned int)advice, linux_syscall_name_fadvise64_64);
-#endif
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_semop(int const semid, struct linux_sembuf* const tsops, unsigned int const nsops)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)semid, (uintptr_t)tsops, nsops, linux_syscall_name_semop);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_accept(linux_fd_t const fd, struct linux_sockaddr* const upeer_sockaddr, int* const upeer_addrlen, linux_fd_t* const result) // DEPRECATED: use linux_accept4
-{
-	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)upeer_sockaddr, (uintptr_t)upeer_addrlen, linux_syscall_name_accept);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_fd_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_kexec_file_load(linux_fd_t const kernel_fd, linux_fd_t const initrd_fd, linux_uword_t const cmdline_len, char const* const cmdline_ptr, linux_uword_t const flags)
-{
-	linux_word_t const ret = linux_syscall5((uint32_t)kernel_fd, (uint32_t)initrd_fd, cmdline_len, (uintptr_t)cmdline_ptr, flags, linux_syscall_name_kexec_file_load);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
-{
-	linux_word_t const ret = linux_syscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
 inline enum linux_error linux_gettimeofday(struct linux_old_timeval* const tv, struct linux_timezone* const tz)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)tv, (uintptr_t)tz, linux_syscall_name_gettimeofday);
@@ -5337,77 +5139,10 @@ inline enum linux_error linux_settimeofday(struct linux_old_timeval* const tv, s
 }
 #endif
 
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_adjtimex(struct linux_timex* const txc_p, int* const result)
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_renameat(linux_fd_t const olddfd, char const* const oldname, linux_fd_t const newdfd, char const* const newname) // DEPRECATED: use linux_renameat2
 {
-	linux_word_t const ret = linux_syscall1((uintptr_t)txc_p, linux_syscall_name_adjtimex);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_nanosleep(struct linux_timespec const* const rqtp, struct linux_timespec* const rmtp)
-{
-	linux_word_t const ret = linux_syscall2((uintptr_t)rqtp, (uintptr_t)rmtp, linux_syscall_name_nanosleep);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_mmap(linux_uword_t const addr, linux_uword_t const len, linux_uword_t const prot, linux_uword_t const flags, linux_uword_t const fd, linux_uword_t const off, linux_uword_t* const result)
-{
-	linux_word_t const ret = linux_syscall6(addr, len, prot, flags, fd, off, linux_syscall_name_mmap);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_uword_t)ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_newfstatat(linux_fd_t const dfd, char const* const filename, struct linux_stat* const statbuf, int const flag)
-{
-	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (uintptr_t)statbuf, (unsigned int)flag, linux_syscall_name_newfstatat);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_time(linux_old_time_t* const tloc, linux_old_time_t* const result)
-{
-	linux_word_t const ret = linux_syscall1((uintptr_t)tloc, linux_syscall_name_time);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_old_time_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_utime(char* const filename, struct linux_utimbuf* const times)
-{
-	linux_word_t const ret = linux_syscall2((uintptr_t)filename, (uintptr_t)times, linux_syscall_name_utime);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_utimes(char* const filename, struct linux_old_timeval* const utimes)
-{
-	linux_word_t const ret = linux_syscall2((uintptr_t)filename, (uintptr_t)utimes, linux_syscall_name_utimes);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_futimesat(linux_fd_t const dfd, char const* const filename, struct linux_old_timeval* const utimes)
-{
-	linux_word_t const ret = linux_syscall3((uint32_t)dfd, (uintptr_t)filename, (uintptr_t)utimes, linux_syscall_name_futimesat);
+	linux_word_t const ret = linux_syscall4((uint32_t)olddfd, (uintptr_t)oldname, (uint32_t)newdfd, (uintptr_t)newname, linux_syscall_name_renameat);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -5673,59 +5408,6 @@ inline enum linux_error linux_eventfd(unsigned int const count, linux_fd_t* cons
 		return (enum linux_error)-ret;
 	if (result)
 		*result = (linux_fd_t)ret;
-	return linux_error_none;
-}
-#endif
-
-#if defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_alarm(unsigned int const seconds, unsigned int* const result)
-{
-	linux_word_t const ret = linux_syscall1(seconds, linux_syscall_name_alarm);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (unsigned int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_modify_ldt(int const func, void* const ptr, linux_uword_t const bytecount, int* const result)
-{
-	int const ret = (int)linux_syscall3((unsigned int)func, (uintptr_t)ptr, bytecount, linux_syscall_name_modify_ldt);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_arch_prctl(int const option, linux_uword_t const arg2)
-{
-	linux_word_t const ret = linux_syscall2((unsigned int)option, arg2, linux_syscall_name_arch_prctl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_iopl(unsigned int const level)
-{
-	linux_word_t const ret = linux_syscall1(level, linux_syscall_name_iopl);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_ioperm(linux_uword_t const from, linux_uword_t const num, int const turn_on)
-{
-	linux_word_t const ret = linux_syscall3(from, num, (unsigned int)turn_on, linux_syscall_name_ioperm);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_fadvise64(linux_fd_t const fd, linux_loff_t const offset, linux_size_t const len, int const advice)
-{
-#if defined(LINUX_ARCH_X86)
-	linux_word_t const ret = linux_syscall5((uint32_t)fd, LINUX_EXPAND(offset), len, (unsigned int)advice, linux_syscall_name_fadvise64);
-#else
-	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uint64_t)offset, len, (unsigned int)advice, linux_syscall_name_fadvise64);
-#endif
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 #endif
@@ -6224,10 +5906,283 @@ inline enum linux_error linux_lstat64(char const* const filename, struct linux_s
 }
 #endif
 
+#if defined(LINUX_ARCH_ARM_EABI)
+inline enum linux_error linux_old_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_old_msgctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_old_semctl(int const semid, int const semnum, int const cmd, linux_uword_t const arg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall4((unsigned int)semid, (unsigned int)semnum, (unsigned int)cmd, arg, linux_syscall_name_old_semctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_old_shmctl(int const shmid, int const cmd, struct linux_shmid64_ds* const buf, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_old_shmctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_semtimedop_time32(int const semid, struct linux_sembuf* const tsems, unsigned int const nsops, struct linux_timespec32 const* const timeout)
+{
+	linux_word_t const ret = linux_syscall4((unsigned int)semid, (uintptr_t)tsems, nsops, (uintptr_t)timeout, linux_syscall_name_semtimedop_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_arm_fadvise64_64(linux_fd_t const fd, int const advice, linux_loff_t const offset, linux_loff_t const len)
+{
+	linux_word_t const ret = linux_syscall6((uint32_t)fd, (unsigned int)advice, LINUX_EXPAND(offset), LINUX_EXPAND(len), linux_syscall_name_arm_fadvise64_64);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_pciconfig_iobase(linux_word_t const which, linux_uword_t const bus, linux_uword_t const devfn, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((linux_uword_t)which, bus, devfn, linux_syscall_name_pciconfig_iobase);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_pciconfig_read(linux_uword_t const bus, linux_uword_t const dfn, linux_uword_t const off, linux_uword_t const len, void* const buf)
+{
+	linux_word_t const ret = linux_syscall5(bus, dfn, off, len, (uintptr_t)buf, linux_syscall_name_pciconfig_read);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_pciconfig_write(linux_uword_t const bus, linux_uword_t const dfn, linux_uword_t const off, linux_uword_t const len, void* const buf)
+{
+	linux_word_t const ret = linux_syscall5(bus, dfn, off, len, (uintptr_t)buf, linux_syscall_name_pciconfig_write);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_send(linux_fd_t const fd, void* const buff, linux_size_t const len, unsigned int const flags, int* const result)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uintptr_t)buff, len, flags, linux_syscall_name_send);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_recv(linux_fd_t const fd, void* const ubuf, linux_size_t const size, unsigned int const flags, int* const result)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uintptr_t)ubuf, size, flags, linux_syscall_name_recv);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_breakpoint(void)
+{
+	linux_word_t const ret = linux_syscall0(linux_syscall_name_breakpoint);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_cacheflush(linux_uword_t const start, linux_uword_t const end, int const flags)
+{
+	linux_word_t const ret = linux_syscall3(start, end, (unsigned int)flags, linux_syscall_name_cacheflush);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_usr26(void)
+{
+	linux_word_t const ret = linux_syscall0(linux_syscall_name_usr26);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_usr32(void)
+{
+	linux_word_t const ret = linux_syscall0(linux_syscall_name_usr32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_set_tls(linux_uword_t const val)
+{
+	linux_word_t const ret = linux_syscall1(val, linux_syscall_name_set_tls);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_get_tls(linux_uword_t* const result)
+{
+	linux_word_t const ret = linux_syscall0(linux_syscall_name_get_tls);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_uword_t)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_msgctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_semctl(int const semid, int const semnum, int const cmd, linux_uword_t const arg, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall4((unsigned int)semid, (unsigned int)semnum, (unsigned int)cmd, arg, linux_syscall_name_semctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_shmctl(int const shmid, int const cmd, struct linux_shmid64_ds* const buf, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_syscall3((unsigned int)shmid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_shmctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_mmap(linux_uword_t const addr, linux_uword_t const len, linux_uword_t const prot, linux_uword_t const flags, linux_uword_t const fd, linux_uword_t const off, linux_uword_t* const result)
+{
+	linux_word_t const ret = linux_syscall6(addr, len, prot, flags, fd, off, linux_syscall_name_mmap);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_uword_t)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86)
+inline enum linux_error linux_fadvise64_64(linux_fd_t const fd, linux_loff_t const offset, linux_loff_t const len, int const advice)
+{
+#if defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_X86)
+	linux_word_t const ret = linux_syscall6((uint32_t)fd, LINUX_EXPAND(offset), LINUX_EXPAND(len), (unsigned int)advice, linux_syscall_name_fadvise64_64);
+#else
+	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uint64_t)offset, (uint64_t)len, (unsigned int)advice, linux_syscall_name_fadvise64_64);
+#endif
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
+{
+	linux_word_t const ret = linux_syscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_adjtimex(struct linux_timex* const txc_p, int* const result) // DEPRECATED: use linux_clock_adjtime
+{
+	linux_word_t const ret = linux_syscall1((uintptr_t)txc_p, linux_syscall_name_adjtimex);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_nanosleep(struct linux_timespec const* const rqtp, struct linux_timespec* const rmtp) // DEPRECATED: use linux_clock_nanosleep
+{
+	linux_word_t const ret = linux_syscall2((uintptr_t)rqtp, (uintptr_t)rmtp, linux_syscall_name_nanosleep);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_newfstatat(linux_fd_t const dfd, char const* const filename, struct linux_stat* const statbuf, int const flag)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)dfd, (uintptr_t)filename, (uintptr_t)statbuf, (unsigned int)flag, linux_syscall_name_newfstatat);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
 #if defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64)
 inline enum linux_error linux_riscv_flush_icache(uintptr_t const start, uintptr_t const end, uintptr_t const flags)
 {
 	linux_word_t const ret = linux_syscall3(start, end, flags, linux_syscall_name_riscv_flush_icache);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_alarm(unsigned int const seconds, unsigned int* const result)
+{
+	linux_word_t const ret = linux_syscall1(seconds, linux_syscall_name_alarm);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (unsigned int)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_modify_ldt(int const func, void* const ptr, linux_uword_t const bytecount, int* const result)
+{
+	int const ret = (int)linux_syscall3((unsigned int)func, (uintptr_t)ptr, bytecount, linux_syscall_name_modify_ldt);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_arch_prctl(int const option, linux_uword_t const arg2)
+{
+	linux_word_t const ret = linux_syscall2((unsigned int)option, arg2, linux_syscall_name_arch_prctl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_iopl(unsigned int const level)
+{
+	linux_word_t const ret = linux_syscall1(level, linux_syscall_name_iopl);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_ioperm(linux_uword_t const from, linux_uword_t const num, int const turn_on)
+{
+	linux_word_t const ret = linux_syscall3(from, num, (unsigned int)turn_on, linux_syscall_name_ioperm);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_fadvise64(linux_fd_t const fd, linux_loff_t const offset, linux_size_t const len, int const advice)
+{
+#if defined(LINUX_ARCH_X86)
+	linux_word_t const ret = linux_syscall5((uint32_t)fd, LINUX_EXPAND(offset), len, (unsigned int)advice, linux_syscall_name_fadvise64);
+#else
+	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uint64_t)offset, len, (unsigned int)advice, linux_syscall_name_fadvise64);
+#endif
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -6410,6 +6365,39 @@ inline enum linux_error linux_set_thread_area(struct linux_user_desc* const u_in
 inline enum linux_error linux_get_thread_area(struct linux_user_desc* const u_info)
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)u_info, linux_syscall_name_get_thread_area);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_time(linux_old_time_t* const tloc, linux_old_time_t* const result)
+{
+	linux_word_t const ret = linux_syscall1((uintptr_t)tloc, linux_syscall_name_time);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_old_time_t)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_utime(char* const filename, struct linux_utimbuf* const times)
+{
+	linux_word_t const ret = linux_syscall2((uintptr_t)filename, (uintptr_t)times, linux_syscall_name_utime);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_utimes(char* const filename, struct linux_old_timeval* const utimes)
+{
+	linux_word_t const ret = linux_syscall2((uintptr_t)filename, (uintptr_t)utimes, linux_syscall_name_utimes);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_futimesat(linux_fd_t const dfd, char const* const filename, struct linux_old_timeval* const utimes)
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)dfd, (uintptr_t)filename, (uintptr_t)utimes, linux_syscall_name_futimesat);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
