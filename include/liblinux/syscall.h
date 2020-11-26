@@ -29,6 +29,7 @@
  * into two 32 bit arguments.
  */
 #if defined(LINUX_ARCH_ARM_EABI) || \
+    defined(LINUX_ARCH_RISCV32)  || \
     defined(LINUX_ARCH_X86)
 #define LINUX_EXPAND(x) \
         (union{uint64_t ll; uint32_t l[2];}){.ll = (uint64_t)(x)}.l[0], \

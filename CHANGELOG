@@ -1,12 +1,15 @@
 master
 ======
 
-- Added all new syscalls up to Linux 5.8.
+- Added all new syscalls up to Linux 5.9.
 - Added new types and constants for some syscalls.
 - Added examples how to use the library.
 - Added safety code after _start to prevent executing random memory.
 - Minor improvements to the Makefile.
 - Removed linux_sysctl syscall.
+- Improved various types, i.e. got rid of the "_kernel_" part of the name.
+- Added riscv32 architecture.
+- Added riscv64 architecture.
 
 0.6.0
 =====

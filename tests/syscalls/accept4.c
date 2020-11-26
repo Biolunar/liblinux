@@ -192,7 +192,7 @@ static enum TestResult test_correct_usage(void)
 	if (linux_close(server))
 		return TEST_OTHER_FAILURE;
 
-	if (linux_wait4(-1, 0, 0, 0, 0))
+	if (linux_waitid(linux_P_ALL, 0, 0, linux_WEXITED, 0))
 		return TEST_OTHER_FAILURE;
 
 	return TEST_SUCCESS;

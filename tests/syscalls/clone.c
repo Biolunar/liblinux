@@ -9,7 +9,7 @@ static enum TestResult test_correct_usage(void)
 	if (!pid) // child
 		linux_exit_group(TEST_SUCCESS);
 
-	if (linux_wait4(-1, 0, 0, 0, 0))
+	if (linux_waitid(linux_P_ALL, 0, 0, linux_WEXITED, 0))
 		return TEST_OTHER_FAILURE;
 
 	return TEST_SUCCESS;

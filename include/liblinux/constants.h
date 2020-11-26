@@ -52,6 +52,24 @@
 #define linux_AT_VECTOR_SIZE_BASE 20
 
 //=============================================================================
+// wait
+
+#define linux_WNOHANG    0x00000001
+#define linux_WUNTRACED  0x00000002
+#define linux_WSTOPPED   linux_WUNTRACED
+#define linux_WEXITED    0x00000004
+#define linux_WCONTINUED 0x00000008
+#define linux_WNOWAIT    0x01000000
+#define linux_WNOTHREAD  0x20000000
+#define linux_WALL       0x40000000
+#define linux_WCLONE     0x80000000
+
+#define linux_P_ALL   0
+#define linux_P_PID   1
+#define linux_P_PGID  2
+#define linux_P_PIDFD 3
+
+//=============================================================================
 // ioprio
 
 #define linux_IOPRIO_CLASS_SHIFT             (13)

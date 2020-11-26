@@ -19,12 +19,12 @@
 
 // Differences (name/function/number):
 // -----------------------------------
-//umount2 umount 39
-//sendfile sendfile64 71
-//fstatat newfstatat 79
-//fstat newfstat 80
-//uname newuname 160
-//fadvise64 fadvise64_64 223
+// umount2 umount 39
+// sendfile sendfile64 71
+// fstatat newfstatat 79
+// fstat newfstat 80
+// uname newuname 160
+// fadvise64 fadvise64_64 223
 
 enum
 {
@@ -66,11 +66,11 @@ enum
 	linux_syscall_name_unlinkat               =  35,
 	linux_syscall_name_symlinkat              =  36,
 	linux_syscall_name_linkat                 =  37,
-	// (unimplemented)
+	// linux_syscall_name_renameat            =  38, // unimplemented
 	linux_syscall_name_umount                 =  39,
 	linux_syscall_name_mount                  =  40,
 	linux_syscall_name_pivot_root             =  41,
-	// (unused) nfsservctl
+	// linux_syscall_name_nfsservctl          =  42, // unimplemented
 	linux_syscall_name_statfs                 =  43,
 	linux_syscall_name_fstatfs                =  44,
 	linux_syscall_name_truncate               =  45,
@@ -156,7 +156,7 @@ enum
 	linux_syscall_name_sched_get_priority_max = 125,
 	linux_syscall_name_sched_get_priority_min = 126,
 	linux_syscall_name_sched_rr_get_interval  = 127,
-	linux_syscall_name_restart_syscall        = 128,
+	// linux_syscall_name_restart_syscall     = 128, // Do not use.
 	linux_syscall_name_kill                   = 129,
 	linux_syscall_name_tkill                  = 130,
 	linux_syscall_name_tgkill                 = 131,
@@ -167,7 +167,7 @@ enum
 	linux_syscall_name_rt_sigpending          = 136,
 	linux_syscall_name_rt_sigtimedwait        = 137,
 	linux_syscall_name_rt_sigqueueinfo        = 138,
-	// linux_syscall_name_rt_sigreturn           = 139, // Use linux_sigreturn()
+	linux_syscall_name_rt_sigreturn           = 139, // Use linux_rt_sigreturn()
 	linux_syscall_name_setpriority            = 140,
 	linux_syscall_name_getpriority            = 141,
 	linux_syscall_name_reboot                 = 142,
@@ -272,8 +272,9 @@ enum
 	linux_syscall_name_perf_event_open        = 241,
 	linux_syscall_name_accept4                = 242,
 	linux_syscall_name_recvmmsg               = 243,
-	// (244 to 258 are unimplemented)
-	linux_syscall_name_riscv_flush_icache     = 244 + 15,
+	// ...
+	// (244 to 259 are reserved for architecture specific syscalls)
+	// ...
 	linux_syscall_name_wait4                  = 260,
 	linux_syscall_name_prlimit64              = 261,
 	linux_syscall_name_fanotify_init          = 262,
@@ -310,7 +311,7 @@ enum
 	linux_syscall_name_rseq                   = 293,
 	linux_syscall_name_kexec_file_load        = 294,
 	// ...
-	// (295 to 423 are unused, so that the numbers are the same as on 32-bit systems)
+	// (295 to 423 are unused, so that the following numbers are in sync on 32 and 64 bit systems)
 	// ...
 	linux_syscall_name_pidfd_send_signal      = 424,
 	linux_syscall_name_io_uring_setup         = 425,
@@ -328,6 +329,8 @@ enum
 	linux_syscall_name_openat2                = 437,
 	linux_syscall_name_pidfd_getfd            = 438,
 	linux_syscall_name_faccessat2             = 439,
+
+	linux_syscall_name_riscv_flush_icache     = 244 + 15,
 };
 
 #endif // !HEADER_LIBLINUX_RISCV64_NAMES_H_INCLUDED
