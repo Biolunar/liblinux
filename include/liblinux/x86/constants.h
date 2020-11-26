@@ -263,11 +263,11 @@ enum linux_sock_type
 
 #define linux_SOL_SOCKET 1
 
-#define linux_SO_TIMESTAMP    (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_TIMESTAMP_OLD    : linux_SO_TIMESTAMP_NEW)
-#define linux_SO_TIMESTAMPNS  (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_TIMESTAMPNS_OLD  : linux_SO_TIMESTAMPNS_NEW)
-#define linux_SO_TIMESTAMPING (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_TIMESTAMPING_OLD : linux_SO_TIMESTAMPING_NEW)
-#define linux_SO_RCVTIMEO     (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_RCVTIMEO_OLD     : linux_SO_RCVTIMEO_NEW)
-#define linux_SO_SNDTIMEO     (sizeof(linux_time_t) == sizeof(linux_kernel_long_t) ? linux_SO_SNDTIMEO_OLD     : linux_SO_SNDTIMEO_NEW)
+#define linux_SO_TIMESTAMP    (sizeof(linux_time_t) == sizeof(linux_word_t) ? linux_SO_TIMESTAMP_OLD    : linux_SO_TIMESTAMP_NEW)
+#define linux_SO_TIMESTAMPNS  (sizeof(linux_time_t) == sizeof(linux_word_t) ? linux_SO_TIMESTAMPNS_OLD  : linux_SO_TIMESTAMPNS_NEW)
+#define linux_SO_TIMESTAMPING (sizeof(linux_time_t) == sizeof(linux_word_t) ? linux_SO_TIMESTAMPING_OLD : linux_SO_TIMESTAMPING_NEW)
+#define linux_SO_RCVTIMEO     (sizeof(linux_time_t) == sizeof(linux_word_t) ? linux_SO_RCVTIMEO_OLD     : linux_SO_RCVTIMEO_NEW)
+#define linux_SO_SNDTIMEO     (sizeof(linux_time_t) == sizeof(linux_word_t) ? linux_SO_SNDTIMEO_OLD     : linux_SO_SNDTIMEO_NEW)
 
 //=============================================================================
 // ioctl

@@ -148,8 +148,8 @@ struct linux_ipc64_perm
 	//unsigned char _pad1[4 - sizeof(linux_mode_t)];
 	unsigned short seq;
 	unsigned short _pad2;
-	linux_kernel_ulong_t _unused1;
-	linux_kernel_ulong_t _unused2;
+	linux_uword_t _unused1;
+	linux_uword_t _unused2;
 };
 struct linux_shmid64_ds
 {
@@ -180,20 +180,20 @@ struct linux_msqid64_ds
 };
 struct linux_sysinfo
 {
-	linux_kernel_long_t uptime;
-	linux_kernel_ulong_t loads[3];
-	linux_kernel_ulong_t totalram;
-	linux_kernel_ulong_t freeram;
-	linux_kernel_ulong_t sharedram;
-	linux_kernel_ulong_t bufferram;
-	linux_kernel_ulong_t totalswap;
-	linux_kernel_ulong_t freeswap;
+	linux_word_t uptime;
+	linux_uword_t loads[3];
+	linux_uword_t totalram;
+	linux_uword_t freeram;
+	linux_uword_t sharedram;
+	linux_uword_t bufferram;
+	linux_uword_t totalswap;
+	linux_uword_t freeswap;
 	uint16_t procs;
 	uint16_t pad;
-	linux_kernel_ulong_t totalhigh;
-	linux_kernel_ulong_t freehigh;
+	linux_uword_t totalhigh;
+	linux_uword_t freehigh;
 	uint32_t mem_unit;
-	//char _f[20 - 2 * sizeof(linux_kernel_ulong_t) - sizeof(uint32_t)];
+	//char _f[20 - 2 * sizeof(linux_uword_t) - sizeof(uint32_t)];
 };
 typedef struct linux_sigaltstack
 {
@@ -286,8 +286,8 @@ struct linux_termiox
 
 struct linux_input_event
 {
-	linux_kernel_ulong_t sec;
-	linux_kernel_ulong_t usec;
+	linux_uword_t sec;
+	linux_uword_t usec;
 	uint16_t type;
 	uint16_t code;
 	int32_t value;

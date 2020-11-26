@@ -22,24 +22,24 @@
 
 struct linux_stat
 {
-	linux_kernel_ulong_t st_dev;
-	linux_kernel_ulong_t st_ino;
-	linux_kernel_ulong_t st_nlink;
+	linux_uword_t st_dev;
+	linux_uword_t st_ino;
+	linux_uword_t st_nlink;
 	unsigned int st_mode;
 	unsigned int st_uid;
 	unsigned int st_gid;
 	unsigned int _pad0;
-	linux_kernel_ulong_t st_rdev;
-	linux_kernel_long_t st_size;
-	linux_kernel_long_t st_blksize;
-	linux_kernel_long_t st_blocks;
-	linux_kernel_ulong_t st_atime;
-	linux_kernel_ulong_t st_atime_nsec;
-	linux_kernel_ulong_t st_mtime;
-	linux_kernel_ulong_t st_mtime_nsec;
-	linux_kernel_ulong_t st_ctime;
-	linux_kernel_ulong_t st_ctime_nsec;
-	linux_kernel_long_t _unused[3];
+	linux_uword_t st_rdev;
+	linux_word_t st_size;
+	linux_word_t st_blksize;
+	linux_word_t st_blocks;
+	linux_uword_t st_atime;
+	linux_uword_t st_atime_nsec;
+	linux_uword_t st_mtime;
+	linux_uword_t st_mtime_nsec;
+	linux_uword_t st_ctime;
+	linux_uword_t st_ctime_nsec;
+	linux_word_t _unused[3];
 };
 struct linux_statfs
 {
@@ -150,52 +150,52 @@ struct linux_ipc64_perm
 	//unsigned char _pad1[4 - sizeof(linux_mode_t)];
 	unsigned short seq;
 	unsigned short _pad2;
-	linux_kernel_ulong_t _unused1;
-	linux_kernel_ulong_t _unused2;
+	linux_uword_t _unused1;
+	linux_uword_t _unused2;
 };
 struct linux_shmid64_ds
 {
 	struct linux_ipc64_perm shm_perm;
 	linux_size_t shm_segsz;
-	linux_kernel_long_t shm_atime;
-	linux_kernel_long_t shm_dtime;
-	linux_kernel_long_t shm_ctime;
+	linux_word_t shm_atime;
+	linux_word_t shm_dtime;
+	linux_word_t shm_ctime;
 	linux_pid_t shm_cpid;
 	linux_pid_t shm_lpid;
-	linux_kernel_ulong_t shm_nattch;
-	linux_kernel_ulong_t _unused4;
-	linux_kernel_ulong_t _unused5;
+	linux_uword_t shm_nattch;
+	linux_uword_t _unused4;
+	linux_uword_t _unused5;
 };
 struct linux_msqid64_ds
 {
 	struct linux_ipc64_perm msg_perm;
-	linux_kernel_long_t msg_stime;
-	linux_kernel_long_t msg_rtime;
-	linux_kernel_long_t msg_ctime;
-	linux_kernel_ulong_t msg_cbytes;
-	linux_kernel_ulong_t msg_qnum;
-	linux_kernel_ulong_t msg_qbytes;
+	linux_word_t msg_stime;
+	linux_word_t msg_rtime;
+	linux_word_t msg_ctime;
+	linux_uword_t msg_cbytes;
+	linux_uword_t msg_qnum;
+	linux_uword_t msg_qbytes;
 	linux_pid_t msg_lspid;
 	linux_pid_t msg_lrpid;
-	linux_kernel_ulong_t _unused4;
-	linux_kernel_ulong_t _unused5;
+	linux_uword_t _unused4;
+	linux_uword_t _unused5;
 };
 struct linux_sysinfo
 {
-	linux_kernel_long_t uptime;
-	linux_kernel_ulong_t loads[3];
-	linux_kernel_ulong_t totalram;
-	linux_kernel_ulong_t freeram;
-	linux_kernel_ulong_t sharedram;
-	linux_kernel_ulong_t bufferram;
-	linux_kernel_ulong_t totalswap;
-	linux_kernel_ulong_t freeswap;
+	linux_word_t uptime;
+	linux_uword_t loads[3];
+	linux_uword_t totalram;
+	linux_uword_t freeram;
+	linux_uword_t sharedram;
+	linux_uword_t bufferram;
+	linux_uword_t totalswap;
+	linux_uword_t freeswap;
 	uint16_t procs;
 	uint16_t pad;
-	linux_kernel_ulong_t totalhigh;
-	linux_kernel_ulong_t freehigh;
+	linux_uword_t totalhigh;
+	linux_uword_t freehigh;
 	uint32_t mem_unit;
-	//char _f[20 - 2 * sizeof(linux_kernel_ulong_t) - sizeof(uint32_t)];
+	//char _f[20 - 2 * sizeof(linux_uword_t) - sizeof(uint32_t)];
 };
 typedef struct linux_sigaltstack
 {
@@ -289,8 +289,8 @@ struct linux_termiox
 
 struct linux_input_event
 {
-	linux_kernel_ulong_t sec;
-	linux_kernel_ulong_t usec;
+	linux_uword_t sec;
+	linux_uword_t usec;
 	uint16_t type;
 	uint16_t code;
 	int32_t value;

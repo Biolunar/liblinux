@@ -19,20 +19,18 @@
 
 #include <stdint.h>
 
-typedef int                  linux_daddr_t;
-typedef long                 linux_kernel_long_t;
-typedef unsigned long        linux_kernel_ulong_t;
-typedef unsigned short       linux_mode_t;
-typedef unsigned short       linux_ipc_pid_t; // unused
-typedef unsigned int         linux_kernel_size_t;
-typedef int                  linux_kernel_ssize_t;
-typedef linux_kernel_long_t  linux_suseconds_t;
-typedef linux_kernel_ulong_t linux_ino_t;
-typedef uint32_t             linux_statfs_word;
-typedef linux_signalfn_t*    linux_sighandler_t;
+typedef int               linux_daddr_t;
+typedef unsigned short    linux_mode_t;
+typedef unsigned short    linux_ipc_pid_t; // unused
+typedef unsigned int      linux_kernel_size_t;
+typedef int               linux_kernel_ssize_t;
+typedef linux_word_t      linux_suseconds_t;
+typedef linux_uword_t     linux_ino_t;
+typedef uint32_t          linux_statfs_word;
+typedef linux_signalfn_t* linux_sighandler_t;
 
-typedef unsigned short       linux_old_uid_t;
-typedef unsigned short       linux_old_gid_t;
-typedef unsigned long        linux_old_sigset_t;
+typedef unsigned short    linux_old_uid_t;
+typedef unsigned short    linux_old_gid_t;
+typedef unsigned long     linux_old_sigset_t;
 
 #endif // !HEADER_LIBLINUX_X86_TYPES_H_INCLUDED

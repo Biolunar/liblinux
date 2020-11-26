@@ -36,6 +36,8 @@
 // -----------------
 // long -> linux_word_t
 // unsigned long -> linux_uword_t
+// __kernel_long_t -> linux_word_t
+// __kernel_ulong_t -> linux_uword_t
 
 //=============================================================================
 // Helper types
@@ -980,13 +982,13 @@ struct linux_open_how
 //=============================================================================
 // Architecture dependent types
 
-typedef linux_kernel_long_t  linux_kernel_off_t;
-typedef linux_kernel_long_t  linux_old_time_t;
-typedef linux_kernel_long_t  linux_kernel_clock_t;
+typedef linux_word_t         linux_kernel_off_t;
+typedef linux_word_t         linux_old_time_t;
+typedef linux_word_t         linux_kernel_clock_t;
 typedef linux_kernel_size_t  linux_size_t;
 typedef linux_kernel_ssize_t linux_ssize_t;
 typedef linux_kernel_off_t   linux_off_t;
-typedef linux_kernel_ulong_t linux_aio_context_t;
+typedef linux_uword_t        linux_aio_context_t;
 
 #include "drm/drm.h"
 #include "drm/drm_mode.h"
@@ -1004,7 +1006,7 @@ struct linux_old_timespec
 };
 struct linux_old_timeval
 {
-	linux_kernel_long_t tv_sec;
+	linux_word_t tv_sec;
 	linux_suseconds_t tv_usec;
 };
 struct linux_old_itimerval
@@ -1039,7 +1041,7 @@ struct linux_sembuf
 };
 struct linux_msgbuf
 {
-	linux_kernel_long_t mtype;
+	linux_word_t mtype;
 	char mtext[];
 };
 struct linux_dirent
@@ -1051,8 +1053,8 @@ struct linux_dirent
 };
 struct linux_rlimit
 {
-	linux_kernel_ulong_t rlim_cur;
-	linux_kernel_ulong_t rlim_max;
+	linux_uword_t rlim_cur;
+	linux_uword_t rlim_max;
 };
 struct linux_tms
 {
@@ -1106,11 +1108,11 @@ typedef struct linux_sigevent
 } linux_sigevent_t;
 struct linux_mq_attr
 {
-	linux_kernel_long_t mq_flags;
-	linux_kernel_long_t mq_maxmsg;
-	linux_kernel_long_t mq_msgsize;
-	linux_kernel_long_t mq_curmsgs;
-	linux_kernel_long_t _reserved[4];
+	linux_word_t mq_flags;
+	linux_word_t mq_maxmsg;
+	linux_word_t mq_msgsize;
+	linux_word_t mq_curmsgs;
+	linux_word_t _reserved[4];
 };
 struct linux_kexec_segment
 {
@@ -1140,20 +1142,20 @@ struct linux_rusage
 {
 	struct linux_old_timeval ru_utime;
 	struct linux_old_timeval ru_stime;
-	linux_kernel_long_t ru_maxrss;
-	linux_kernel_long_t ru_ixrss;
-	linux_kernel_long_t ru_idrss;
-	linux_kernel_long_t ru_isrss;
-	linux_kernel_long_t ru_minflt;
-	linux_kernel_long_t ru_majflt;
-	linux_kernel_long_t ru_nswap;
-	linux_kernel_long_t ru_inblock;
-	linux_kernel_long_t ru_oublock;
-	linux_kernel_long_t ru_msgsnd;
-	linux_kernel_long_t ru_msgrcv;
-	linux_kernel_long_t ru_nsignals;
-	linux_kernel_long_t ru_nvcsw;
-	linux_kernel_long_t ru_nivcsw;
+	linux_word_t ru_maxrss;
+	linux_word_t ru_ixrss;
+	linux_word_t ru_idrss;
+	linux_word_t ru_isrss;
+	linux_word_t ru_minflt;
+	linux_word_t ru_majflt;
+	linux_word_t ru_nswap;
+	linux_word_t ru_inblock;
+	linux_word_t ru_oublock;
+	linux_word_t ru_msgsnd;
+	linux_word_t ru_msgrcv;
+	linux_word_t ru_nsignals;
+	linux_word_t ru_nvcsw;
+	linux_word_t ru_nivcsw;
 };
 
 //=============================================================================
@@ -5084,7 +5086,7 @@ inline enum linux_error linux_ftruncate(linux_fd_t const fd, linux_uword_t const
 }
 inline enum linux_error linux_lseek(linux_fd_t const fd, linux_off_t const offset, unsigned int const whence, linux_off_t* const result)
 {
-	linux_word_t const ret = linux_syscall3((uint32_t)fd, (linux_kernel_ulong_t)offset, whence, linux_syscall_name_lseek);
+	linux_word_t const ret = linux_syscall3((uint32_t)fd, (linux_uword_t)offset, whence, linux_syscall_name_lseek);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
