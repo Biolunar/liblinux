@@ -5120,14 +5120,14 @@ inline enum linux_error linux_wait4(linux_pid_t const upid, int* const stat_addr
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_gettimeofday(struct linux_old_timeval* const tv, struct linux_timezone* const tz)
+inline enum linux_error linux_gettimeofday(struct linux_old_timeval* const tv, struct linux_timezone* const tz) // DEPRECATED: use linux_clock_gettime
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)tv, (uintptr_t)tz, linux_syscall_name_gettimeofday);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_settimeofday(struct linux_old_timeval* const tv, struct linux_timezone* const tz)
+inline enum linux_error linux_settimeofday(struct linux_old_timeval* const tv, struct linux_timezone* const tz) // DEPRECATED: use linux_clock_settime
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)tv, (uintptr_t)tz, linux_syscall_name_settimeofday);
 	if (linux_syscall_returned_error(ret))
