@@ -28,8 +28,7 @@
 #include <stdint.h>
 #include <stdalign.h>
 
-// TODO: Do old signal syscalls work with 64 bit sigset? (Use NSIG or _NSIG or both?)
-// TODO: I changed (u)long to (u)word_t in all signatures. Is this also necessary for the struct members (I don't think so)? TODO: also change the typedefs?
+// TODO: I changed (u)long to (u)word_t in all signatures. TODO: also change that in structures that are passed to syscalls. TODO: also change the typedefs?
 // TODO: find a good and future proof way to name all syscalls. Currently I'm using the names from the unterlying kernel functions.
 
 // Type replacements
@@ -90,7 +89,7 @@ struct linux_utimbuf
 struct linux_old_timespec
 {
 	linux_old_time_t tv_sec;
-	long tv_nsec;
+	linux_word_t tv_nsec;
 };
 struct linux_sched_param
 {
@@ -131,8 +130,8 @@ struct linux_msgbuf
 };
 struct linux_dirent
 {
-	unsigned long d_ino;
-	unsigned long d_off;
+	linux_uword_t d_ino;
+	linux_uword_t d_off;
 	unsigned short d_reclen;
 	char d_name[];
 };
@@ -165,7 +164,7 @@ typedef struct
 } linux_fsid_t;
 typedef struct
 {
-	unsigned long fds_bits[1024 / (8 * sizeof(long))];
+	linux_uword_t fds_bits[1024 / (8 * sizeof(linux_uword_t))];
 } linux_fd_set;
 struct linux_pollfd
 {
@@ -304,7 +303,7 @@ struct linux_robust_list
 struct linux_robust_list_head
 {
 	struct linux_robust_list list;
-	long futex_offset;
+	linux_word_t futex_offset;
 	struct linux_robust_list* list_op_pending;
 };
 struct linux_perf_event_attr
@@ -390,7 +389,7 @@ struct linux_file_handle
 };
 struct linux_getcpu_cache
 {
-	unsigned long blob[128 / sizeof(long)];
+	linux_uword_t blob[128 / sizeof(linux_uword_t)];
 };
 struct linux_sched_attr
 {
@@ -752,19 +751,19 @@ struct linux_oldold_utsname
 };
 struct linux_old_linux_dirent
 {
-	unsigned long d_ino;
-	unsigned long d_offset;
+	linux_uword_t d_ino;
+	linux_uword_t d_offset;
 	unsigned short d_namlen;
 	char d_name[];
 };
 struct linux_mmap_arg_struct
 {
-	unsigned long addr;
-	unsigned long len;
-	unsigned long prot;
-	unsigned long flags;
-	unsigned long fd;
-	unsigned long offset;
+	linux_uword_t addr;
+	linux_uword_t len;
+	linux_uword_t prot;
+	linux_uword_t flags;
+	linux_uword_t fd;
+	linux_uword_t offset;
 };
 struct linux_old_utsname
 {
@@ -1029,18 +1028,6 @@ struct linux_file_dedupe_range
 	uint32_t reserved2;
 	struct linux_file_dedupe_range_info info[];
 };
-struct linux_files_stat_struct
-{
-	unsigned long nr_files;
-	unsigned long nr_free_files;
-	unsigned long max_files;
-};
-struct linux_inodes_stat_t
-{
-	long nr_inodes;
-	long nr_unused;
-	long dummy[5];
-};
 struct linux_fsxattr
 {
 	uint32_t fsx_xflags;
@@ -1137,7 +1124,6 @@ struct linux_rusage
 	linux_word_t ru_nivcsw;
 };
 
-
 #if defined(LINUX_ARCH_ARM_EABI)
 #include "arm-eabi/structs.h"
 #elif defined(LINUX_ARCH_ARM64)
@@ -1162,14 +1148,14 @@ struct linux_old_sigaction
 {
 	linux_sighandler_t sa_handler;
 	linux_old_sigset_t sa_mask;
-	unsigned long sa_flags;
+	linux_uword_t sa_flags;
 	linux_sigrestore_t sa_restorer;
 };
 #endif
 #if defined(LINUX_ARCH_X86)
 struct linux_sel_arg_struct
 {
-	unsigned long n;
+	linux_uword_t n;
 	linux_fd_set *inp, *outp, *exp;
 	struct linux_old_timeval* tvp;
 };
@@ -1345,7 +1331,7 @@ struct linux_in6_rtmsg
 	uint16_t rtmsg_dst_len;
 	uint16_t rtmsg_src_len;
 	uint32_t rtmsg_metric;
-	unsigned long rtmsg_info;
+	linux_uword_t rtmsg_info;
 	uint32_t rtmsg_flags;
 	int rtmsg_ifindex;
 };
@@ -1520,7 +1506,7 @@ struct linux_tpacket_auxdata
 };
 struct linux_tpacket_hdr
 {
-	unsigned long tp_status;
+	linux_uword_t tp_status;
 	unsigned int tp_len;
 	unsigned int tp_snaplen;
 	unsigned short tp_mac;
@@ -1660,7 +1646,7 @@ struct linux_ax25_ctl_struct
 	linux_ax25_address source_addr;
 	linux_ax25_address dest_addr;
 	unsigned int cmd;
-	unsigned long arg;
+	linux_uword_t arg;
 	unsigned char digi_count;
 	linux_ax25_address digi_addr[linux_AX25_MAX_DIGIS];
 };
@@ -1707,8 +1693,8 @@ struct linux_sockaddr_x25
 };
 struct linux_x25_subscrip_struct
 {
-	char device[200-sizeof(unsigned long)];
-	unsigned long global_facil_mask;
+	char device[200-sizeof(linux_uword_t)];
+	linux_uword_t global_facil_mask;
 	unsigned int extended;
 };
 struct linux_x25_route_struct
@@ -2455,8 +2441,8 @@ typedef struct
 
 struct linux_ifmap
 {
-	unsigned long mem_start;
-	unsigned long mem_end;
+	linux_uword_t mem_start;
+	linux_uword_t mem_end;
 	unsigned short base_addr;
 	unsigned char irq;
 	unsigned char dma;
@@ -2563,7 +2549,7 @@ struct linux_serial_struct
 	unsigned char* iomem_base;
 	unsigned short iomem_reg_shift;
 	unsigned int port_high;
-	unsigned long iomap_base;
+	linux_uword_t iomap_base;
 };
 struct linux_serial_multiport_struct
 {
@@ -4589,13 +4575,13 @@ inline enum linux_error linux_io_uring_setup(uint32_t const entries, struct linu
 		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_io_uring_enter(linux_fd_t const fd, uint32_t const to_submit, uint32_t const min_complete, uint32_t const flags, linux_sigset_t const* const sig, linux_size_t const sigsz, long* const result)
+inline enum linux_error linux_io_uring_enter(linux_fd_t const fd, uint32_t const to_submit, uint32_t const min_complete, uint32_t const flags, linux_sigset_t const* const sig, linux_size_t const sigsz, int* const result)
 {
 	linux_word_t const ret = linux_syscall6((uint32_t)fd, to_submit, min_complete, flags, (uintptr_t)sig, sigsz, linux_syscall_name_io_uring_enter);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (long)ret;
+		*result = (int)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_io_uring_register(linux_fd_t const fd, unsigned int const opcode, void* const arg, unsigned int const nr_args, int* const result)

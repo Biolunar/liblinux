@@ -21,6 +21,8 @@
 #include "arch.h"
 #include "endian.h"
 
+#include <stdint.h>
+
 //=============================================================================
 // auxvec
 
@@ -845,9 +847,9 @@ enum
 #define linux_IN_CLASSE_NET    0xffffffff
 #define linux_IN_CLASSE_NSHIFT 0
 
-#define linux_INADDR_ANY               ((unsigned long int)0x00000000)
-#define linux_INADDR_BROADCAST         ((unsigned long int)0xffffffff)
-#define linux_INADDR_NONE              ((unsigned long int)0xffffffff)
+#define linux_INADDR_ANY               ((uint32_t)0x00000000)
+#define linux_INADDR_BROADCAST         ((uint32_t)0xffffffff)
+#define linux_INADDR_NONE              ((uint32_t)0xffffffff)
 #define linux_IN_LOOPBACKNET           127
 #define linux_INADDR_LOOPBACK          0x7f000001
 #define linux_INADDR_UNSPEC_GROUP      0xe0000000U
