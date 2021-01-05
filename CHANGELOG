@@ -1,5 +1,9 @@
 master
 ======
+(nothing yet)
+
+0.7.0
+=====
 
 - Added all new syscalls up to Linux 5.10.
 - Added new types and constants for some syscalls.
