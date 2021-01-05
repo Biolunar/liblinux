@@ -385,6 +385,7 @@ csrc = \
        src/openat2.c\
        src/pidfd_getfd.c\
        src/faccessat2.c\
+       src/process_madvise.c\
        src/breakpoint.c\
        src/cacheflush.c\
        src/usr26.c\
@@ -778,6 +779,7 @@ tests = \
         tests/syscalls/openat2\
         tests/syscalls/pidfd_getfd\
         tests/syscalls/faccessat2\
+        tests/syscalls/process_madvise\
         tests/syscalls/breakpoint\
         tests/syscalls/cacheflush\
         tests/syscalls/usr26\

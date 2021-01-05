@@ -389,6 +389,7 @@ static void test_arm_eabi(void)
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
+	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_breakpoint();
 	linux_cacheflush(0, 0, 0);
 	linux_usr26();
@@ -691,6 +692,7 @@ static void test_arm64(void)
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
+	linux_process_madvise(0, 0, 0, 0, 0, 0);
 }
 #endif
 
@@ -980,6 +982,7 @@ static void test_riscv32(void)
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
+	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_riscv_flush_icache(0, 0, 0);
 }
 #endif
@@ -1276,6 +1279,7 @@ static void test_riscv64(void)
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
+	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_riscv_flush_icache(0, 0, 0);
 }
 #endif
@@ -1688,6 +1692,7 @@ static void test_x86(void)
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
+	linux_process_madvise(0, 0, 0, 0, 0, 0);
 }
 #endif
 
@@ -2025,6 +2030,7 @@ static void test_x32_and_x86_64(void)
 	linux_openat2(0, 0, 0, 0, 0);
 	linux_pidfd_getfd(0, 0, 0, 0);
 	linux_faccessat2(0, 0, 0, 0);
+	linux_process_madvise(0, 0, 0, 0, 0, 0);
 }
 #endif
 

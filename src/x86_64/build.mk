@@ -330,7 +330,8 @@ csrc = \
        src/close_range.c\
        src/openat2.c\
        src/pidfd_getfd.c\
-       src/faccessat2.c
+       src/faccessat2.c\
+       src/process_madvise.c
 
 tests = \
         tests/syscalls/read\
@@ -663,4 +664,5 @@ tests = \
         tests/syscalls/close_range\
         tests/syscalls/openat2\
         tests/syscalls/pidfd_getfd\
-        tests/syscalls/faccessat2
+        tests/syscalls/faccessat2\
+        tests/syscalls/process_madvise

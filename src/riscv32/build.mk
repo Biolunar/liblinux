@@ -283,6 +283,7 @@ csrc = \
        src/openat2.c\
        src/pidfd_getfd.c\
        src/faccessat2.c\
+       src/process_madvise.c\
        src/riscv_flush_icache.c
 
 tests = \
@@ -569,4 +570,5 @@ tests = \
         tests/syscalls/openat2\
         tests/syscalls/pidfd_getfd\
         tests/syscalls/faccessat2\
+        tests/syscalls/process_madvise\
         tests/syscalls/riscv_flush_icache

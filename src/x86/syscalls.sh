@@ -402,4 +402,5 @@ SYSCALLS="fork\
           close_range\
           openat2\
           pidfd_getfd\
-          faccessat2"
+          faccessat2\
+          process_madvise"

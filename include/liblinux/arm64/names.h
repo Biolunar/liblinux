@@ -327,6 +327,7 @@ enum
 	linux_syscall_name_openat2                = 437,
 	linux_syscall_name_pidfd_getfd            = 438,
 	linux_syscall_name_faccessat2             = 439,
+	linux_syscall_name_process_madvise        = 440,
 };
 
 #endif // !HEADER_LIBLINUX_ARM64_NAMES_H_INCLUDED

@@ -4346,6 +4346,15 @@ inline enum linux_error linux_madvise(linux_uword_t const start, linux_size_t co
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_process_madvise(int const pidfd, struct linux_iovec const* const vec, linux_size_t const vlen, int const behavior, unsigned int const flags, linux_size_t* const result)
+{
+	linux_word_t const ret = linux_syscall5((unsigned int)pidfd, (uintptr_t)vec, vlen, (unsigned int)behavior, flags, linux_syscall_name_process_madvise);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_size_t)ret;
+	return linux_error_none;
+}
 inline enum linux_error linux_remap_file_pages(linux_uword_t const start, linux_uword_t const size, linux_uword_t const prot, linux_uword_t const pgoff, linux_uword_t const flags)
 {
 	linux_word_t const ret = linux_syscall5(start, size, prot, pgoff, flags, linux_syscall_name_remap_file_pages);

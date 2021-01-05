@@ -281,4 +281,5 @@ SYSCALLS="io_setup\
           openat2\
           pidfd_getfd\
           faccessat2\
+          process_madvise\
           riscv_flush_icache"
