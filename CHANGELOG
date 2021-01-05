@@ -1,7 +1,7 @@
 master
 ======
 
-- Added all new syscalls up to Linux 5.9.
+- Added all new syscalls up to Linux 5.10.
 - Added new types and constants for some syscalls.
 - Added examples how to use the library.
 - Added safety code after _start to prevent executing random memory.
