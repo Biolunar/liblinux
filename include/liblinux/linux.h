@@ -6400,7 +6400,7 @@ inline enum linux_error linux_futimesat(linux_fd_t const dfd, char const* const 
 // x86 vsyscalls
 
 #if defined(LINUX_ARCH_X86)
-// TODO: Add vsyscalls for x86.
+// TODO: Add vsyscalls for x86, except for clone (see the manpage).
 #endif
 
 //=============================================================================
