@@ -222,10 +222,15 @@ csrc = \
        src/set_thread_area.c\
        src/get_thread_area.c\
        src/io_setup.c\
+       src/io_setup_v.c\
        src/io_destroy.c\
+       src/io_destroy_v.c\
        src/io_getevents_time32.c\
+       src/io_getevents_time32_v.c\
        src/io_submit.c\
+       src/io_submit_v.c\
        src/io_cancel.c\
+       src/io_cancel_v.c\
        src/fadvise64.c\
        src/lookup_dcookie.c\
        src/epoll_create.c\
@@ -358,6 +363,7 @@ csrc = \
        src/statx.c\
        src/arch_prctl.c\
        src/io_pgetevents_time32.c\
+       src/io_pgetevents_time32_v.c\
        src/rseq.c\
        src/semget.c\
        src/semctl.c\
@@ -382,6 +388,7 @@ csrc = \
        src/pselect6.c\
        src/ppoll.c\
        src/io_pgetevents.c\
+       src/io_pgetevents_v.c\
        src/recvmmsg.c\
        src/mq_timedsend.c\
        src/mq_timedreceive.c\

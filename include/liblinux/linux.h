@@ -2861,6 +2861,72 @@ inline enum linux_error linux_io_pgetevents_time32(linux_aio_context_t const ctx
 }
 #endif
 
+#if defined(LINUX_ARCH_X86)
+inline enum linux_error linux_io_setup_v(unsigned int const nr_events, linux_aio_context_t* const ctxp)
+{
+	linux_word_t const ret = linux_vsyscall2(nr_events, (uintptr_t)ctxp, linux_syscall_name_io_setup);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_io_destroy_v(linux_aio_context_t const ctx)
+{
+	linux_word_t const ret = linux_vsyscall1(ctx, linux_syscall_name_io_destroy);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_io_submit_v(linux_aio_context_t const ctx_id, linux_word_t const nr, struct linux_iocb** const iocbpp, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall3(ctx_id, (linux_uword_t)nr, (uintptr_t)iocbpp, linux_syscall_name_io_submit);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_io_cancel_v(linux_aio_context_t const ctx_id, struct linux_iocb* const iocb, struct linux_io_event* const result)
+{
+	linux_word_t const ret = linux_vsyscall3(ctx_id, (uintptr_t)iocb, (uintptr_t)result, linux_syscall_name_io_cancel);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_io_pgetevents_v(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec* const timeout, struct linux_aio_sigset const* const usig, linux_word_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall6(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, (uintptr_t)usig, linux_syscall_name_io_pgetevents);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_word_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_io_getevents_time32_v(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec32* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
+{
+	linux_word_t const ret = linux_vsyscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_io_pgetevents_time32_v(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec32* const timeout, struct linux_aio_sigset const* const usig, int* const result) // DEPRECATED: use linux_io_pgetevents
+{
+	linux_word_t const ret = linux_vsyscall6(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, (uintptr_t)usig, linux_syscall_name_io_pgetevents_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // xattr
 
