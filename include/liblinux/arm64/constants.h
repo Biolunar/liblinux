@@ -40,6 +40,8 @@
 //-----------------------------------------------------------------------------
 // signals
 
+#define linux_NSIG 64
+
 #define linux_SIGHUP     1
 #define linux_SIGINT     2
 #define linux_SIGQUIT    3

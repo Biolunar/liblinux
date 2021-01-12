@@ -50,6 +50,8 @@
 //-----------------------------------------------------------------------------
 // signals
 
+#define linux_NSIG 64
+
 #define linux_OLD_NSIG 32
 
 #define linux_SIGHUP     1

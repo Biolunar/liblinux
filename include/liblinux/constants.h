@@ -54,6 +54,32 @@
 #define linux_AT_VECTOR_SIZE_BASE 20
 
 //=============================================================================
+// signals
+
+#define linux_SIG_DFL ((linux_sighandler_t) 0)
+#define linux_SIG_IGN ((linux_sighandler_t) 1)
+#define linux_SIG_ERR ((linux_sighandler_t)-1)
+
+//=============================================================================
+// aio
+
+enum
+{
+	linux_IOCB_CMD_PREAD     = 0,
+	linux_IOCB_CMD_PWRITE    = 1,
+	linux_IOCB_CMD_FSYNC     = 2,
+	linux_IOCB_CMD_FDSYNC    = 3,
+	// linux_IOCB_CMD_PREADX = 4,
+	linux_IOCB_CMD_POLL      = 5,
+	linux_IOCB_CMD_NOOP      = 6,
+	linux_IOCB_CMD_PREADV    = 7,
+	linux_IOCB_CMD_PWRITEV   = 8,
+};
+
+#define linux_IOCB_FLAG_RESFD  (1 << 0)
+#define linux_IOCB_FLAG_IOPRIO (1 << 1)
+
+//=============================================================================
 // wait
 
 #define linux_WNOHANG    0x00000001
@@ -186,15 +212,6 @@ enum // Kernel sources do not explicitly define these constants. They correspond
 	linux_W_OK = 2,
 	linux_R_OK = 4,
 };
-
-//=============================================================================
-// signals
-
-#define linux_NSIG 64
-
-#define linux_SIG_DFL ((linux_sighandler_t) 0)
-#define linux_SIG_IGN ((linux_sighandler_t) 1)
-#define linux_SIG_ERR ((linux_sighandler_t)-1)
 
 //=============================================================================
 // clone
@@ -3742,24 +3759,6 @@ enum linux_netdev_priv_flags
 #define TIOCL_SELBUTTONMASK  15
 
 //=============================================================================
-// aio
-
-enum
-{
-	linux_IOCB_CMD_PREAD   = 0,
-	linux_IOCB_CMD_PWRITE  = 1,
-	linux_IOCB_CMD_FSYNC   = 2,
-	linux_IOCB_CMD_FDSYNC  = 3,
-	linux_IOCB_CMD_POLL    = 5,
-	linux_IOCB_CMD_NOOP    = 6,
-	linux_IOCB_CMD_PREADV  = 7,
-	linux_IOCB_CMD_PWRITEV = 8,
-};
-
-#define linux_IOCB_FLAG_RESFD  (1 << 0)
-#define linux_IOCB_FLAG_IOPRIO (1 << 1)
-
-//=============================================================================
 // mount
 
 #define linux_MS_RDONLY          1
@@ -4102,6 +4101,7 @@ enum
 #define linux_SYNC_FILE_RANGE_WAIT_AFTER     4
 #define linux_SYNC_FILE_RANGE_WRITE_AND_WAIT (linux_SYNC_FILE_RANGE_WRITE | linux_SYNC_FILE_RANGE_WAIT_BEFORE | linux_SYNC_FILE_RANGE_WAIT_AFTER)
 
+// Used by linux_io_submit:
 #define linux_RWF_HIPRI     ((linux_rwf_t)0x00000001)
 #define linux_RWF_DSYNC     ((linux_rwf_t)0x00000002)
 #define linux_RWF_SYNC      ((linux_rwf_t)0x00000004)

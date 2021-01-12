@@ -47,7 +47,11 @@ typedef int32_t linux_wd_t;
 //=============================================================================
 // Generic types
 
-typedef long long          linux_time64_t;
+typedef int32_t            linux_rwf_t;
+
+//-----------------------------------------------------------------------------
+// TODO
+
 typedef linux_word_t       linux_old_time_t;
 typedef unsigned short     linux_umode_t;
 typedef unsigned int       linux_poll_t;
@@ -60,7 +64,6 @@ typedef long long          linux_loff_t;
 typedef unsigned int       linux_uid_t;
 typedef unsigned int       linux_gid_t;
 typedef linux_uid_t        linux_qid_t;
-typedef int                linux_rwf_t;
 typedef int                linux_clockid_t;
 typedef linux_word_t       linux_clock_t;
 typedef int                linux_timer_t;
@@ -69,18 +72,77 @@ typedef void               linux_restorefn_t(void);
 typedef linux_restorefn_t* linux_sigrestore_t;
 typedef unsigned char      linux_cc_t;
 typedef unsigned int       linux_speed_t;
-typedef linux_uword_t      linux_aio_context_t;
+
+//-----------------------------------------------------------------------------
+// time
+
+typedef int64_t linux_time_t;
 
 struct linux_timespec
 {
-	linux_time64_t tv_sec;
-	long long tv_nsec;
+	linux_time_t tv_sec;
+	int64_t      tv_nsec;
 };
+
 struct linux_itimerspec
 {
 	struct linux_timespec it_interval;
 	struct linux_timespec it_value;
 };
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
+typedef int32_t linux_time32_t;
+
+struct linux_timespec32
+{
+	linux_time32_t tv_sec;
+	int32_t        tv_nsec;
+};
+
+struct linux_itimerspec32
+{
+	struct linux_timespec32 it_interval;
+	struct linux_timespec32 it_value;
+};
+#endif
+
+//-----------------------------------------------------------------------------
+// aio
+
+typedef linux_uword_t linux_aio_context_t;
+
+struct linux_io_event
+{
+	uint64_t data;
+	uint64_t obj;
+	int64_t  res;
+	int64_t  res2;
+};
+
+struct linux_iocb
+{
+	uint64_t    aio_data;
+#ifdef LINUX_ENDIAN_LITTLE
+	uint32_t    aio_key;
+	linux_rwf_t aio_rw_flags;
+#else
+	linux_rwf_t aio_rw_flags;
+	uint32_t    aio_key;
+#endif
+	uint16_t    aio_lio_opcode;
+	int16_t     aio_reqprio;
+	uint32_t    aio_fildes;
+	uint64_t    aio_buf;
+	uint64_t    aio_nbytes;
+	int64_t     aio_offset;
+	uint64_t    aio_reserved2;
+	uint32_t    aio_flags;
+	uint32_t    aio_resfd;
+};
+
+//-----------------------------------------------------------------------------
+// TODO
+
 struct linux_utimbuf
 {
 	linux_old_time_t actime;
@@ -172,10 +234,6 @@ struct linux_pollfd
 	short events;
 	short revents;
 };
-typedef struct
-{
-	unsigned long sig[linux_NSIG / LINUX_BITS_PER_LONG];
-} linux_sigset_t; // Defined in a bunch of different architectures but all those agree on the definition. So assume it's generic.
 typedef union linux_sigval
 {
 	int sival_int;
@@ -197,33 +255,6 @@ typedef struct linux_sigevent
 		} sigev_thread;
 	} sigev_un;
 } linux_sigevent_t;
-struct linux_io_event
-{
-	uint64_t data;
-	uint64_t obj;
-	int64_t res;
-	int64_t res2;
-};
-struct linux_iocb
-{
-	uint64_t aio_data;
-#ifdef LINUX_ENDIAN_LITTLE
-	uint32_t aio_key;
-	linux_rwf_t aio_rw_flags;
-#else
-	linux_rwf_t aio_rw_flags;
-	uint32_t aio_key;
-#endif
-	uint16_t aio_lio_opcode;
-	int16_t aio_reqprio;
-	uint32_t aio_fildes;
-	uint64_t aio_buf;
-	uint64_t aio_nbytes;
-	int64_t aio_offset;
-	uint64_t aio_reserved2;
-	uint32_t aio_flags;
-	uint32_t aio_resfd;
-};
 struct linux_dirent64
 {
 	uint64_t d_ino;
@@ -264,7 +295,7 @@ struct linux_statx
 };
 struct linux_timex_timeval
 {
-	linux_time64_t tv_sec;
+	linux_time_t tv_sec;
 	long long tv_usec;
 };
 struct linux_timex
@@ -691,21 +722,10 @@ struct linux_clone_args
 };
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
-typedef int32_t linux_time32_t;
-struct linux_timespec32
-{
-	linux_time32_t tv_sec;
-	int32_t tv_nsec;
-};
 struct linux_timeval32
 {
 	linux_time32_t tv_sec;
 	int32_t tv_usec;
-};
-struct linux_itimerspec32
-{
-	struct linux_timespec32 it_interval;
-	struct linux_timespec32 it_value;
 };
 struct linux_utimbuf32
 {
@@ -1070,6 +1090,26 @@ struct linux_open_how
 #include "drm/drm_mode.h"
 #include "drm/drm_fourcc.h"
 
+//-----------------------------------------------------------------------------
+// signal
+
+typedef struct
+{
+	unsigned long sig[linux_NSIG / LINUX_BITS_PER_LONG];
+} linux_sigset_t;
+
+//-----------------------------------------------------------------------------
+// aio
+
+struct linux_aio_sigset
+{
+	linux_sigset_t const* sigmask;
+	linux_size_t          sigsetsize;
+};
+
+//-----------------------------------------------------------------------------
+// TODO
+
 struct linux_old_timeval
 {
 	linux_word_t tv_sec;
@@ -1091,11 +1131,6 @@ struct linux_ustat
 	linux_ino_t f_tinode;
 	char f_fname[6];
 	char f_fpack[6];
-};
-struct linux_aio_sigset
-{
-	linux_sigset_t const* sigmask;
-	linux_size_t sigsetsize;
 };
 struct linux_kexec_segment
 {
@@ -2753,6 +2788,7 @@ inline enum linux_error linux_io_setup(unsigned int const nr_events, linux_aio_c
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_io_destroy(linux_aio_context_t const ctx)
 {
 	linux_word_t const ret = linux_syscall1(ctx, linux_syscall_name_io_destroy);
@@ -2760,6 +2796,7 @@ inline enum linux_error linux_io_destroy(linux_aio_context_t const ctx)
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_io_submit(linux_aio_context_t const ctx_id, linux_word_t const nr, struct linux_iocb** const iocbpp, linux_word_t* const result)
 {
 	linux_word_t const ret = linux_syscall3(ctx_id, (linux_uword_t)nr, (uintptr_t)iocbpp, linux_syscall_name_io_submit);
@@ -2769,6 +2806,7 @@ inline enum linux_error linux_io_submit(linux_aio_context_t const ctx_id, linux_
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_io_cancel(linux_aio_context_t const ctx_id, struct linux_iocb* const iocb, struct linux_io_event* const result)
 {
 	linux_word_t const ret = linux_syscall3(ctx_id, (uintptr_t)iocb, (uintptr_t)result, linux_syscall_name_io_cancel);
@@ -2776,6 +2814,7 @@ inline enum linux_error linux_io_cancel(linux_aio_context_t const ctx_id, struct
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_io_pgetevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec* const timeout, struct linux_aio_sigset const* const usig, linux_word_t* const result)
 {
 	linux_word_t const ret = linux_syscall6(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, (uintptr_t)usig, linux_syscall_name_io_pgetevents);
@@ -2785,6 +2824,42 @@ inline enum linux_error linux_io_pgetevents(linux_aio_context_t const ctx_id, li
 		*result = (linux_word_t)ret;
 	return linux_error_none;
 }
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
+inline enum linux_error linux_io_getevents_time32(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec32* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
+{
+	linux_word_t const ret = linux_syscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
+{
+	linux_word_t const ret = linux_syscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
+inline enum linux_error linux_io_pgetevents_time32(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec32* const timeout, struct linux_aio_sigset const* const usig, int* const result) // DEPRECATED: use linux_io_pgetevents
+{
+	linux_word_t const ret = linux_syscall6(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, (uintptr_t)usig, linux_syscall_name_io_pgetevents_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // xattr
@@ -5478,24 +5553,6 @@ inline enum linux_error linux_fstat64(linux_uword_t const fd, struct linux_stat6
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
-inline enum linux_error linux_io_getevents_time32(uint32_t const ctx_id, int32_t const min_nr, int32_t const nr, struct linux_io_event* const events, struct linux_timespec32* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
-{
-	linux_word_t const ret = linux_syscall5(ctx_id, (uint32_t)min_nr, (uint32_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents_time32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_io_pgetevents_time32(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec32* const timeout, struct linux_aio_sigset const* const usig, int* const result) // DEPRECATED: use linux_io_pgetevents
-{
-	linux_word_t const ret = linux_syscall6(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, (uintptr_t)usig, linux_syscall_name_io_pgetevents_time32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
 inline enum linux_error linux_adjtimex_time32(struct linux_timex32* const utp, int* const result)
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)utp, linux_syscall_name_adjtimex_time32);
@@ -6084,15 +6141,6 @@ inline enum linux_error linux_fadvise64_64(linux_fd_t const fd, linux_loff_t con
 #endif
 
 #if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_io_getevents(linux_aio_context_t const ctx_id, linux_word_t const min_nr, linux_word_t const nr, struct linux_io_event* const events, struct linux_timespec* const timeout, int* const result) // DEPRECATED: use linux_io_pgetevents
-{
-	linux_word_t const ret = linux_syscall5(ctx_id, (linux_uword_t)min_nr, (linux_uword_t)nr, (uintptr_t)events, (uintptr_t)timeout, linux_syscall_name_io_getevents);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
 inline enum linux_error linux_adjtimex(struct linux_timex* const txc_p, int* const result) // DEPRECATED: use linux_clock_adjtime
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)txc_p, linux_syscall_name_adjtimex);
