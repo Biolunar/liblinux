@@ -203,17 +203,29 @@ csrc = \
        src/gettid.c\
        src/readahead.c\
        src/setxattr.c\
+       src/setxattr_v.c\
        src/lsetxattr.c\
+       src/lsetxattr_v.c\
        src/fsetxattr.c\
+       src/fsetxattr_v.c\
        src/getxattr.c\
+       src/getxattr_v.c\
        src/lgetxattr.c\
+       src/lgetxattr_v.c\
        src/fgetxattr.c\
+       src/fgetxattr_v.c\
        src/listxattr.c\
+       src/listxattr_v.c\
        src/llistxattr.c\
+       src/llistxattr_v.c\
        src/flistxattr.c\
+       src/flistxattr_v.c\
        src/removexattr.c\
+       src/removexattr_v.c\
        src/lremovexattr.c\
+       src/lremovexattr_v.c\
        src/fremovexattr.c\
+       src/fremovexattr_v.c\
        src/tkill.c\
        src/sendfile64.c\
        src/futex_time32.c\

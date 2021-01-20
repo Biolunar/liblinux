@@ -2937,6 +2937,7 @@ inline enum linux_error linux_setxattr(char const* const pathname, char const* c
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_lsetxattr(char const* const pathname, char const* const name, void const* const value, linux_size_t const size, int const flags)
 {
 	linux_word_t const ret = linux_syscall5((uintptr_t)pathname, (uintptr_t)name, (uintptr_t)value, size, (unsigned int)flags, linux_syscall_name_lsetxattr);
@@ -2944,6 +2945,7 @@ inline enum linux_error linux_lsetxattr(char const* const pathname, char const* 
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_fsetxattr(linux_fd_t const fd, char const* const name, void const* const value, linux_size_t const size, int const flags)
 {
 	linux_word_t const ret = linux_syscall5((uint32_t)fd, (uintptr_t)name, (uintptr_t)value, size, (unsigned int)flags, linux_syscall_name_fsetxattr);
@@ -2951,6 +2953,7 @@ inline enum linux_error linux_fsetxattr(linux_fd_t const fd, char const* const n
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_getxattr(char const* const pathname, char const* const name, void* const value, linux_size_t const size, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall4((uintptr_t)pathname, (uintptr_t)name, (uintptr_t)value, size, linux_syscall_name_getxattr);
@@ -2960,6 +2963,7 @@ inline enum linux_error linux_getxattr(char const* const pathname, char const* c
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_lgetxattr(char const* const pathname, char const* const name, void* const value, linux_size_t const size, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall4((uintptr_t)pathname, (uintptr_t)name, (uintptr_t)value, size, linux_syscall_name_lgetxattr);
@@ -2969,6 +2973,7 @@ inline enum linux_error linux_lgetxattr(char const* const pathname, char const* 
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_fgetxattr(linux_fd_t const fd, char const* const name, void* const value, linux_size_t const size, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall4((uint32_t)fd, (uintptr_t)name, (uintptr_t)value, size, linux_syscall_name_fgetxattr);
@@ -2978,6 +2983,7 @@ inline enum linux_error linux_fgetxattr(linux_fd_t const fd, char const* const n
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_listxattr(char const* const pathname, char* const list, linux_size_t const size, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((uintptr_t)pathname, (uintptr_t)list, size, linux_syscall_name_listxattr);
@@ -2987,6 +2993,7 @@ inline enum linux_error linux_listxattr(char const* const pathname, char* const 
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_llistxattr(char const* const pathname, char* const list, linux_size_t const size, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((uintptr_t)pathname, (uintptr_t)list, size, linux_syscall_name_llistxattr);
@@ -2996,6 +3003,7 @@ inline enum linux_error linux_llistxattr(char const* const pathname, char* const
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_flistxattr(linux_fd_t const fd, char* const list, linux_size_t const size, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)list, size, linux_syscall_name_flistxattr);
@@ -3005,6 +3013,7 @@ inline enum linux_error linux_flistxattr(linux_fd_t const fd, char* const list, 
 		*result = (linux_ssize_t)ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_removexattr(char const* const pathname, char const* const name)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)pathname, (uintptr_t)name, linux_syscall_name_removexattr);
@@ -3012,6 +3021,7 @@ inline enum linux_error linux_removexattr(char const* const pathname, char const
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_lremovexattr(char const* const pathname, char const* const name)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)pathname, (uintptr_t)name, linux_syscall_name_lremovexattr);
@@ -3019,6 +3029,7 @@ inline enum linux_error linux_lremovexattr(char const* const pathname, char cons
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_fremovexattr(linux_fd_t const fd, char const* const name)
 {
 	linux_word_t const ret = linux_syscall2((uint32_t)fd, (uintptr_t)name, linux_syscall_name_fremovexattr);
@@ -3026,6 +3037,116 @@ inline enum linux_error linux_fremovexattr(linux_fd_t const fd, char const* cons
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
+#if defined(LINUX_ARCH_X86)
+inline enum linux_error linux_setxattr_v(char const* const pathname, char const* const name, void const* const value, linux_size_t const size, int const flags)
+{
+	linux_word_t const ret = linux_vsyscall5((uintptr_t)pathname, (uintptr_t)name, (uintptr_t)value, size, (unsigned int)flags, linux_syscall_name_setxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_lsetxattr_v(char const* const pathname, char const* const name, void const* const value, linux_size_t const size, int const flags)
+{
+	linux_word_t const ret = linux_vsyscall5((uintptr_t)pathname, (uintptr_t)name, (uintptr_t)value, size, (unsigned int)flags, linux_syscall_name_lsetxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_fsetxattr_v(linux_fd_t const fd, char const* const name, void const* const value, linux_size_t const size, int const flags)
+{
+	linux_word_t const ret = linux_vsyscall5((uint32_t)fd, (uintptr_t)name, (uintptr_t)value, size, (unsigned int)flags, linux_syscall_name_fsetxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_getxattr_v(char const* const pathname, char const* const name, void* const value, linux_size_t const size, linux_ssize_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall4((uintptr_t)pathname, (uintptr_t)name, (uintptr_t)value, size, linux_syscall_name_getxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_ssize_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_lgetxattr_v(char const* const pathname, char const* const name, void* const value, linux_size_t const size, linux_ssize_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall4((uintptr_t)pathname, (uintptr_t)name, (uintptr_t)value, size, linux_syscall_name_lgetxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_ssize_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_fgetxattr_v(linux_fd_t const fd, char const* const name, void* const value, linux_size_t const size, linux_ssize_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall4((uint32_t)fd, (uintptr_t)name, (uintptr_t)value, size, linux_syscall_name_fgetxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_ssize_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_listxattr_v(char const* const pathname, char* const list, linux_size_t const size, linux_ssize_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall3((uintptr_t)pathname, (uintptr_t)list, size, linux_syscall_name_listxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_ssize_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_llistxattr_v(char const* const pathname, char* const list, linux_size_t const size, linux_ssize_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall3((uintptr_t)pathname, (uintptr_t)list, size, linux_syscall_name_llistxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_ssize_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_flistxattr_v(linux_fd_t const fd, char* const list, linux_size_t const size, linux_ssize_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall3((uint32_t)fd, (uintptr_t)list, size, linux_syscall_name_flistxattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_ssize_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_removexattr_v(char const* const pathname, char const* const name)
+{
+	linux_word_t const ret = linux_vsyscall2((uintptr_t)pathname, (uintptr_t)name, linux_syscall_name_removexattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_lremovexattr_v(char const* const pathname, char const* const name)
+{
+	linux_word_t const ret = linux_vsyscall2((uintptr_t)pathname, (uintptr_t)name, linux_syscall_name_lremovexattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_fremovexattr_v(linux_fd_t const fd, char const* const name)
+{
+	linux_word_t const ret = linux_vsyscall2((uint32_t)fd, (uintptr_t)name, linux_syscall_name_fremovexattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // polling
