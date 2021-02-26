@@ -29,51 +29,42 @@
 #include <stdalign.h>
 
 // TODO: I changed (u)long to (u)word_t in all signatures. TODO: also change that in structures that are passed to syscalls. TODO: also change the typedefs?
+// TODO: Replace primitive types and signed types with appropriate fixed types in syscall signatures.
 // TODO: find a good and future proof way to name all syscalls. Currently I'm using the names from the unterlying kernel functions.
-
-// Type replacements
-// -----------------
-// long -> linux_word_t
-// unsigned long -> linux_uword_t
-// __kernel_long_t -> linux_word_t
-// __kernel_ulong_t -> linux_uword_t
-
-//=============================================================================
-// Helper types
-
-typedef int32_t linux_fd_t;
-typedef int32_t linux_wd_t;
+// TODO: Some architectures have unique types and constants. Make them stand out more?
 
 //=============================================================================
 // Generic types
 
-typedef int32_t            linux_rwf_t;
+typedef int32_t  linux_fd_t;
+typedef int32_t  linux_rwf_t;
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 // TODO
 
-typedef linux_word_t       linux_old_time_t;
-typedef unsigned short     linux_umode_t;
-typedef unsigned int       linux_poll_t;
-typedef int32_t            linux_key_serial_t;
-typedef int                linux_key_t;
-typedef int                linux_mqd_t;
-typedef int                linux_pid_t;
-typedef linux_word_t       linux_off_t;
-typedef long long          linux_loff_t;
-typedef unsigned int       linux_uid_t;
-typedef unsigned int       linux_gid_t;
-typedef linux_uid_t        linux_qid_t;
-typedef int                linux_clockid_t;
-typedef linux_word_t       linux_clock_t;
-typedef int                linux_timer_t;
-typedef void               linux_signalfn_t(int);
+typedef int32_t        linux_wd_t;
+typedef linux_word_t   linux_old_time_t;
+typedef unsigned short linux_umode_t;
+typedef int32_t        linux_key_serial_t;
+typedef int            linux_key_t;
+typedef int            linux_mqd_t;
+typedef linux_word_t   linux_off_t;
+typedef long long      linux_loff_t;
+typedef unsigned int   linux_uid_t;
+typedef unsigned int   linux_gid_t;
+typedef linux_uid_t    linux_qid_t;
+typedef int            linux_clockid_t;
+typedef linux_word_t   linux_clock_t;
+typedef int            linux_timer_t;
+typedef unsigned int   linux_poll_t;
+typedef int            linux_pid_t;
+typedef void           linux_signalfn_t(int);
 typedef void               linux_restorefn_t(void);
 typedef linux_restorefn_t* linux_sigrestore_t;
 typedef unsigned char      linux_cc_t;
 typedef unsigned int       linux_speed_t;
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 // time
 
 typedef int64_t linux_time_t;
@@ -106,7 +97,7 @@ struct linux_itimerspec32
 };
 #endif
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 // aio
 
 typedef linux_uword_t linux_aio_context_t;
@@ -140,7 +131,7 @@ struct linux_iocb
 	uint32_t    aio_resfd;
 };
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 // TODO
 
 struct linux_utimbuf

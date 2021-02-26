@@ -529,9 +529,9 @@ enum linux_sock_type
 
 #define linux_NFF 5
 
-#define	linux_RTSXOFF 0x0001
-#define	linux_CTSXON  0x0002
-#define	linux_DTRXOFF 0x0004
+#define linux_RTSXOFF 0x0001
+#define linux_CTSXON  0x0002
+#define linux_DTRXOFF 0x0004
 #define linux_DSRXON  0x0008
 
 #endif // !HEADER_LIBLINUX_ARM_EABI_CONSTANTS_H_INCLUDED

@@ -21,7 +21,24 @@
 #include "arch.h"
 #include "endian.h"
 
+#include <stddef.h>
 #include <stdint.h>
+
+//=============================================================================
+// aio
+
+#define linux_IOCB_CMD_PREAD    UINT16_C(0)
+#define linux_IOCB_CMD_PWRITE   UINT16_C(1)
+#define linux_IOCB_CMD_FSYNC    UINT16_C(2)
+#define linux_IOCB_CMD_FDSYNC   UINT16_C(3)
+//#define linux_IOCB_CMD_PREADX UINT16_C(4)
+#define linux_IOCB_CMD_POLL     UINT16_C(5)
+#define linux_IOCB_CMD_NOOP     UINT16_C(6)
+#define linux_IOCB_CMD_PREADV   UINT16_C(7)
+#define linux_IOCB_CMD_PWRITEV  UINT16_C(8)
+
+#define linux_IOCB_FLAG_RESFD  (UINT32_C(1) << 0)
+#define linux_IOCB_FLAG_IOPRIO (UINT32_C(1) << 1)
 
 //=============================================================================
 // auxvec

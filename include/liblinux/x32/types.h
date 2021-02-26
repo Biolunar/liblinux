@@ -19,7 +19,11 @@
 
 #include <stdint.h>
 
-typedef uint32_t          linux_size_t;
+typedef uint32_t           linux_size_t;
+
+//-----------------------------------------------------------------------------
+// TODO
+
 typedef int               linux_daddr_t;
 typedef unsigned int      linux_mode_t;
 typedef int               linux_ipc_pid_t; // unused
