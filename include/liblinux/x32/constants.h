@@ -17,6 +17,20 @@
 #ifndef HEADER_LIBLINUX_X32_CONSTANTS_H_INCLUDED
 #define HEADER_LIBLINUX_X32_CONSTANTS_H_INCLUDED
 
+#include <stdint.h>
+
+//=============================================================================
+// poll
+
+#define linux_POLLWRNORM UINT16_C(0x0100)
+#define linux_POLLWRBAND UINT16_C(0x0200)
+#define linux_POLLMSG    UINT16_C(0x0400)
+#define linux_POLLREMOVE UINT16_C(0x1000)
+#define linux_POLLRDHUP  UINT16_C(0x2000)
+
+//=============================================================================
+// TODO
+
 #define linux_PAGE_SHIFT 12
 #define linux_PAGE_SIZE  (1UL << linux_PAGE_SHIFT)
 #define linux_PAGE_MASK  (~(linux_PAGE_SIZE - 1))
@@ -503,15 +517,6 @@ enum linux_sock_type
 #define linux_TCSANOW   0
 #define linux_TCSADRAIN 1
 #define linux_TCSAFLUSH 2
-
-//=============================================================================
-// poll
-
-#define linux_POLLWRNORM 0x0100
-#define linux_POLLWRBAND 0x0200
-#define linux_POLLMSG    0x0400
-#define linux_POLLREMOVE 0x1000
-#define linux_POLLRDHUP  0x2000
 
 //=============================================================================
 // termios

@@ -20,6 +20,18 @@
 #include <stdint.h>
 #include <stdalign.h>
 
+//=============================================================================
+// epoll
+
+struct linux_epoll_event
+{
+	linux_poll_t events;
+	uint64_t     data[1];
+};
+
+//=============================================================================
+// TODO
+
 struct linux_stat
 {
 	unsigned long st_dev;
@@ -357,16 +369,6 @@ struct linux_flock64
 	linux_loff_t l_len;
 	linux_pid_t l_pid;
 };
-
-//=============================================================================
-// epoll
-
-struct linux_epoll_event
-{
-	linux_poll_t events;
-	uint64_t data;
-};
-_Static_assert(alignof(struct linux_epoll_event) == 4, "struct linux_epoll_event is misaligned");
 
 //=============================================================================
 // termios

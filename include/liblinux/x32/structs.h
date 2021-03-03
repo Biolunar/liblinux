@@ -17,8 +17,26 @@
 #ifndef HEADER_LIBLINUX_X32_STRUCTS_H_INCLUDED
 #define HEADER_LIBLINUX_X32_STRUCTS_H_INCLUDED
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdalign.h>
+
+//=============================================================================
+// epoll
+
+// NOTICE: Technically this struct wants an alignment of 1 but that is not
+// possible with standard C, and it doesn't matter in practice since the kernel
+// doesn't produce these structs.
+struct linux_epoll_event
+{
+	linux_poll_t  events;
+	unsigned char data[sizeof(uint64_t)];
+};
+_Static_assert(sizeof(struct linux_epoll_event) == sizeof(linux_poll_t) + sizeof(uint64_t), "struct linux_epoll_event has incorrect size");
+_Static_assert(offsetof(struct linux_epoll_event, data) == sizeof(linux_poll_t), "struct linux_epoll_event member 'data' is misaligned");
+
+//=============================================================================
+// TODO
 
 struct linux_stat
 {
@@ -249,16 +267,6 @@ struct linux_flock64
 	linux_loff_t l_len;
 	linux_pid_t l_pid;
 };
-
-//=============================================================================
-// epoll
-
-struct linux_epoll_event
-{
-	linux_poll_t events;
-	unsigned char data[sizeof(uint64_t)];
-};
-_Static_assert(offsetof(struct linux_epoll_event, data) == sizeof(linux_poll_t), "struct linux_epoll_event member 'data' is misaligned");
 
 //=============================================================================
 // termios
