@@ -20,6 +20,9 @@
 #include <stdint.h>
 
 typedef linux_uword_t     linux_size_t;
+typedef void              linux_signalfn_t(int);
+typedef linux_signalfn_t* linux_sighandler_t;
+typedef long              linux_si_band_t;
 
 //-----------------------------------------------------------------------------
 // TODO
@@ -31,6 +34,5 @@ typedef linux_word_t      linux_ssize_t;
 typedef linux_word_t      linux_suseconds_t;
 typedef linux_uword_t     linux_ino_t;
 typedef linux_word_t      linux_statfs_word;
-typedef linux_signalfn_t* linux_sighandler_t;
 
 #endif // !HEADER_LIBLINUX_RISCV64_TYPES_H_INCLUDED

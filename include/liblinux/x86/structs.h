@@ -30,6 +30,112 @@ struct linux_epoll_event
 };
 
 //=============================================================================
+// signal
+
+typedef struct
+{
+	alignas(alignof(linux_clock_t)) unsigned char data[sizeof(linux_clock_t)];
+} linux_si_clock_t; // NOTICE: can be memcpy'd into a linux_clock_t
+_Static_assert(sizeof(linux_si_clock_t) == sizeof(linux_clock_t), "size of linux_si_clock_t is not equal to size of linux_clock_t");
+_Static_assert(alignof(linux_si_clock_t) == alignof(linux_clock_t), "alignment of linux_si_clock_t is not equal to alignment of linux_clock_t");
+
+union linux_sifields
+{
+	struct
+	{
+		linux_pid_t pid;
+		linux_uid_t uid;
+	} kill;
+	struct
+	{
+		linux_timer_t tid;
+		int overrun;
+		linux_sigval_t sigval;
+		int _sys_private;
+	} timer;
+	struct
+	{
+		linux_pid_t pid;
+		linux_uid_t uid;
+		linux_sigval_t sigval;
+	} rt;
+	struct
+	{
+		linux_pid_t pid;
+		linux_uid_t uid;
+		int status;
+		linux_si_clock_t utime;
+		linux_si_clock_t stime;
+	} sigchld;
+	struct
+	{
+		void* addr;
+#define linux_ADDR_BND_PKEY_PAD (alignof(void*) < sizeof(short) ? sizeof(short) : alignof(void*))
+		union
+		{
+			short addr_lsb;
+			struct
+			{
+				char _dummy_bnd[linux_ADDR_BND_PKEY_PAD];
+				void* lower;
+				void* upper;
+			} addr_bnd;
+			struct
+			{
+				char _dummy_pkey[linux_ADDR_BND_PKEY_PAD];
+				uint32_t pkey;
+			} addr_pkey;
+		};
+#undef linux_ADDR_BND_PKEY_PAD
+	} sigfault;
+	struct
+	{
+		linux_si_band_t band;
+		int fd;
+	} sigpoll;
+	struct
+	{
+		void* call_addr;
+		int syscall;
+		unsigned int arch;
+	} sigsys;
+};
+
+typedef struct linux_siginfo
+{
+	union
+	{
+		struct
+		{
+			uint32_t si_signo;
+			int si_errno;
+			int32_t si_code;
+			union linux_sifields sifields;
+		};
+		int _si_pad[linux_SI_MAX_SIZE / sizeof(int)];
+	};
+} linux_siginfo_t;
+
+struct linux_sigaction
+{
+	union
+	{
+		linux_sighandler_t   sa_handler;
+		void               (*sa_sigaction)(int, struct linux_siginfo*, void*);
+	};
+	linux_sigset_t   sa_mask;
+	uintptr_t        sa_flags;
+	void           (*sa_restorer)(void);
+};
+
+typedef struct linux_sigaltstack
+{
+	void* ss_sp;
+	uint32_t ss_flags;
+	linux_size_t ss_size;
+} linux_stack_t;
+
+//=============================================================================
 // TODO
 
 struct linux_stat
@@ -67,90 +173,6 @@ struct linux_statfs
 	linux_statfs_word f_frsize;
 	linux_statfs_word f_flags;
 	linux_statfs_word f_spare[4];
-};
-union linux_sifields
-{
-	struct
-	{
-		linux_pid_t pid;
-		linux_uid_t uid;
-	} kill;
-	struct
-	{
-		linux_timer_t tid;
-		int overrun;
-		linux_sigval_t sigval;
-		int _sys_private;
-	} timer;
-	struct
-	{
-		linux_pid_t pid;
-		linux_uid_t uid;
-		linux_sigval_t sigval;
-	} rt;
-	struct
-	{
-		linux_pid_t pid;
-		linux_uid_t uid;
-		int status;
-		linux_clock_t utime;
-		linux_clock_t stime;
-	} sigchld;
-	struct
-	{
-		void* addr;
-		union
-		{
-			short addr_lsb;
-			struct
-			{
-				char _dummy_bnd[alignof(void*) < sizeof(short) ? sizeof(short) : alignof(void*)];
-				void* lower;
-				void* upper;
-			} addr_bnd;
-			struct
-			{
-				char _dummy_pkey[alignof(void*) < sizeof(short) ? sizeof(short) : alignof(void*)];
-				uint32_t pkey;
-			} addr_pkey;
-		};
-	} sigfault;
-	struct
-	{
-		long band;
-		int fd;
-	} sigpoll;
-	struct
-	{
-		void* call_addr;
-		int syscall;
-		unsigned int arch;
-	} sigsys;
-};
-typedef struct linux_siginfo
-{
-	union
-	{
-		struct
-		{
-			int si_signo;
-			int si_errno;
-			int si_code;
-			union linux_sifields sifields;
-		};
-		int _si_pad[128 / sizeof(int)];
-	};
-} linux_siginfo_t;
-struct linux_sigaction
-{
-	union
-	{
-		linux_sighandler_t sa_handler;
-		void (*sa_sigaction)(int, struct linux_siginfo*, void*);
-	};
-	linux_sigset_t sa_mask;
-	unsigned long sa_flags;
-	void (*sa_restorer)(void);
 };
 struct linux_ipc64_perm
 {
@@ -216,12 +238,6 @@ struct linux_sysinfo
 	uint32_t mem_unit;
 	char _f[20 - 2 * sizeof(linux_uword_t) - sizeof(uint32_t)];
 };
-typedef struct linux_sigaltstack
-{
-	void* ss_sp;
-	int ss_flags;
-	linux_size_t ss_size;
-} linux_stack_t;
 
 struct linux_old_kernel_stat
 {

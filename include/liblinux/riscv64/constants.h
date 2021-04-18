@@ -29,6 +29,79 @@
 #define linux_POLLRDHUP  UINT16_C(0x2000)
 
 //=============================================================================
+// signal
+
+#define linux_NSIG UINT32_C(64)
+
+//-----------------------------------------------------------------------------
+// signals
+
+#define linux_SIGBUS    UINT32_C( 7)
+#define linux_SIGUSR1   UINT32_C(10)
+#define linux_SIGUSR2   UINT32_C(12)
+#define linux_SIGSTKFLT UINT32_C(16)
+#define linux_SIGCHLD   UINT32_C(17)
+#define linux_SIGCONT   UINT32_C(18)
+#define linux_SIGSTOP   UINT32_C(19)
+#define linux_SIGTSTP   UINT32_C(20)
+#define linux_SIGTTIN   UINT32_C(21)
+#define linux_SIGTTOU   UINT32_C(22)
+#define linux_SIGURG    UINT32_C(23)
+#define linux_SIGXCPU   UINT32_C(24)
+#define linux_SIGXFSZ   UINT32_C(25)
+#define linux_SIGVTALRM UINT32_C(26)
+#define linux_SIGPROF   UINT32_C(27)
+#define linux_SIGWINCH  UINT32_C(28)
+#define linux_SIGIO     UINT32_C(29)
+#define linux_SIGPWR    UINT32_C(30)
+#define linux_SIGSYS    UINT32_C(31)
+#define linux_SIGUNUSED UINT32_C(31)
+
+#define linux_SIGRTMAX  linux_NSIG
+
+//-----------------------------------------------------------------------------
+// sigaction
+
+#define linux_SA_NOCLDSTOP UINT32_C(0x00000001)
+#define linux_SA_NOCLDWAIT UINT32_C(0x00000002)
+#define linux_SA_SIGINFO   UINT32_C(0x00000004)
+#define linux_SA_ONSTACK   UINT32_C(0x08000000)
+#define linux_SA_RESTART   UINT32_C(0x10000000)
+#define linux_SA_NODEFER   UINT32_C(0x40000000)
+#define linux_SA_RESETHAND UINT32_C(0x80000000)
+#define linux_SA_ONESHOT   linux_SA_RESETHAND
+
+//-----------------------------------------------------------------------------
+// sigaltstack
+
+#define linux_MINSIGSTKSZ ((linux_size_t)2048)
+#define linux_SIGSTKSZ    ((linux_size_t)8192)
+
+#define linux_SS_ONSTACK UINT32_C(1)
+#define linux_SS_DISABLE UINT32_C(2)
+
+#define linux_SS_AUTODISARM UINT32_C(0x80000000)
+#define linux_SS_FLAG_BITS  linux_SS_AUTODISARM
+
+//-----------------------------------------------------------------------------
+// sigprocmask
+
+#define linux_SIG_BLOCK   UINT32_C(0)
+#define linux_SIG_UNBLOCK UINT32_C(1)
+#define linux_SIG_SETMASK UINT32_C(2)
+
+//-----------------------------------------------------------------------------
+// siginfo
+
+#define linux_SI_TIMER   INT32_C(-2)
+#define linux_SI_MESGQ   INT32_C(-3)
+#define linux_SI_ASYNCIO INT32_C(-4)
+
+#define linux_SEGV_PKUERR INT32_C(4)
+
+#define linux_ARCH_SIGEV_PREAMBLE_SIZE (sizeof(uint32_t) * 2 + sizeof(linux_sigval_t))
+
+//=============================================================================
 // TODO
 
 #define linux_PAGE_SHIFT 12
@@ -41,77 +114,6 @@
 #define linux_AT_SYSINFO_EHDR 33
 
 #define linux_AT_VECTOR_SIZE_ARCH 1
-
-//=============================================================================
-// signal
-
-//-----------------------------------------------------------------------------
-// signals
-
-#define linux_NSIG 64
-
-#define linux_SIGHUP     1
-#define linux_SIGINT     2
-#define linux_SIGQUIT    3
-#define linux_SIGILL     4
-#define linux_SIGTRAP    5
-#define linux_SIGABRT    6
-#define linux_SIGIOT     6
-#define linux_SIGBUS     7
-#define linux_SIGFPE     8
-#define linux_SIGKILL    9
-#define linux_SIGUSR1   10
-#define linux_SIGSEGV   11
-#define linux_SIGUSR2   12
-#define linux_SIGPIPE   13
-#define linux_SIGALRM   14
-#define linux_SIGTERM   15
-#define linux_SIGSTKFLT 16
-#define linux_SIGCHLD   17
-#define linux_SIGCONT   18
-#define linux_SIGSTOP   19
-#define linux_SIGTSTP   20
-#define linux_SIGTTIN   21
-#define linux_SIGTTOU   22
-#define linux_SIGURG    23
-#define linux_SIGXCPU   24
-#define linux_SIGXFSZ   25
-#define linux_SIGVTALRM 26
-#define linux_SIGPROF   27
-#define linux_SIGWINCH  28
-#define linux_SIGIO     29
-#define linux_SIGPOLL   linux_SIGIO
-#define linux_SIGPWR    30
-#define linux_SIGSYS    31
-#define linux_SIGUNUSED 31
-#define linux_SIGRTMIN  32
-#define linux_SIGRTMAX  64
-
-//-----------------------------------------------------------------------------
-// sigaction flags
-
-#define linux_SA_NOCLDSTOP 0x00000001
-#define linux_SA_NOCLDWAIT 0x00000002
-#define linux_SA_SIGINFO   0x00000004
-#define linux_SA_ONSTACK   0x08000000
-#define linux_SA_RESTART   0x10000000
-#define linux_SA_NODEFER   0x40000000
-#define linux_SA_RESETHAND 0x80000000
-#define linux_SA_NOMASK    linux_SA_NODEFER
-#define linux_SA_ONESHOT   linux_SA_RESETHAND
-
-//-----------------------------------------------------------------------------
-// sigaltstack
-
-#define linux_MINSIGSTKSZ 2048
-#define linux_SIGSTKSZ    8192
-
-//-----------------------------------------------------------------------------
-// sigprocmask
-
-#define linux_SIG_BLOCK   0
-#define linux_SIG_UNBLOCK 1
-#define linux_SIG_SETMASK 2
 
 //=============================================================================
 // memory

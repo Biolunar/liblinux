@@ -37,6 +37,7 @@
 // Generic types
 
 typedef int32_t  linux_fd_t;
+typedef int32_t  linux_pid_t;
 typedef uint32_t linux_poll_t;
 typedef int32_t  linux_rwf_t;
 
@@ -57,12 +58,8 @@ typedef linux_uid_t    linux_qid_t;
 typedef int            linux_clockid_t;
 typedef linux_word_t   linux_clock_t;
 typedef int            linux_timer_t;
-typedef int            linux_pid_t;
-typedef void           linux_signalfn_t(int);
-typedef void               linux_restorefn_t(void);
-typedef linux_restorefn_t* linux_sigrestore_t;
-typedef unsigned char      linux_cc_t;
-typedef unsigned int       linux_speed_t;
+typedef unsigned char  linux_cc_t;
+typedef unsigned int   linux_speed_t;
 
 //=============================================================================
 // time
@@ -145,6 +142,32 @@ struct linux_pollfd
 	int16_t    events;
 	int16_t    revents;
 };
+
+//=============================================================================
+// signal
+
+typedef union linux_sigval
+{
+	int32_t sival_int;
+	void*   sival_ptr;
+} linux_sigval_t;
+
+typedef struct linux_sigevent
+{
+	linux_sigval_t sigev_value;
+	uint32_t       sigev_signo;
+	uint32_t       sigev_notify;
+	union
+	{
+		uint32_t    _pad[linux_SIGEV_PAD_SIZE];
+		linux_pid_t sigev_notify_thread_id;
+		struct
+		{
+			void  (*sigev_notify_function)(linux_sigval_t);
+			void*   sigev_notify_attributes;
+		};
+	};
+} linux_sigevent_t;
 
 //=============================================================================
 // TODO
@@ -230,27 +253,6 @@ typedef struct
 {
 	int val[2];
 } linux_fsid_t;
-typedef union linux_sigval
-{
-	int sival_int;
-	void* sival_ptr;
-} linux_sigval_t;
-typedef struct linux_sigevent
-{
-	linux_sigval_t sigev_value;
-	int sigev_signo;
-	int sigev_notify;
-	union
-	{
-		int _pad[(64 - (sizeof(int) * 2 + sizeof(linux_sigval_t))) / sizeof(int)];
-		int tid;
-		struct
-		{
-			void (*function)(linux_sigval_t);
-			void *attribute;
-		} sigev_thread;
-	} sigev_un;
-} linux_sigevent_t;
 struct linux_dirent64
 {
 	uint64_t d_ino;
@@ -2772,6 +2774,19 @@ struct linux_uinput_user_dev
 };
 
 //=============================================================================
+// Helper functions
+
+static inline bool linux_SI_FROMUSER(linux_siginfo_t const* si)
+{
+	return si->si_code <= 0;
+}
+
+static inline bool linux_SI_FROMKERNEL(linux_siginfo_t const* si)
+{
+	return si->si_code > 0;
+}
+
+//=============================================================================
 // Generic syscalls
 
 //-----------------------------------------------------------------------------
@@ -4103,9 +4118,9 @@ inline enum linux_error linux_rt_sigaction(int const sig, struct linux_sigaction
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_rt_sigprocmask(int const how, linux_sigset_t* const nset, linux_sigset_t* const oset, linux_size_t const sigsetsize)
+inline enum linux_error linux_rt_sigprocmask(uint32_t const how, linux_sigset_t* const nset, linux_sigset_t* const oset, linux_size_t const sigsetsize)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)how, (uintptr_t)nset, (uintptr_t)oset, sigsetsize, linux_syscall_name_rt_sigprocmask);
+	linux_word_t const ret = linux_syscall4(how, (uintptr_t)nset, (uintptr_t)oset, sigsetsize, linux_syscall_name_rt_sigprocmask);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -6124,9 +6139,9 @@ inline enum linux_error linux_fchown16(linux_fd_t const fd, linux_old_uid_t cons
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_sigprocmask(int const how, linux_old_sigset_t* const nset, linux_old_sigset_t* const oset)
+inline enum linux_error linux_sigprocmask(uint32_t const how, linux_old_sigset_t* const nset, linux_old_sigset_t* const oset)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)how, (uintptr_t)nset, (uintptr_t)oset, linux_syscall_name_sigprocmask);
+	linux_word_t const ret = linux_syscall3(how, (uintptr_t)nset, (uintptr_t)oset, linux_syscall_name_sigprocmask);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -6803,7 +6818,7 @@ static inline void linux_sigfillset(linux_sigset_t* const set)
 		set->sig[i] = (unsigned long)-1; // -1 == ULONG_MAX
 }
 
-static inline enum linux_error linux_sigaddset(linux_sigset_t* const set, int const signum)
+static inline enum linux_error linux_sigaddset(linux_sigset_t* const set, uint32_t const signum)
 {
 	if (signum <= 0 || signum > linux_NSIG)
 		return linux_EINVAL;
@@ -6813,7 +6828,7 @@ static inline enum linux_error linux_sigaddset(linux_sigset_t* const set, int co
 	return linux_error_none;
 }
 
-static inline enum linux_error linux_sigdelset(linux_sigset_t* const set, int const signum)
+static inline enum linux_error linux_sigdelset(linux_sigset_t* const set, uint32_t const signum)
 {
 	if (signum <= 0 || signum > linux_NSIG)
 		return linux_EINVAL;
@@ -6823,7 +6838,7 @@ static inline enum linux_error linux_sigdelset(linux_sigset_t* const set, int co
 	return linux_error_none;
 }
 
-static inline enum linux_error linux_sigismember(linux_sigset_t const* const set, int const signum, bool* const ret)
+static inline enum linux_error linux_sigismember(linux_sigset_t const* const set, uint32_t const signum, bool* const ret)
 {
 	if (signum <= 0 || signum > linux_NSIG)
 		return linux_EINVAL;
@@ -6844,7 +6859,7 @@ static inline void linux_old_sigfillset(linux_old_sigset_t* const set)
 	*set = (linux_old_sigset_t)-1;
 }
 
-static inline enum linux_error linux_old_sigaddset(linux_old_sigset_t* const set, int const signum)
+static inline enum linux_error linux_old_sigaddset(linux_old_sigset_t* const set, uint32_t const signum)
 {
 	if (signum <= 0 || signum > linux_OLD_NSIG)
 		return linux_EINVAL;
@@ -6853,7 +6868,7 @@ static inline enum linux_error linux_old_sigaddset(linux_old_sigset_t* const set
 	return linux_error_none;
 }
 
-static inline enum linux_error linux_old_sigdelset(linux_old_sigset_t* const set, int const signum)
+static inline enum linux_error linux_old_sigdelset(linux_old_sigset_t* const set, uint32_t const signum)
 {
 	if (signum <= 0 || signum > linux_OLD_NSIG)
 		return linux_EINVAL;
@@ -6862,7 +6877,7 @@ static inline enum linux_error linux_old_sigdelset(linux_old_sigset_t* const set
 	return linux_error_none;
 }
 
-static inline enum linux_error linux_old_sigismember(linux_old_sigset_t const* const set, int const signum, bool* const ret)
+static inline enum linux_error linux_old_sigismember(linux_old_sigset_t const* const set, uint32_t const signum, bool* const ret)
 {
 	if (signum <= 0 || signum > linux_OLD_NSIG)
 		return linux_EINVAL;

@@ -87,6 +87,135 @@
 #define linux_POLL_BUSY_LOOP ((linux_poll_t)0x00008000)
 
 //=============================================================================
+// signal
+
+//-----------------------------------------------------------------------------
+// signals
+
+#define linux_SIGHUP  UINT32_C( 1)
+#define linux_SIGINT  UINT32_C( 2)
+#define linux_SIGQUIT UINT32_C( 3)
+#define linux_SIGILL  UINT32_C( 4)
+#define linux_SIGTRAP UINT32_C( 5)
+#define linux_SIGABRT UINT32_C( 6)
+#define linux_SIGIOT  UINT32_C( 6)
+#define linux_SIGFPE  UINT32_C( 8)
+#define linux_SIGKILL UINT32_C( 9)
+#define linux_SIGSEGV UINT32_C(11)
+#define linux_SIGPIPE UINT32_C(13)
+#define linux_SIGALRM UINT32_C(14)
+#define linux_SIGTERM UINT32_C(15)
+#define linux_SIGPOLL linux_SIGIO
+
+#define linux_SIGRTMIN UINT32_C(32)
+
+//-----------------------------------------------------------------------------
+// sigaction
+
+#define linux_SA_NOMASK linux_SA_NODEFER
+
+#define linux_SIG_DFL ((linux_sighandler_t) 0)
+#define linux_SIG_IGN ((linux_sighandler_t) 1)
+#define linux_SIG_ERR ((linux_sighandler_t)-1)
+
+//-----------------------------------------------------------------------------
+// siginfo
+
+#define linux_SI_MAX_SIZE ((size_t)128)
+
+#define linux_SI_USER     INT32_C( 0)
+#define linux_SI_KERNEL   INT32_C(0x80)
+#define linux_SI_QUEUE    INT32_C(-1)
+#define linux_SI_SIGIO    INT32_C(-5)
+#define linux_SI_TKILL    INT32_C(-6)
+#define linux_SI_DETHREAD INT32_C(-7)
+#define linux_SI_ASYNCNL  INT32_C(-60)
+
+#define linux_ILL_ILLOPC   INT32_C( 1)
+#define linux_ILL_ILLOPN   INT32_C( 2)
+#define linux_ILL_ILLADR   INT32_C( 3)
+#define linux_ILL_ILLTRP   INT32_C( 4)
+#define linux_ILL_PRVOPC   INT32_C( 5)
+#define linux_ILL_PRVREG   INT32_C( 6)
+#define linux_ILL_COPROC   INT32_C( 7)
+#define linux_ILL_BADSTK   INT32_C( 8)
+#define linux_ILL_BADIADDR INT32_C( 9)
+#define linux_ILL_BREAK    INT32_C(10)
+#define linux_ILL_BNDMOD   INT32_C(11)
+#define linux_NSIGILL      INT32_C(11)
+
+#define linux_FPE_INTDIV   INT32_C( 1)
+#define linux_FPE_INTOVF   INT32_C( 2)
+#define linux_FPE_FLTDIV   INT32_C( 3)
+#define linux_FPE_FLTOVF   INT32_C( 4)
+#define linux_FPE_FLTUND   INT32_C( 5)
+#define linux_FPE_FLTRES   INT32_C( 6)
+#define linux_FPE_FLTINV   INT32_C( 7)
+#define linux_FPE_FLTSUB   INT32_C( 8)
+#define linux_FPE_DECOVF   INT32_C( 9)
+#define linux_FPE_DECDIV   INT32_C(10)
+#define linux_FPE_DECERR   INT32_C(11)
+#define linux_FPE_INVASC   INT32_C(12)
+#define linux_FPE_INVDEC   INT32_C(13)
+#define linux_FPE_FLTUNK   INT32_C(14)
+#define linux_FPE_CONDTRAP INT32_C(15)
+#define linux_NSIGFPE      INT32_C(15)
+
+#define linux_SEGV_MAPERR  INT32_C(1)
+#define linux_SEGV_ACCERR  INT32_C(2)
+#define linux_SEGV_BNDERR  INT32_C(3)
+#define linux_SEGV_ACCADI  INT32_C(5)
+#define linux_SEGV_ADIDERR INT32_C(6)
+#define linux_SEGV_ADIPERR INT32_C(7)
+#define linux_SEGV_MTEAERR INT32_C(8)
+#define linux_SEGV_MTESERR INT32_C(9)
+#define linux_NSIGSEGV     INT32_C(9)
+
+#define linux_BUS_ADRALN    INT32_C(1)
+#define linux_BUS_ADRERR    INT32_C(2)
+#define linux_BUS_OBJERR    INT32_C(3)
+#define linux_BUS_MCEERR_AR INT32_C(4)
+#define linux_BUS_MCEERR_AO INT32_C(5)
+#define linux_NSIGBUS       INT32_C(5)
+
+#define linux_TRAP_BRKPT  INT32_C(1)
+#define linux_TRAP_TRACE  INT32_C(2)
+#define linux_TRAP_BRANCH INT32_C(3)
+#define linux_TRAP_HWBKPT INT32_C(4)
+#define linux_TRAP_UNK    INT32_C(5)
+#define linux_NSIGTRAP    INT32_C(5)
+
+#define linux_CLD_EXITED    INT32_C(1)
+#define linux_CLD_KILLED    INT32_C(2)
+#define linux_CLD_DUMPED    INT32_C(3)
+#define linux_CLD_TRAPPED   INT32_C(4)
+#define linux_CLD_STOPPED   INT32_C(5)
+#define linux_CLD_CONTINUED INT32_C(6)
+#define linux_NSIGCHLD      INT32_C(6)
+
+#define linux_POLL_IN  INT32_C(1)
+#define linux_POLL_OUT INT32_C(2)
+#define linux_POLL_MSG INT32_C(3)
+#define linux_POLL_ERR INT32_C(4)
+#define linux_POLL_PRI INT32_C(5)
+#define linux_POLL_HUP INT32_C(6)
+#define linux_NSIGPOLL INT32_C(6)
+
+#define linux_SYS_SECCOMP INT32_C(1)
+#define linux_NSIGSYS     INT32_C(1)
+
+#define linux_EMT_TAGOVF INT32_C(1)
+#define linux_NSIGEMT    INT32_C(1)
+
+#define linux_SIGEV_SIGNAL    UINT32_C(0)
+#define linux_SIGEV_NONE      UINT32_C(1)
+#define linux_SIGEV_THREAD    UINT32_C(2)
+#define linux_SIGEV_THREAD_ID UINT32_C(4)
+
+#define linux_SIGEV_MAX_SIZE ((size_t)64)
+#define linux_SIGEV_PAD_SIZE ((linux_SIGEV_MAX_SIZE - linux_ARCH_SIGEV_PREAMBLE_SIZE) / sizeof(uint32_t))
+
+//=============================================================================
 // TODO
 
 //=============================================================================
@@ -118,13 +247,6 @@
 #define linux_AT_EXECFN        31
 
 #define linux_AT_VECTOR_SIZE_BASE 20
-
-//=============================================================================
-// signals
-
-#define linux_SIG_DFL ((linux_sighandler_t) 0)
-#define linux_SIG_IGN ((linux_sighandler_t) 1)
-#define linux_SIG_ERR ((linux_sighandler_t)-1)
 
 //=============================================================================
 // wait

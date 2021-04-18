@@ -20,6 +20,11 @@
 #include <stdint.h>
 
 typedef linux_uword_t      linux_size_t;
+typedef void               linux_signalfn_t(int);
+typedef linux_signalfn_t*  linux_sighandler_t;
+typedef void               linux_restorefn_t(void);
+typedef linux_restorefn_t* linux_sigrestore_t;
+typedef long               linux_si_band_t;
 
 //-----------------------------------------------------------------------------
 // TODO
@@ -31,7 +36,6 @@ typedef int               linux_ssize_t;
 typedef linux_word_t      linux_suseconds_t;
 typedef linux_uword_t     linux_ino_t;
 typedef uint32_t          linux_statfs_word;
-typedef linux_signalfn_t* linux_sighandler_t;
 
 typedef unsigned short    linux_old_uid_t;
 typedef unsigned short    linux_old_gid_t;
