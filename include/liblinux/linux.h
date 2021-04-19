@@ -169,6 +169,33 @@ typedef struct linux_sigevent
 	};
 } linux_sigevent_t;
 
+struct linux_signalfd_siginfo
+{
+	uint32_t ssi_signo;
+	int32_t  ssi_errno;
+	int32_t  ssi_code;
+	uint32_t ssi_pid;
+	uint32_t ssi_uid;
+	int32_t  ssi_fd;
+	uint32_t ssi_tid;
+	uint32_t ssi_band;
+	uint32_t ssi_overrun;
+	uint32_t ssi_trapno;
+	int32_t  ssi_status;
+	int32_t  ssi_int;
+	uint64_t ssi_ptr;
+	uint64_t ssi_utime;
+	uint64_t ssi_stime;
+	uint64_t ssi_addr;
+	uint16_t ssi_addr_lsb;
+	uint16_t _pad2;
+	int32_t  ssi_syscall;
+	uint64_t ssi_call_addr;
+	uint32_t ssi_arch;
+
+	uint8_t _pad[28];
+};
+
 //=============================================================================
 // TODO
 
@@ -1188,7 +1215,7 @@ struct linux_old_sigaction
 #if defined(LINUX_ARCH_X86)
 struct linux_sel_arg_struct
 {
-	linux_uword_t n;
+	uint32_t n;
 	linux_fd_set *inp, *outp, *exp;
 	struct linux_old_timeval* tvp;
 };
@@ -3162,9 +3189,9 @@ inline enum linux_error linux_fremovexattr_v(linux_fd_t const fd, char const* co
 //-----------------------------------------------------------------------------
 // polling
 
-inline enum linux_error linux_epoll_create1(int const flags, linux_fd_t* const result)
+inline enum linux_error linux_epoll_create1(uint32_t const flags, linux_fd_t* const result)
 {
-	linux_word_t const ret = linux_syscall1((unsigned int)flags, linux_syscall_name_epoll_create1);
+	linux_word_t const ret = linux_syscall1(flags, linux_syscall_name_epoll_create1);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3180,40 +3207,40 @@ inline enum linux_error linux_epoll_ctl(linux_fd_t const epfd, uint32_t const op
 	return linux_error_none;
 }
 
-inline enum linux_error linux_epoll_pwait(linux_fd_t const epfd, struct linux_epoll_event* const events, int const maxevents, int const timeout, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, int* const result)
+inline enum linux_error linux_epoll_pwait(linux_fd_t const epfd, struct linux_epoll_event* const events, uint32_t const maxevents, int32_t const timeout, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result)
 {
-	linux_word_t const ret = linux_syscall6((uint32_t)epfd, (uintptr_t)events, (unsigned int)maxevents, (unsigned int)timeout, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_epoll_pwait);
+	linux_word_t const ret = linux_syscall6((uint32_t)epfd, (uintptr_t)events, maxevents, (uint32_t)timeout, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_epoll_pwait);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 
-inline enum linux_error linux_pselect6(int const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_timespec* const tsp, void* const sig, linux_word_t* const result)
+inline enum linux_error linux_pselect6(uint32_t const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_timespec* const tsp, void* const sig, uint32_t* const result)
 {
-	linux_word_t const ret = linux_syscall6((unsigned int)n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tsp, (uintptr_t)sig, linux_syscall_name_pselect6);
+	linux_word_t const ret = linux_syscall6(n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tsp, (uintptr_t)sig, linux_syscall_name_pselect6);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (linux_word_t)ret;
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 
-inline enum linux_error linux_ppoll(struct linux_pollfd* const ufds, unsigned int const nfds, struct linux_timespec* const tsp, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, int* const result)
+inline enum linux_error linux_ppoll(struct linux_pollfd* const ufds, uint32_t const nfds, struct linux_timespec* const tsp, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result)
 {
 	linux_word_t const ret = linux_syscall5((uintptr_t)ufds, nfds, (uintptr_t)tsp, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_ppoll);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_epoll_create(int const size, linux_fd_t* const result) // DEPRECATED: use linux_epoll_create1
+inline enum linux_error linux_epoll_create(int32_t const size, linux_fd_t* const result) // DEPRECATED: use linux_epoll_create1
 {
-	linux_word_t const ret = linux_syscall1((unsigned int)size, linux_syscall_name_epoll_create);
+	linux_word_t const ret = linux_syscall1((uint32_t)size, linux_syscall_name_epoll_create);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3221,21 +3248,77 @@ inline enum linux_error linux_epoll_create(int const size, linux_fd_t* const res
 	return linux_error_none;
 }
 
-inline enum linux_error linux_epoll_wait(linux_fd_t const epfd, struct linux_epoll_event* const events, int const maxevents, int const timeout, int* const result) // DEPRECATED: use linux_epoll_pwait
+inline enum linux_error linux_epoll_wait(linux_fd_t const epfd, struct linux_epoll_event* const events, uint32_t const maxevents, int32_t const timeout, uint32_t* const result) // DEPRECATED: use linux_epoll_pwait
 {
-	linux_word_t const ret = linux_syscall4((uint32_t)epfd, (uintptr_t)events, (unsigned int)maxevents, (unsigned int)timeout, linux_syscall_name_epoll_wait);
+	linux_word_t const ret = linux_syscall4((uint32_t)epfd, (uintptr_t)events, maxevents, (uint32_t)timeout, linux_syscall_name_epoll_wait);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_select(uint32_t const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_old_timeval* const tvp, uint32_t* const result) // DEPRECATED: use linux_pselect6
+{
+	linux_word_t const ret = linux_syscall5(n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tvp, linux_syscall_name_select);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_poll(struct linux_pollfd* const ufds, uint32_t const nfds, int32_t const timeout_msecs, uint32_t* const result) // DEPRECATED: use linux_ppoll
+{
+	linux_word_t const ret = linux_syscall3((uintptr_t)ufds, nfds, (uint32_t)timeout_msecs, linux_syscall_name_poll);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
+inline enum linux_error linux_pselect6_time32(uint32_t const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_timespec32* const tsp, void* const sig, uint32_t* const result) // DEPRECATED: use linux_pselect6
+{
+	linux_word_t const ret = linux_syscall6(n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tsp, (uintptr_t)sig, linux_syscall_name_pselect6_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_ppoll_time32(struct linux_pollfd* const ufds, uint32_t const nfds, struct linux_timespec32* const tsp, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result) // DEPRECATED: use linux_ppoll
+{
+	linux_word_t const ret = linux_syscall5((uintptr_t)ufds, nfds, (uintptr_t)tsp, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_ppoll_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 #endif
 
 #if defined(LINUX_ARCH_X86)
-inline enum linux_error linux_epoll_create1_v(int const flags, linux_fd_t* const result)
+inline enum linux_error linux_old_select(struct linux_sel_arg_struct* const arg, uint32_t* const result) // DEPRECATED: use linux_pselect6
 {
-	linux_word_t const ret = linux_vsyscall1((unsigned int)flags, linux_syscall_name_epoll_create1);
+	linux_word_t const ret = linux_syscall1((uintptr_t)arg, linux_syscall_name_old_select);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_X86)
+inline enum linux_error linux_epoll_create1_v(uint32_t const flags, linux_fd_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall1(flags, linux_syscall_name_epoll_create1);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3251,39 +3334,39 @@ inline enum linux_error linux_epoll_ctl_v(linux_fd_t const epfd, uint32_t const 
 	return linux_error_none;
 }
 
-inline enum linux_error linux_epoll_pwait_v(linux_fd_t const epfd, struct linux_epoll_event* const events, int const maxevents, int const timeout, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, int* const result)
+inline enum linux_error linux_epoll_pwait_v(linux_fd_t const epfd, struct linux_epoll_event* const events, uint32_t const maxevents, int32_t const timeout, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result)
 {
-	linux_word_t const ret = linux_vsyscall6((uint32_t)epfd, (uintptr_t)events, (unsigned int)maxevents, (unsigned int)timeout, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_epoll_pwait);
+	linux_word_t const ret = linux_vsyscall6((uint32_t)epfd, (uintptr_t)events, maxevents, (uint32_t)timeout, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_epoll_pwait);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 
-inline enum linux_error linux_pselect6_v(int const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_timespec* const tsp, void* const sig, linux_word_t* const result)
+inline enum linux_error linux_pselect6_v(uint32_t const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_timespec* const tsp, void* const sig, uint32_t* const result)
 {
-	linux_word_t const ret = linux_vsyscall6((unsigned int)n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tsp, (uintptr_t)sig, linux_syscall_name_pselect6);
+	linux_word_t const ret = linux_vsyscall6(n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tsp, (uintptr_t)sig, linux_syscall_name_pselect6);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (linux_word_t)ret;
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 
-inline enum linux_error linux_ppoll_v(struct linux_pollfd* const ufds, unsigned int const nfds, struct linux_timespec* const tsp, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, int* const result)
+inline enum linux_error linux_ppoll_v(struct linux_pollfd* const ufds, uint32_t const nfds, struct linux_timespec* const tsp, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result)
 {
 	linux_word_t const ret = linux_vsyscall5((uintptr_t)ufds, nfds, (uintptr_t)tsp, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_ppoll);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 
-inline enum linux_error linux_epoll_create_v(int const size, linux_fd_t* const result) // DEPRECATED: use linux_epoll_create1_v
+inline enum linux_error linux_epoll_create_v(int32_t const size, linux_fd_t* const result) // DEPRECATED: use linux_epoll_create1_v
 {
-	linux_word_t const ret = linux_vsyscall1((unsigned int)size, linux_syscall_name_epoll_create);
+	linux_word_t const ret = linux_vsyscall1((uint32_t)size, linux_syscall_name_epoll_create);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3291,13 +3374,63 @@ inline enum linux_error linux_epoll_create_v(int const size, linux_fd_t* const r
 	return linux_error_none;
 }
 
-inline enum linux_error linux_epoll_wait_v(linux_fd_t const epfd, struct linux_epoll_event* const events, int const maxevents, int const timeout, int* const result) // DEPRECATED: use linux_epoll_pwait_v
+inline enum linux_error linux_epoll_wait_v(linux_fd_t const epfd, struct linux_epoll_event* const events, uint32_t const maxevents, int32_t const timeout, uint32_t* const result) // DEPRECATED: use linux_epoll_pwait_v
 {
-	linux_word_t const ret = linux_vsyscall4((uint32_t)epfd, (uintptr_t)events, (unsigned int)maxevents, (unsigned int)timeout, linux_syscall_name_epoll_wait);
+	linux_word_t const ret = linux_vsyscall4((uint32_t)epfd, (uintptr_t)events, maxevents, (uint32_t)timeout, linux_syscall_name_epoll_wait);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_select_v(uint32_t const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_old_timeval* const tvp, uint32_t* const result) // DEPRECATED: use linux_pselect6_v
+{
+	linux_word_t const ret = linux_vsyscall5(n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tvp, linux_syscall_name_select);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_poll_v(struct linux_pollfd* const ufds, uint32_t const nfds, int32_t const timeout_msecs, uint32_t* const result) // DEPRECATED: use linux_ppoll_v
+{
+	linux_word_t const ret = linux_vsyscall3((uintptr_t)ufds, nfds, (uint32_t)timeout_msecs, linux_syscall_name_poll);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_pselect6_time32_v(uint32_t const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_timespec32* const tsp, void* const sig, uint32_t* const result) // DEPRECATED: use linux_pselect6_v
+{
+	linux_word_t const ret = linux_vsyscall6(n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tsp, (uintptr_t)sig, linux_syscall_name_pselect6_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_ppoll_time32_v(struct linux_pollfd* const ufds, uint32_t const nfds, struct linux_timespec32* const tsp, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result) // DEPRECATED: use linux_ppoll_v
+{
+	linux_word_t const ret = linux_vsyscall5((uintptr_t)ufds, nfds, (uintptr_t)tsp, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_ppoll_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_old_select_v(struct linux_sel_arg_struct* const arg, uint32_t* const result) // DEPRECATED: use linux_pselect6_v
+{
+	linux_word_t const ret = linux_vsyscall1((uintptr_t)arg, linux_syscall_name_old_select);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
 #endif
@@ -3683,7 +3816,7 @@ inline enum linux_error linux_readahead(linux_fd_t const fd, linux_loff_t const 
 }
 inline enum linux_error linux_process_vm_readv(linux_pid_t const pid, struct linux_iovec const* const lvec, linux_uword_t const liovcnt, struct linux_iovec const* const rvec, linux_uword_t const riovcnt, linux_uword_t const flags, linux_ssize_t* const result)
 {
-	linux_word_t const ret = linux_syscall6((unsigned int)pid, (uintptr_t)lvec, liovcnt, (uintptr_t)rvec, riovcnt, flags, linux_syscall_name_process_vm_readv);
+	linux_word_t const ret = linux_syscall6((uint32_t)pid, (uintptr_t)lvec, liovcnt, (uintptr_t)rvec, riovcnt, flags, linux_syscall_name_process_vm_readv);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3692,7 +3825,7 @@ inline enum linux_error linux_process_vm_readv(linux_pid_t const pid, struct lin
 }
 inline enum linux_error linux_process_vm_writev(linux_pid_t const pid, struct linux_iovec const* const lvec, linux_uword_t const liovcnt, struct linux_iovec const* const rvec, linux_uword_t const riovcnt, linux_uword_t const flags, linux_ssize_t* const result)
 {
-	linux_word_t const ret = linux_syscall6((unsigned int)pid, (uintptr_t)lvec, liovcnt, (uintptr_t)rvec, riovcnt, flags, linux_syscall_name_process_vm_writev);
+	linux_word_t const ret = linux_syscall6((uint32_t)pid, (uintptr_t)lvec, liovcnt, (uintptr_t)rvec, riovcnt, flags, linux_syscall_name_process_vm_writev);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3710,7 +3843,7 @@ inline enum linux_error linux_copy_file_range(linux_fd_t const fd_in, linux_loff
 }
 inline enum linux_error linux_preadv2(linux_uword_t const fd, struct linux_iovec const* const vec, linux_uword_t const vlen, linux_uword_t const pos_l, linux_uword_t const pos_h, linux_rwf_t const flags, linux_ssize_t* const result)
 {
-	linux_word_t const ret = linux_syscall6(fd, (uintptr_t)vec, vlen, pos_l, pos_h, (unsigned int)flags, linux_syscall_name_preadv2);
+	linux_word_t const ret = linux_syscall6(fd, (uintptr_t)vec, vlen, pos_l, pos_h, (uint32_t)flags, linux_syscall_name_preadv2);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3719,7 +3852,7 @@ inline enum linux_error linux_preadv2(linux_uword_t const fd, struct linux_iovec
 }
 inline enum linux_error linux_pwritev2(linux_uword_t const fd, struct linux_iovec const* const vec, linux_uword_t const vlen, linux_uword_t const pos_l, linux_uword_t const pos_h, linux_rwf_t const flags, linux_ssize_t* const result)
 {
-	linux_word_t const ret = linux_syscall6(fd, (uintptr_t)vec, vlen, pos_l, pos_h, (unsigned int)flags, linux_syscall_name_pwritev2);
+	linux_word_t const ret = linux_syscall6(fd, (uintptr_t)vec, vlen, pos_l, pos_h, (uint32_t)flags, linux_syscall_name_pwritev2);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3959,21 +4092,21 @@ inline enum linux_error linux_ioprio_get(int const which, int const who, int* co
 }
 inline enum linux_error linux_sched_setparam(linux_pid_t const pid, struct linux_sched_param* const param)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, (uintptr_t)param, linux_syscall_name_sched_setparam);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, (uintptr_t)param, linux_syscall_name_sched_setparam);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_sched_setscheduler(linux_pid_t const pid, int const policy, struct linux_sched_param* const param)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pid, (unsigned int)policy, (uintptr_t)param, linux_syscall_name_sched_setscheduler);
+	linux_word_t const ret = linux_syscall3((uint32_t)pid, (unsigned int)policy, (uintptr_t)param, linux_syscall_name_sched_setscheduler);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_sched_getscheduler(linux_pid_t const pid, int* const result)
 {
-	linux_word_t const ret = linux_syscall1((unsigned int)pid, linux_syscall_name_sched_getscheduler);
+	linux_word_t const ret = linux_syscall1((uint32_t)pid, linux_syscall_name_sched_getscheduler);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -3982,21 +4115,21 @@ inline enum linux_error linux_sched_getscheduler(linux_pid_t const pid, int* con
 }
 inline enum linux_error linux_sched_getparam(linux_pid_t const pid, struct linux_sched_param* const param)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, (uintptr_t)param, linux_syscall_name_sched_getparam);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, (uintptr_t)param, linux_syscall_name_sched_getparam);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_sched_setaffinity(linux_pid_t const pid, unsigned int const len, linux_uword_t* const user_mask_ptr)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pid, len, (uintptr_t)user_mask_ptr, linux_syscall_name_sched_setaffinity);
+	linux_word_t const ret = linux_syscall3((uint32_t)pid, len, (uintptr_t)user_mask_ptr, linux_syscall_name_sched_setaffinity);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_sched_getaffinity(linux_pid_t const pid, unsigned int const len, linux_uword_t* const user_mask_ptr)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pid, len, (uintptr_t)user_mask_ptr, linux_syscall_name_sched_getaffinity);
+	linux_word_t const ret = linux_syscall3((uint32_t)pid, len, (uintptr_t)user_mask_ptr, linux_syscall_name_sched_getaffinity);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -4028,7 +4161,7 @@ inline enum linux_error linux_sched_get_priority_min(int const policy, int* cons
 }
 inline enum linux_error linux_sched_rr_get_interval(linux_pid_t const pid, struct linux_timespec* const interval)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, (uintptr_t)interval, linux_syscall_name_sched_rr_get_interval);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, (uintptr_t)interval, linux_syscall_name_sched_rr_get_interval);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -4051,14 +4184,14 @@ inline enum linux_error linux_getpriority(int const which, int const who, linux_
 }
 inline enum linux_error linux_sched_setattr(linux_pid_t const pid, struct linux_sched_attr* const uattr, unsigned int const flags)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pid, (uintptr_t)uattr, flags, linux_syscall_name_sched_setattr);
+	linux_word_t const ret = linux_syscall3((uint32_t)pid, (uintptr_t)uattr, flags, linux_syscall_name_sched_setattr);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_sched_getattr(linux_pid_t const pid, struct linux_sched_attr* const uattr, unsigned int const size, unsigned int const flags)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)pid, (uintptr_t)uattr, size, flags, linux_syscall_name_sched_getattr);
+	linux_word_t const ret = linux_syscall4((uint32_t)pid, (uintptr_t)uattr, size, flags, linux_syscall_name_sched_getattr);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -4067,36 +4200,40 @@ inline enum linux_error linux_sched_getattr(linux_pid_t const pid, struct linux_
 //-----------------------------------------------------------------------------
 // signals
 
-inline enum linux_error linux_signalfd4(linux_fd_t const ufd, linux_sigset_t* const user_mask, linux_size_t const sizemask, int const flags, linux_fd_t* const result)
+inline enum linux_error linux_signalfd4(linux_fd_t const ufd, linux_sigset_t* const user_mask, linux_size_t const sizemask, uint32_t const flags, linux_fd_t* const result)
 {
-	linux_word_t const ret = linux_syscall4((uint32_t)ufd, (uintptr_t)user_mask, sizemask, (unsigned int)flags, linux_syscall_name_signalfd4);
+	linux_word_t const ret = linux_syscall4((uint32_t)ufd, (uintptr_t)user_mask, sizemask, flags, linux_syscall_name_signalfd4);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
 		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_kill(linux_pid_t const pid, int const sig)
+
+inline enum linux_error linux_kill(linux_pid_t const pid, uint32_t const sig)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, (unsigned int)sig, linux_syscall_name_kill);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, sig, linux_syscall_name_kill);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_tkill(linux_pid_t const pid, int const sig) // DEPRECATED: use linux_tgkill
+
+inline enum linux_error linux_tkill(linux_pid_t const pid, uint32_t const sig) // DEPRECATED: use linux_tgkill
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, (unsigned int)sig, linux_syscall_name_tkill);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, sig, linux_syscall_name_tkill);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_tgkill(linux_pid_t const tgid, linux_pid_t const pid, int const sig)
+
+inline enum linux_error linux_tgkill(linux_pid_t const tgid, linux_pid_t const pid, uint32_t const sig)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)tgid, (unsigned int)pid, (unsigned int)sig, linux_syscall_name_tgkill);
+	linux_word_t const ret = linux_syscall3((uint32_t)tgid, (uint32_t)pid, sig, linux_syscall_name_tgkill);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_sigaltstack(linux_stack_t const* const uss, linux_stack_t* const uoss)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)uss, (uintptr_t)uoss, linux_syscall_name_sigaltstack);
@@ -4104,6 +4241,7 @@ inline enum linux_error linux_sigaltstack(linux_stack_t const* const uss, linux_
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_rt_sigsuspend(linux_sigset_t* const unewset, linux_size_t const sigsetsize)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)unewset, sigsetsize, linux_syscall_name_rt_sigsuspend);
@@ -4111,13 +4249,15 @@ inline enum linux_error linux_rt_sigsuspend(linux_sigset_t* const unewset, linux
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_rt_sigaction(int const sig, struct linux_sigaction const* const act, struct linux_sigaction* const oact, linux_size_t const sigsetsize)
+
+inline enum linux_error linux_rt_sigaction(uint32_t const sig, struct linux_sigaction const* const act, struct linux_sigaction* const oact, linux_size_t const sigsetsize)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)sig, (uintptr_t)act, (uintptr_t)oact, sigsetsize, linux_syscall_name_rt_sigaction);
+	linux_word_t const ret = linux_syscall4(sig, (uintptr_t)act, (uintptr_t)oact, sigsetsize, linux_syscall_name_rt_sigaction);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_rt_sigprocmask(uint32_t const how, linux_sigset_t* const nset, linux_sigset_t* const oset, linux_size_t const sigsetsize)
 {
 	linux_word_t const ret = linux_syscall4(how, (uintptr_t)nset, (uintptr_t)oset, sigsetsize, linux_syscall_name_rt_sigprocmask);
@@ -4125,6 +4265,7 @@ inline enum linux_error linux_rt_sigprocmask(uint32_t const how, linux_sigset_t*
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
 inline enum linux_error linux_rt_sigpending(linux_sigset_t* const uset, linux_size_t const sigsetsize)
 {
 	linux_word_t const ret = linux_syscall2((uintptr_t)uset, sigsetsize, linux_syscall_name_rt_sigpending);
@@ -4132,36 +4273,107 @@ inline enum linux_error linux_rt_sigpending(linux_sigset_t* const uset, linux_si
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_rt_sigtimedwait(linux_sigset_t const* const uthese, linux_siginfo_t* const uinfo, struct linux_timespec const* const uts, linux_size_t const sigsetsize, int* const result)
+
+inline enum linux_error linux_rt_sigtimedwait(linux_sigset_t const* const uthese, linux_siginfo_t* const uinfo, struct linux_timespec const* const uts, linux_size_t const sigsetsize, uint32_t* const result)
 {
 	linux_word_t const ret = linux_syscall4((uintptr_t)uthese, (uintptr_t)uinfo, (uintptr_t)uts, sigsetsize, linux_syscall_name_rt_sigtimedwait);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
-		*result = (int)ret;
+		*result = (uint32_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_rt_sigqueueinfo(linux_pid_t const pid, int const sig, linux_siginfo_t* const uinfo) // DEPRECATED: use linux_rt_tgsigqueueinfo
+
+inline enum linux_error linux_rt_sigqueueinfo(linux_pid_t const pid, uint32_t const sig, linux_siginfo_t* const uinfo) // DEPRECATED: use linux_rt_tgsigqueueinfo
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pid, (unsigned int)sig, (uintptr_t)uinfo, linux_syscall_name_rt_sigqueueinfo);
+	linux_word_t const ret = linux_syscall3((uint32_t)pid, sig, (uintptr_t)uinfo, linux_syscall_name_rt_sigqueueinfo);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_rt_tgsigqueueinfo(linux_pid_t const tgid, linux_pid_t const pid, int const sig, linux_siginfo_t* const uinfo)
+
+inline enum linux_error linux_rt_tgsigqueueinfo(linux_pid_t const tgid, linux_pid_t const pid, uint32_t const sig, linux_siginfo_t* const uinfo)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)tgid, (unsigned int)pid, (unsigned int)sig, (uintptr_t)uinfo, linux_syscall_name_rt_tgsigqueueinfo);
+	linux_word_t const ret = linux_syscall4((uint32_t)tgid, (uint32_t)pid, sig, (uintptr_t)uinfo, linux_syscall_name_rt_tgsigqueueinfo);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline enum linux_error linux_signalfd(linux_fd_t const ufd, linux_sigset_t* const user_mask, linux_size_t const sizemask, linux_fd_t* const result) // DEPRECATED: use linux_signalfd4
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)ufd, (uintptr_t)user_mask, sizemask, linux_syscall_name_signalfd);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86)
+inline enum linux_error linux_rt_sigtimedwait_time32(linux_sigset_t const* const uthese, linux_siginfo_t* const uinfo, struct linux_timespec32 const* const uts, linux_size_t const sigsetsize, uint32_t* const result)
+{
+	linux_word_t const ret = linux_syscall4((uintptr_t)uthese, (uintptr_t)uinfo, (uintptr_t)uts, sigsetsize, linux_syscall_name_rt_sigtimedwait_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigaction(uint32_t const sig, struct linux_old_sigaction const* const act, struct linux_old_sigaction* const oact)
+{
+	linux_word_t const ret = linux_syscall3(sig, (uintptr_t)act, (uintptr_t)oact, linux_syscall_name_sigaction);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigsuspend(int32_t const unused1, int32_t const unused2, linux_old_sigset_t const mask)
+{
+	linux_word_t const ret = linux_syscall3((uint32_t)unused1, (uint32_t)unused2, mask, linux_syscall_name_sigsuspend);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigpending(linux_old_sigset_t* const uset)
+{
+	linux_word_t const ret = linux_syscall1((uintptr_t)uset, linux_syscall_name_sigpending);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigprocmask(uint32_t const how, linux_old_sigset_t* const nset, linux_old_sigset_t* const oset)
+{
+	linux_word_t const ret = linux_syscall3(how, (uintptr_t)nset, (uintptr_t)oset, linux_syscall_name_sigprocmask);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+#endif
+
+#if defined(LINUX_ARCH_X86)
+inline enum linux_error linux_signal(uint32_t const sig, linux_sighandler_t const handler, linux_uword_t* const result)
+{
+	linux_word_t const ret = linux_syscall2(sig, (uintptr_t)handler, linux_syscall_name_signal);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_uword_t)ret;
+	return linux_error_none;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // pidfd
 
 inline enum linux_error linux_pidfd_open(linux_pid_t pid, unsigned int flags, linux_fd_t* result)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, flags, linux_syscall_name_pidfd_open);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, flags, linux_syscall_name_pidfd_open);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -4177,7 +4389,7 @@ inline enum linux_error linux_pidfd_send_signal(linux_fd_t const pidfd, int cons
 }
 inline enum linux_error linux_pidfd_getfd(linux_pid_t const pidfd, linux_fd_t const fd, unsigned int const flags, linux_fd_t* const result)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pidfd, (unsigned int)fd, flags, linux_syscall_name_pidfd_getfd);
+	linux_word_t const ret = linux_syscall3((uint32_t)pidfd, (uint32_t)fd, flags, linux_syscall_name_pidfd_getfd);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -4304,7 +4516,7 @@ inline enum linux_error linux_getresgid(linux_gid_t* const rgidp, linux_gid_t* c
 
 inline enum linux_error linux_setpgid(linux_pid_t const pid, linux_pid_t const pgid)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, (unsigned int)pgid, linux_syscall_name_setpgid);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, (uint32_t)pgid, linux_syscall_name_setpgid);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -4320,7 +4532,7 @@ inline enum linux_error linux_setsid(int* const result)
 }
 inline enum linux_error linux_getpgid(linux_pid_t const pid, int* const result)
 {
-	linux_word_t const ret = linux_syscall1((unsigned int)pid, linux_syscall_name_getpgid);
+	linux_word_t const ret = linux_syscall1((uint32_t)pid, linux_syscall_name_getpgid);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -4329,7 +4541,7 @@ inline enum linux_error linux_getpgid(linux_pid_t const pid, int* const result)
 }
 inline enum linux_error linux_getsid(linux_pid_t const pid, int* const result)
 {
-	linux_word_t const ret = linux_syscall1((unsigned int)pid, linux_syscall_name_getsid);
+	linux_word_t const ret = linux_syscall1((uint32_t)pid, linux_syscall_name_getsid);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -4754,7 +4966,7 @@ inline enum linux_error linux_set_mempolicy(int const mode, linux_uword_t const*
 }
 inline enum linux_error linux_migrate_pages(linux_pid_t const pid, linux_uword_t const maxnode, linux_uword_t const* const old_nodes, linux_uword_t const* const new_nodes, int* const result)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)pid, maxnode, (uintptr_t)old_nodes, (uintptr_t)new_nodes, linux_syscall_name_migrate_pages);
+	linux_word_t const ret = linux_syscall4((uint32_t)pid, maxnode, (uintptr_t)old_nodes, (uintptr_t)new_nodes, linux_syscall_name_migrate_pages);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -4763,7 +4975,7 @@ inline enum linux_error linux_migrate_pages(linux_pid_t const pid, linux_uword_t
 }
 inline enum linux_error linux_move_pages(linux_pid_t const pid, linux_uword_t const nr_pages, void const** const pages, int const* const nodes, int* const status, int const flags)
 {
-	linux_word_t const ret = linux_syscall6((unsigned int)pid, nr_pages, (uintptr_t)pages, (uintptr_t)nodes, (uintptr_t)status, (unsigned int)flags, linux_syscall_name_move_pages);
+	linux_word_t const ret = linux_syscall6((uint32_t)pid, nr_pages, (uintptr_t)pages, (uintptr_t)nodes, (uintptr_t)status, (unsigned int)flags, linux_syscall_name_move_pages);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -4844,7 +5056,7 @@ inline enum linux_error linux_keyctl(int const option, linux_uword_t const arg2,
 
 inline enum linux_error linux_waitid(int const which, linux_pid_t const upid, struct linux_siginfo* const infop, int const options, struct linux_rusage* const ru)
 {
-	linux_word_t const ret = linux_syscall5((unsigned int)which, (unsigned int)upid, (uintptr_t)infop, (unsigned int)options, (uintptr_t)ru, linux_syscall_name_waitid);
+	linux_word_t const ret = linux_syscall5((unsigned int)which, (uint32_t)upid, (uintptr_t)infop, (unsigned int)options, (uintptr_t)ru, linux_syscall_name_waitid);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -5320,7 +5532,7 @@ inline enum linux_error linux_swapoff(char const* const specialfile)
 }
 inline enum linux_error linux_perf_event_open(struct linux_perf_event_attr* const attr_uptr, linux_pid_t const pid, int const cpu, linux_fd_t const group_fd, linux_uword_t const flags, linux_fd_t* const result)
 {
-	linux_word_t const ret = linux_syscall5((uintptr_t)attr_uptr, (unsigned int)pid, (unsigned int)cpu, (uint32_t)group_fd, flags, linux_syscall_name_perf_event_open);
+	linux_word_t const ret = linux_syscall5((uintptr_t)attr_uptr, (uint32_t)pid, (unsigned int)cpu, (uint32_t)group_fd, flags, linux_syscall_name_perf_event_open);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -5329,7 +5541,7 @@ inline enum linux_error linux_perf_event_open(struct linux_perf_event_attr* cons
 }
 inline enum linux_error linux_prlimit64(linux_pid_t const pid, unsigned int const resource, struct linux_rlimit64 const* const new_rlim, struct linux_rlimit64* const old_rlim)
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)pid, resource, (uintptr_t)new_rlim, (uintptr_t)old_rlim, linux_syscall_name_prlimit64);
+	linux_word_t const ret = linux_syscall4((uint32_t)pid, resource, (uintptr_t)new_rlim, (uintptr_t)old_rlim, linux_syscall_name_prlimit64);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -5350,7 +5562,7 @@ inline enum linux_error linux_setns(linux_fd_t const fd, int const nstype)
 }
 inline enum linux_error linux_kcmp(linux_pid_t const pid1, linux_pid_t const pid2, int const type, linux_uword_t const idx1, linux_uword_t const idx2, int* const result)
 {
-	linux_word_t const ret = linux_syscall5((unsigned int)pid1, (unsigned int)pid2, (unsigned int)type, idx1, idx2, linux_syscall_name_kcmp);
+	linux_word_t const ret = linux_syscall5((uint32_t)pid1, (uint32_t)pid2, (unsigned int)type, idx1, idx2, linux_syscall_name_kcmp);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -5477,7 +5689,7 @@ inline enum linux_error linux_fcntl(linux_fd_t const fd, unsigned int const cmd,
 }
 inline enum linux_error linux_wait4(linux_pid_t const upid, int* const stat_addr, int const options, struct linux_rusage* const ru, linux_word_t* const result) // DEPRECATED: use linux_waitid
 {
-	linux_word_t const ret = linux_syscall4((unsigned int)upid, (uintptr_t)stat_addr, (unsigned int)options, (uintptr_t)ru, linux_syscall_name_wait4);
+	linux_word_t const ret = linux_syscall4((uint32_t)upid, (uintptr_t)stat_addr, (unsigned int)options, (uintptr_t)ru, linux_syscall_name_wait4);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -5511,15 +5723,6 @@ inline enum linux_error linux_renameat(linux_fd_t const olddfd, char const* cons
 #endif
 
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
-inline enum linux_error linux_signalfd(linux_fd_t const ufd, linux_sigset_t* const user_mask, linux_size_t const sizemask, linux_fd_t* const result)
-{
-	linux_word_t const ret = linux_syscall3((uint32_t)ufd, (uintptr_t)user_mask, sizemask, linux_syscall_name_signalfd);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_fd_t)ret;
-	return linux_error_none;
-}
 inline enum linux_error linux_fork(linux_word_t* const result)
 {
 	linux_word_t const ret = linux_syscall0(linux_syscall_name_fork);
@@ -5690,24 +5893,6 @@ inline enum linux_error linux_getdents(linux_fd_t const fd, struct linux_dirent*
 		*result = (int)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_select(int const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_old_timeval* const tvp, int* const result)
-{
-	linux_word_t const ret = linux_syscall5((unsigned int)n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tvp, linux_syscall_name_select);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_poll(struct linux_pollfd* const ufds, unsigned int const nfds, int const timeout_msecs, int* const result)
-{
-	linux_word_t const ret = linux_syscall3((uintptr_t)ufds, nfds, (unsigned int)timeout_msecs, linux_syscall_name_poll);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
-	return linux_error_none;
-}
 inline enum linux_error linux_vfork(linux_word_t* const result)
 {
 #if defined(LINUX_ARCH_ARM_EABI)
@@ -5840,18 +6025,9 @@ inline enum linux_error linux_adjtimex_time32(struct linux_timex32* const utp, i
 }
 inline enum linux_error linux_sched_rr_get_interval_time32(linux_pid_t const pid, struct linux_timespec32* const interval)
 {
-	linux_word_t const ret = linux_syscall2((unsigned int)pid, (uintptr_t)interval, linux_syscall_name_sched_rr_get_interval_time32);
+	linux_word_t const ret = linux_syscall2((uint32_t)pid, (uintptr_t)interval, linux_syscall_name_sched_rr_get_interval_time32);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_rt_sigtimedwait_time32(linux_sigset_t const* const uthese, linux_siginfo_t* const uinfo, struct linux_timespec32 const* const uts, linux_size_t const sigsetsize, int* const result)
-{
-	linux_word_t const ret = linux_syscall4((uintptr_t)uthese, (uintptr_t)uinfo, (uintptr_t)uts, sigsetsize, linux_syscall_name_rt_sigtimedwait_time32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_futex_time32(uint32_t* const uaddr, int const op, uint32_t const val, struct linux_timespec32* const utime, uint32_t* const uaddr2, uint32_t const val3, linux_word_t* const result) // DEPRECATED: use linux_futex
@@ -5940,24 +6116,6 @@ inline enum linux_error linux_futimesat_time32(linux_fd_t const dfd, char const*
 	linux_word_t const ret = linux_syscall3((uint32_t)dfd, (uintptr_t)filename, (uintptr_t)t, linux_syscall_name_futimesat_time32);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_pselect6_time32(int const n, linux_fd_set* const inp, linux_fd_set* const outp, linux_fd_set* const exp, struct linux_timespec32* const tsp, void* const sig, linux_word_t* const result)
-{
-	linux_word_t const ret = linux_syscall6((unsigned int)n, (uintptr_t)inp, (uintptr_t)outp, (uintptr_t)exp, (uintptr_t)tsp, (uintptr_t)sig, linux_syscall_name_pselect6_time32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_word_t)ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_ppoll_time32(struct linux_pollfd* const ufds, unsigned int const nfds, struct linux_timespec32* const tsp, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, int* const result)
-{
-	linux_word_t const ret = linux_syscall5((uintptr_t)ufds, nfds, (uintptr_t)tsp, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_ppoll_time32);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_utimensat_time32(linux_fd_t const dfd, char const* const filename, struct linux_timespec32* const t, int const flags)
@@ -6074,13 +6232,6 @@ inline enum linux_error linux_getegid16(linux_old_gid_t* const result)
 		*result = (linux_old_gid_t)ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_sigaction(int const sig, struct linux_old_sigaction const* const act, struct linux_old_sigaction* const oact)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)sig, (uintptr_t)act, (uintptr_t)oact, linux_syscall_name_sigaction);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
 inline enum linux_error linux_setreuid16(linux_old_uid_t const ruid, linux_old_uid_t const euid)
 {
 	linux_word_t const ret = linux_syscall2(ruid, euid, linux_syscall_name_setreuid16);
@@ -6091,20 +6242,6 @@ inline enum linux_error linux_setreuid16(linux_old_uid_t const ruid, linux_old_u
 inline enum linux_error linux_setregid16(linux_old_gid_t const rgid, linux_old_gid_t const egid)
 {
 	linux_word_t const ret = linux_syscall2(rgid, egid, linux_syscall_name_setregid16);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_sigsuspend(int const unused1, int const unused2, linux_old_sigset_t const mask)
-{
-	linux_word_t const ret = linux_syscall3((unsigned int)unused1, (unsigned int)unused2, mask, linux_syscall_name_sigsuspend);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_sigpending(linux_old_sigset_t* const uset)
-{
-	linux_word_t const ret = linux_syscall1((uintptr_t)uset, linux_syscall_name_sigpending);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -6135,13 +6272,6 @@ inline enum linux_error linux_uselib(char const* const library)
 inline enum linux_error linux_fchown16(linux_fd_t const fd, linux_old_uid_t const user, linux_old_gid_t const group)
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, user, group, linux_syscall_name_fchown16);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_sigprocmask(uint32_t const how, linux_old_sigset_t* const nset, linux_old_sigset_t* const oset)
-{
-	linux_word_t const ret = linux_syscall3(how, (uintptr_t)nset, (uintptr_t)oset, linux_syscall_name_sigprocmask);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;
@@ -6508,7 +6638,7 @@ inline enum linux_error linux_fadvise64(linux_fd_t const fd, linux_loff_t const 
 #if defined(LINUX_ARCH_X86)
 inline enum linux_error linux_waitpid(linux_pid_t const pid, int* const stat_addr, int const options, linux_word_t* const result)
 {
-	linux_word_t const ret = linux_syscall3((unsigned int)pid, (uintptr_t)stat_addr, (unsigned int)options, linux_syscall_name_waitpid);
+	linux_word_t const ret = linux_syscall3((uint32_t)pid, (uintptr_t)stat_addr, (unsigned int)options, linux_syscall_name_waitpid);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -6559,15 +6689,6 @@ inline enum linux_error linux_fstat(linux_fd_t const fd, struct linux_old_kernel
 		return (enum linux_error)-ret;
 	return linux_error_none;
 }
-inline enum linux_error linux_signal(int const sig, linux_sighandler_t const handler, linux_uword_t* const result)
-{
-	linux_word_t const ret = linux_syscall2((unsigned int)sig, (uintptr_t)handler, linux_syscall_name_signal);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (linux_uword_t)ret;
-	return linux_error_none;
-}
 inline enum linux_error linux_olduname(struct linux_oldold_utsname* const name)
 {
 	linux_word_t const ret = linux_syscall1((uintptr_t)name, linux_syscall_name_olduname);
@@ -6598,15 +6719,6 @@ inline enum linux_error linux_old_getrlimit(unsigned int const resource, struct 
 	linux_word_t const ret = linux_syscall2(resource, (uintptr_t)rlim, linux_syscall_name_old_getrlimit);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
-	return linux_error_none;
-}
-inline enum linux_error linux_old_select(struct linux_sel_arg_struct* const arg, int* const result)
-{
-	linux_word_t const ret = linux_syscall1((uintptr_t)arg, linux_syscall_name_old_select);
-	if (linux_syscall_returned_error(ret))
-		return (enum linux_error)-ret;
-	if (result)
-		*result = (int)ret;
 	return linux_error_none;
 }
 inline enum linux_error linux_lstat(char const* const filename, struct linux_old_kernel_stat* const statbuf)

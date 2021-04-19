@@ -73,6 +73,7 @@ csrc = \
        src/getgroups16.c\
        src/setgroups16.c\
        src/old_select.c\
+       src/old_select_v.c\
        src/symlink.c\
        src/lstat.c\
        src/readlink.c\
@@ -127,6 +128,7 @@ csrc = \
        src/llseek.c\
        src/getdents.c\
        src/select.c\
+       src/select_v.c\
        src/flock.c\
        src/msync.c\
        src/readv.c\
@@ -151,6 +153,7 @@ csrc = \
        src/getresuid16.c\
        src/vm86.c\
        src/poll.c\
+       src/poll_v.c\
        src/setresgid16.c\
        src/getresgid16.c\
        src/prctl.c\
@@ -246,8 +249,11 @@ csrc = \
        src/fadvise64.c\
        src/lookup_dcookie.c\
        src/epoll_create.c\
+       src/epoll_create_v.c\
        src/epoll_ctl.c\
+       src/epoll_ctl_v.c\
        src/epoll_wait.c\
+       src/epoll_wait_v.c\
        src/remap_file_pages.c\
        src/set_tid_address.c\
        src/timer_create.c\
@@ -298,7 +304,9 @@ csrc = \
        src/fchmodat.c\
        src/faccessat.c\
        src/pselect6_time32.c\
+       src/pselect6_time32_v.c\
        src/ppoll_time32.c\
+       src/ppoll_time32_v.c\
        src/unshare.c\
        src/set_robust_list.c\
        src/get_robust_list.c\
@@ -309,6 +317,7 @@ csrc = \
        src/move_pages.c\
        src/getcpu.c\
        src/epoll_pwait.c\
+       src/epoll_pwait_v.c\
        src/utimensat_time32.c\
        src/signalfd.c\
        src/timerfd_create.c\
@@ -319,6 +328,7 @@ csrc = \
        src/signalfd4.c\
        src/eventfd2.c\
        src/epoll_create1.c\
+       src/epoll_create1_v.c\
        src/dup3.c\
        src/pipe2.c\
        src/inotify_init1.c\
@@ -398,7 +408,9 @@ csrc = \
        src/timerfd_settime.c\
        src/utimensat.c\
        src/pselect6.c\
+       src/pselect6_v.c\
        src/ppoll.c\
+       src/ppoll_v.c\
        src/io_pgetevents.c\
        src/io_pgetevents_v.c\
        src/recvmmsg.c\

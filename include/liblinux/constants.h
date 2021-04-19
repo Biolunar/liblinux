@@ -110,6 +110,12 @@
 #define linux_SIGRTMIN UINT32_C(32)
 
 //-----------------------------------------------------------------------------
+// signalfd
+
+#define linux_SFD_CLOEXEC  linux_O_CLOEXEC
+#define linux_SFD_NONBLOCK linux_O_NONBLOCK
+
+//-----------------------------------------------------------------------------
 // sigaction
 
 #define linux_SA_NOMASK linux_SA_NODEFER
