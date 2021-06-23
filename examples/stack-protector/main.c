@@ -13,6 +13,11 @@ struct tls
 
 static struct tls tls =
 {
+	/*
+	 * NOTICE: for real world applications you probably want to use a
+	 * canary which starts with a null byte, so that C string functions do
+	 * not leak it.
+	 */
 #if LINUX_BITS_PER_LONG == 32
 	.canary = 0xdeadbeef,
 #elif LINUX_BITS_PER_LONG == 64
