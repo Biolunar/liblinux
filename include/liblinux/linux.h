@@ -192,8 +192,7 @@ struct linux_signalfd_siginfo
 	int32_t  ssi_syscall;
 	uint64_t ssi_call_addr;
 	uint32_t ssi_arch;
-
-	uint8_t _pad[28];
+	uint8_t  _pad[28];
 };
 
 //=============================================================================

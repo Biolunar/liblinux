@@ -48,22 +48,22 @@ union linux_sifields
 	} kill;
 	struct
 	{
-		linux_timer_t tid;
-		int overrun;
+		linux_timer_t  tid;
+		uint32_t       overrun; // Won't have more than INT_MAX.
 		linux_sigval_t sigval;
-		int _sys_private;
+		int            _sys_private;
 	} timer;
 	struct
 	{
-		linux_pid_t pid;
-		linux_uid_t uid;
+		linux_pid_t    pid;
+		linux_uid_t    uid;
 		linux_sigval_t sigval;
 	} rt;
 	struct
 	{
-		linux_pid_t pid;
-		linux_uid_t uid;
-		int status;
+		linux_pid_t      pid;
+		linux_uid_t      uid;
+		uint32_t         status;
 		linux_si_clock_t utime;
 		linux_si_clock_t stime;
 	} sigchld;
@@ -76,13 +76,13 @@ union linux_sifields
 			short addr_lsb;
 			struct
 			{
-				char _dummy_bnd[linux_ADDR_BND_PKEY_PAD];
+				char  _dummy_bnd[linux_ADDR_BND_PKEY_PAD];
 				void* lower;
 				void* upper;
 			} addr_bnd;
 			struct
 			{
-				char _dummy_pkey[linux_ADDR_BND_PKEY_PAD];
+				char     _dummy_pkey[linux_ADDR_BND_PKEY_PAD];
 				uint32_t pkey;
 			} addr_pkey;
 		};
@@ -91,13 +91,13 @@ union linux_sifields
 	struct
 	{
 		linux_si_band_t band;
-		int fd;
+		linux_fd_t      fd;
 	} sigpoll;
 	struct
 	{
-		void* call_addr;
-		int syscall;
-		unsigned int arch;
+		void*    call_addr;
+		uint32_t syscall;
+		uint32_t arch;
 	} sigsys;
 };
 
@@ -107,9 +107,9 @@ typedef struct linux_siginfo
 	{
 		struct
 		{
-			uint32_t si_signo;
-			int si_errno;
-			int32_t si_code;
+			uint32_t             si_signo;
+			uint32_t             si_errno;
+			int32_t              si_code;
 			union linux_sifields sifields;
 		};
 		int _si_pad[linux_SI_MAX_SIZE / sizeof(int)];
@@ -123,15 +123,15 @@ struct linux_sigaction
 		linux_sighandler_t   sa_handler;
 		void               (*sa_sigaction)(int, struct linux_siginfo*, void*);
 	};
-	linux_sigset_t   sa_mask;
-	uintptr_t        sa_flags;
-	void           (*sa_restorer)(void);
+	linux_sigset_t     sa_mask;
+	uintptr_t          sa_flags;
+	linux_sigrestore_t sa_restorer;
 };
 
 typedef struct linux_sigaltstack
 {
-	void* ss_sp;
-	uint32_t ss_flags;
+	void*        ss_sp;
+	uint32_t     ss_flags;
 	linux_size_t ss_size;
 } linux_stack_t;
 
