@@ -32,6 +32,7 @@ csrc = \
        src/nice.c\
        src/sync.c\
        src/kill.c\
+       src/kill_v.c\
        src/rename.c\
        src/mkdir.c\
        src/rmdir.c\
@@ -42,6 +43,7 @@ csrc = \
        src/setgid16.c\
        src/getgid16.c\
        src/signal.c\
+       src/signal_v.c\
        src/geteuid16.c\
        src/getegid16.c\
        src/acct.c\
@@ -58,12 +60,15 @@ csrc = \
        src/getpgrp.c\
        src/setsid.c\
        src/sigaction.c\
+       src/sigaction_v.c\
        src/sgetmask.c\
        src/ssetmask.c\
        src/setreuid16.c\
        src/setregid16.c\
        src/sigsuspend.c\
+       src/sigsuspend_v.c\
        src/sigpending.c\
+       src/sigpending_v.c\
        src/sethostname.c\
        src/setrlimit.c\
        src/old_getrlimit.c\
@@ -115,6 +120,7 @@ csrc = \
        src/adjtimex_time32.c\
        src/mprotect.c\
        src/sigprocmask.c\
+       src/sigprocmask_v.c\
        src/init_module.c\
        src/delete_module.c\
        src/quotactl.c\
@@ -158,11 +164,17 @@ csrc = \
        src/getresgid16.c\
        src/prctl.c\
        src/rt_sigaction.c\
+       src/rt_sigaction_v.c\
        src/rt_sigprocmask.c\
+       src/rt_sigprocmask_v.c\
        src/rt_sigpending.c\
+       src/rt_sigpending_v.c\
        src/rt_sigtimedwait_time32.c\
+       src/rt_sigtimedwait_time32_v.c\
        src/rt_sigqueueinfo.c\
+       src/rt_sigqueueinfo_v.c\
        src/rt_sigsuspend.c\
+       src/rt_sigsuspend_v.c\
        src/pread64.c\
        src/pwrite64.c\
        src/chown16.c\
@@ -170,6 +182,7 @@ csrc = \
        src/capget.c\
        src/capset.c\
        src/sigaltstack.c\
+       src/sigaltstack_v.c\
        src/sendfile.c\
        src/vfork.c\
        src/getrlimit.c\
@@ -230,6 +243,7 @@ csrc = \
        src/fremovexattr.c\
        src/fremovexattr_v.c\
        src/tkill.c\
+       src/tkill_v.c\
        src/sendfile64.c\
        src/futex_time32.c\
        src/sched_setaffinity.c\
@@ -268,6 +282,7 @@ csrc = \
        src/statfs64.c\
        src/fstatfs64.c\
        src/tgkill.c\
+       src/tgkill_v.c\
        src/utimes_time32.c\
        src/fadvise64_64.c\
        src/mbind.c\
@@ -320,12 +335,14 @@ csrc = \
        src/epoll_pwait_v.c\
        src/utimensat_time32.c\
        src/signalfd.c\
+       src/signalfd_v.c\
        src/timerfd_create.c\
        src/eventfd.c\
        src/fallocate.c\
        src/timerfd_settime32.c\
        src/timerfd_gettime32.c\
        src/signalfd4.c\
+       src/signalfd4_v.c\
        src/eventfd2.c\
        src/epoll_create1.c\
        src/epoll_create1_v.c\
@@ -335,6 +352,7 @@ csrc = \
        src/preadv.c\
        src/pwritev.c\
        src/rt_tgsigqueueinfo.c\
+       src/rt_tgsigqueueinfo_v.c\
        src/perf_event_open.c\
        src/recvmmsg_time32.c\
        src/fanotify_init.c\
@@ -418,6 +436,7 @@ csrc = \
        src/mq_timedreceive.c\
        src/semtimedop.c\
        src/rt_sigtimedwait.c\
+       src/rt_sigtimedwait_v.c\
        src/futex.c\
        src/sched_rr_get_interval.c\
        src/pidfd_send_signal.c\

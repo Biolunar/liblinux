@@ -4367,6 +4367,170 @@ inline enum linux_error linux_signal(uint32_t const sig, linux_sighandler_t cons
 }
 #endif
 
+#if defined(LINUX_ARCH_X86)
+inline enum linux_error linux_signalfd4_v(linux_fd_t const ufd, linux_sigset_t* const user_mask, linux_size_t const sizemask, uint32_t const flags, linux_fd_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall4((uint32_t)ufd, (uintptr_t)user_mask, sizemask, flags, linux_syscall_name_signalfd4);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_kill_v(linux_pid_t const pid, uint32_t const sig)
+{
+	linux_word_t const ret = linux_vsyscall2((uint32_t)pid, sig, linux_syscall_name_kill);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_tkill_v(linux_pid_t const pid, uint32_t const sig) // DEPRECATED: use linux_tgkill_v
+{
+	linux_word_t const ret = linux_vsyscall2((uint32_t)pid, sig, linux_syscall_name_tkill);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_tgkill_v(linux_pid_t const tgid, linux_pid_t const pid, uint32_t const sig)
+{
+	linux_word_t const ret = linux_vsyscall3((uint32_t)tgid, (uint32_t)pid, sig, linux_syscall_name_tgkill);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigaltstack_v(linux_stack_t const* const uss, linux_stack_t* const uoss)
+{
+	linux_word_t const ret = linux_vsyscall2((uintptr_t)uss, (uintptr_t)uoss, linux_syscall_name_sigaltstack);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_sigsuspend_v(linux_sigset_t* const unewset, linux_size_t const sigsetsize)
+{
+	linux_word_t const ret = linux_vsyscall2((uintptr_t)unewset, sigsetsize, linux_syscall_name_rt_sigsuspend);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_sigaction_v(uint32_t const sig, struct linux_sigaction const* const act, struct linux_sigaction* const oact, linux_size_t const sigsetsize)
+{
+	linux_word_t const ret = linux_vsyscall4(sig, (uintptr_t)act, (uintptr_t)oact, sigsetsize, linux_syscall_name_rt_sigaction);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_sigprocmask_v(uint32_t const how, linux_sigset_t* const nset, linux_sigset_t* const oset, linux_size_t const sigsetsize)
+{
+	linux_word_t const ret = linux_vsyscall4(how, (uintptr_t)nset, (uintptr_t)oset, sigsetsize, linux_syscall_name_rt_sigprocmask);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_sigpending_v(linux_sigset_t* const uset, linux_size_t const sigsetsize)
+{
+	linux_word_t const ret = linux_vsyscall2((uintptr_t)uset, sigsetsize, linux_syscall_name_rt_sigpending);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_sigtimedwait_v(linux_sigset_t const* const uthese, linux_siginfo_t* const uinfo, struct linux_timespec const* const uts, linux_size_t const sigsetsize, uint32_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall4((uintptr_t)uthese, (uintptr_t)uinfo, (uintptr_t)uts, sigsetsize, linux_syscall_name_rt_sigtimedwait);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_sigqueueinfo_v(linux_pid_t const pid, uint32_t const sig, linux_siginfo_t* const uinfo) // DEPRECATED: use linux_rt_tgsigqueueinfo_v
+{
+	linux_word_t const ret = linux_vsyscall3((uint32_t)pid, sig, (uintptr_t)uinfo, linux_syscall_name_rt_sigqueueinfo);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_tgsigqueueinfo_v(linux_pid_t const tgid, linux_pid_t const pid, uint32_t const sig, linux_siginfo_t* const uinfo)
+{
+	linux_word_t const ret = linux_vsyscall4((uint32_t)tgid, (uint32_t)pid, sig, (uintptr_t)uinfo, linux_syscall_name_rt_tgsigqueueinfo);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_signalfd_v(linux_fd_t const ufd, linux_sigset_t* const user_mask, linux_size_t const sizemask, linux_fd_t* const result) // DEPRECATED: use linux_signalfd4_v
+{
+	linux_word_t const ret = linux_vsyscall3((uint32_t)ufd, (uintptr_t)user_mask, sizemask, linux_syscall_name_signalfd);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_fd_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_rt_sigtimedwait_time32_v(linux_sigset_t const* const uthese, linux_siginfo_t* const uinfo, struct linux_timespec32 const* const uts, linux_size_t const sigsetsize, uint32_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall4((uintptr_t)uthese, (uintptr_t)uinfo, (uintptr_t)uts, sigsetsize, linux_syscall_name_rt_sigtimedwait_time32);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigaction_v(uint32_t const sig, struct linux_old_sigaction const* const act, struct linux_old_sigaction* const oact)
+{
+	linux_word_t const ret = linux_vsyscall3(sig, (uintptr_t)act, (uintptr_t)oact, linux_syscall_name_sigaction);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigsuspend_v(int32_t const unused1, int32_t const unused2, linux_old_sigset_t const mask)
+{
+	linux_word_t const ret = linux_vsyscall3((uint32_t)unused1, (uint32_t)unused2, mask, linux_syscall_name_sigsuspend);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigpending_v(linux_old_sigset_t* const uset)
+{
+	linux_word_t const ret = linux_vsyscall1((uintptr_t)uset, linux_syscall_name_sigpending);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_sigprocmask_v(uint32_t const how, linux_old_sigset_t* const nset, linux_old_sigset_t* const oset)
+{
+	linux_word_t const ret = linux_vsyscall3(how, (uintptr_t)nset, (uintptr_t)oset, linux_syscall_name_sigprocmask);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_signal_v(uint32_t const sig, linux_sighandler_t const handler, linux_uword_t* const result)
+{
+	linux_word_t const ret = linux_vsyscall2(sig, (uintptr_t)handler, linux_syscall_name_signal);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (linux_uword_t)ret;
+	return linux_error_none;
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // pidfd
 
