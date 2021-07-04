@@ -556,6 +556,12 @@ enum
 	linux_syscall_name_pidfd_getfd                  = 438,
 	linux_syscall_name_faccessat2                   = 439,
 	linux_syscall_name_process_madvise              = 440,
+	linux_syscall_name_epoll_pwait2                 = 441,
+	linux_syscall_name_mount_setattr                = 442,
+	//linux_syscall_name_quotactl_path              = 443, // reserved
+	linux_syscall_name_landlock_create_ruleset      = 444,
+	linux_syscall_name_landlock_add_rule            = 445,
+	linux_syscall_name_landlock_restrict_self       = 446,
 
 	linux_syscall_name_breakpoint                   = 0x0f0000 + 1,
 	linux_syscall_name_cacheflush                   = 0x0f0000 + 2,

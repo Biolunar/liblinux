@@ -146,6 +146,11 @@ struct linux_pollfd
 //=============================================================================
 // signal
 
+typedef struct
+{
+	unsigned long sig[linux_NSIG / LINUX_BITS_PER_LONG];
+} linux_sigset_t;
+
 typedef union linux_sigval
 {
 	int32_t sival_int;
@@ -196,8 +201,31 @@ struct linux_signalfd_siginfo
 };
 
 //=============================================================================
+// landlock
+
+struct linux_landlock_ruleset_attr
+{
+	uint64_t handled_access_fs;
+};
+
+struct linux_landlock_path_beneath_attr
+{
+	unsigned char data[sizeof(uint64_t) + sizeof(linux_fd_t)];
+	//uint64_t allowed_access;
+	//linux_fd_t parent_fd;
+};
+_Static_assert(sizeof(struct linux_landlock_path_beneath_attr) == (sizeof(uint64_t) + sizeof(linux_fd_t)), "struct linux_landlock_path_beneath_attr is not tightly packed");
+
+//=============================================================================
 // TODO
 
+struct linux_mount_attr
+{
+	uint64_t attr_set;
+	uint64_t attr_clr;
+	uint64_t propagation;
+	uint64_t userns_fd;
+};
 struct linux_utimbuf
 {
 	linux_old_time_t actime;
@@ -1113,14 +1141,6 @@ struct linux_open_how
 #include "drm/drm.h"
 #include "drm/drm_mode.h"
 #include "drm/drm_fourcc.h"
-
-//-----------------------------------------------------------------------------
-// signal
-
-typedef struct
-{
-	unsigned long sig[linux_NSIG / LINUX_BITS_PER_LONG];
-} linux_sigset_t;
 
 //-----------------------------------------------------------------------------
 // aio
@@ -3206,9 +3226,19 @@ inline enum linux_error linux_epoll_ctl(linux_fd_t const epfd, uint32_t const op
 	return linux_error_none;
 }
 
-inline enum linux_error linux_epoll_pwait(linux_fd_t const epfd, struct linux_epoll_event* const events, uint32_t const maxevents, int32_t const timeout, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result)
+inline enum linux_error linux_epoll_pwait(linux_fd_t const epfd, struct linux_epoll_event* const events, uint32_t const maxevents, int32_t const timeout, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result) // DEPRECATED: use linux_epoll_pwait2
 {
 	linux_word_t const ret = linux_syscall6((uint32_t)epfd, (uintptr_t)events, maxevents, (uint32_t)timeout, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_epoll_pwait);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (uint32_t)ret;
+	return linux_error_none;
+}
+
+inline enum linux_error linux_epoll_pwait2(linux_fd_t const epfd, struct linux_epoll_event* const events, uint32_t const maxevents, struct linux_timespec const* const timeout, linux_sigset_t const* const sigmask, linux_size_t const sigsetsize, uint32_t* const result)
+{
+	linux_word_t const ret = linux_syscall6((uint32_t)epfd, (uintptr_t)events, maxevents, (uintptr_t)timeout, (uintptr_t)sigmask, sigsetsize, linux_syscall_name_epoll_pwait2);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	if (result)
@@ -5421,6 +5451,13 @@ inline enum linux_error linux_fspick(linux_fd_t dfd, char const* path, unsigned 
 		*result = (linux_fd_t)ret;
 	return linux_error_none;
 }
+inline enum linux_error linux_mount_setattr(linux_fd_t dfd, char const* path, unsigned int flags, struct linux_mount_attr* uattr, linux_size_t usize)
+{
+	linux_word_t const ret = linux_syscall5((uint32_t)dfd, (uintptr_t)path, flags, (uintptr_t)uattr, usize, linux_syscall_name_mount_setattr);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
 
 //-----------------------------------------------------------------------------
 // misc
@@ -5762,6 +5799,29 @@ inline enum linux_error linux_bpf(int const cmd, union linux_bpf_attr* const uat
 inline enum linux_error linux_rseq(struct linux_rseq* const rseq, uint32_t const rseq_len, int const flags, uint32_t const sig)
 {
 	linux_word_t const ret = linux_syscall4((uintptr_t)rseq, rseq_len, (unsigned int)flags, sig, linux_syscall_name_rseq);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_landlock_create_ruleset(struct linux_landlock_ruleset_attr const* const attr, linux_size_t const size, uint32_t const flags, int* result)
+{
+	linux_word_t const ret = linux_syscall3((uintptr_t)attr, size, flags, linux_syscall_name_landlock_create_ruleset);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	if (result)
+		*result = (int)ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_landlock_add_rule(linux_fd_t const ruleset_fd, enum linux_landlock_rule_type const rule_type, void const* const rule_attr, uint32_t const flags)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)ruleset_fd, (unsigned int)rule_type, (uintptr_t)rule_attr, flags, linux_syscall_name_landlock_add_rule);
+	if (linux_syscall_returned_error(ret))
+		return (enum linux_error)-ret;
+	return linux_error_none;
+}
+inline enum linux_error linux_landlock_restrict_self(linux_fd_t const ruleset_fd, uint32_t const flags)
+{
+	linux_word_t const ret = linux_syscall2((uint32_t)ruleset_fd, flags, linux_syscall_name_landlock_restrict_self);
 	if (linux_syscall_returned_error(ret))
 		return (enum linux_error)-ret;
 	return linux_error_none;

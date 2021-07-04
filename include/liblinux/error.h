@@ -22,6 +22,7 @@
 
 #include <stdbool.h>
 
+// TODO: Don't use an enum for ABI stability.
 enum linux_error
 {
 	linux_error_none      =    0,

@@ -329,4 +329,9 @@ SYSCALLS="read\
           openat2\
           pidfd_getfd\
           faccessat2\
-          process_madvise"
+          process_madvise\
+          epoll_pwait2\
+          mount_setattr\
+          landlock_create_ruleset\
+          landlock_add_rule\
+          landlock_restrict_self"

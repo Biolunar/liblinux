@@ -290,7 +290,12 @@ csrc = \
        src/openat2.c\
        src/pidfd_getfd.c\
        src/faccessat2.c\
-       src/process_madvise.c
+       src/process_madvise.c\
+       src/epoll_pwait2.c\
+       src/mount_setattr.c\
+       src/landlock_create_ruleset.c\
+       src/landlock_add_rule.c\
+       src/landlock_restrict_self.c
 
 tests = \
         tests/syscalls/io_setup\
@@ -583,4 +588,9 @@ tests = \
         tests/syscalls/openat2\
         tests/syscalls/pidfd_getfd\
         tests/syscalls/faccessat2\
-        tests/syscalls/process_madvise
+        tests/syscalls/process_madvise\
+        tests/syscalls/epoll_pwait2\
+        tests/syscalls/mount_setattr\
+        tests/syscalls/landlock_create_ruleset\
+        tests/syscalls/landlock_add_rule\
+        tests/syscalls/landlock_restrict_self

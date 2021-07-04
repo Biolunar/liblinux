@@ -222,6 +222,30 @@
 #define linux_SIGEV_PAD_SIZE ((linux_SIGEV_MAX_SIZE - linux_ARCH_SIGEV_PREAMBLE_SIZE) / sizeof(uint32_t))
 
 //=============================================================================
+// landlock
+
+#define LANDLOCK_CREATE_RULESET_VERSION			(1U << 0)
+
+enum linux_landlock_rule_type
+{
+	linux_LANDLOCK_RULE_PATH_BENEATH = 1,
+};
+
+#define linux_LANDLOCK_ACCESS_FS_EXECUTE     (UINT64_C(1) <<  0)
+#define linux_LANDLOCK_ACCESS_FS_WRITE_FILE  (UINT64_C(1) <<  1)
+#define linux_LANDLOCK_ACCESS_FS_READ_FILE   (UINT64_C(1) <<  2)
+#define linux_LANDLOCK_ACCESS_FS_READ_DIR    (UINT64_C(1) <<  3)
+#define linux_LANDLOCK_ACCESS_FS_REMOVE_DIR  (UINT64_C(1) <<  4)
+#define linux_LANDLOCK_ACCESS_FS_REMOVE_FILE (UINT64_C(1) <<  5)
+#define linux_LANDLOCK_ACCESS_FS_MAKE_CHAR   (UINT64_C(1) <<  6)
+#define linux_LANDLOCK_ACCESS_FS_MAKE_DIR    (UINT64_C(1) <<  7)
+#define linux_LANDLOCK_ACCESS_FS_MAKE_REG    (UINT64_C(1) <<  8)
+#define linux_LANDLOCK_ACCESS_FS_MAKE_SOCK   (UINT64_C(1) <<  9)
+#define linux_LANDLOCK_ACCESS_FS_MAKE_FIFO   (UINT64_C(1) << 10)
+#define linux_LANDLOCK_ACCESS_FS_MAKE_BLOCK  (UINT64_C(1) << 11)
+#define linux_LANDLOCK_ACCESS_FS_MAKE_SYM    (UINT64_C(1) << 12)
+
+//=============================================================================
 // TODO
 
 //=============================================================================
