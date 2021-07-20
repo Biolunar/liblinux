@@ -18,17 +18,15 @@ BITS 32
 
 EXTERN linux_vsyscall_ptr
 
-GLOBAL linux_vsyscall6
-linux_vsyscall6:
+GLOBAL linux_syscall5_v
+linux_syscall5_v:
 	xchg ebx, [esp+4] ; arg1 -> arg1
 	mov ecx, [esp+8] ; arg2 -> arg2
 	mov edx, [esp+12] ; arg3 -> arg3
 	xchg esi, [esp+16] ; arg4 -> arg4
 	xchg edi, [esp+20] ; arg5 -> arg5
-	xchg ebp, [esp+24] ; arg6 -> arg6
-	mov eax, [esp+28] ; arg7 -> #
+	mov eax, [esp+24] ; arg6 -> #
 	call [linux_vsyscall_ptr]
-	mov ebp, [esp+24]
 	mov edi, [esp+20]
 	mov esi, [esp+16]
 	mov ebx, [esp+4]

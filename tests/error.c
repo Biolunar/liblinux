@@ -1,6 +1,4 @@
-#include <liblinux/start.h>
-#include <liblinux/syscall.h>
-#include <liblinux/error.h>
+#include <liblinux/linux.h>
 
 noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 {
@@ -8,20 +6,20 @@ noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[])
 	(void)argv;
 	(void)envp;
 
-	linux_word_t err = 0;
-	if (linux_syscall_returned_error(err))
+	linux_word_t ret = 0;
+	if (linux_get_error(ret))
 		linux_exit_group(1);
 
-	err = -1;
-	if (!linux_syscall_returned_error(err))
+	ret = -1;
+	if (!linux_get_error(ret))
 		linux_exit_group(2);
 
-	err = -linux_MAX_ERRNO;
-	if (!linux_syscall_returned_error(err))
+	ret = -4095;
+	if (!linux_get_error(ret))
 		linux_exit_group(3);
 
-	err = -linux_MAX_ERRNO - 1;
-	if (linux_syscall_returned_error(err))
+	ret = -4095 - 1;
+	if (linux_get_error(ret))
 		linux_exit_group(4);
 
 	linux_exit_group(0);

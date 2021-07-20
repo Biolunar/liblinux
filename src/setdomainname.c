@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error linux_setdomainname(char* name, int len);
+extern inline linux_error_t linux_setdomainname(char* name, int len);

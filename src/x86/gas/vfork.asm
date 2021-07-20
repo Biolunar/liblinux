@@ -19,14 +19,42 @@
 /*
  * The parent process will be suspended while the child is running. The parent
  * expects an unmodified stack, but since the child inevitably modifies the
- * stack (e.g. by returning from this function), we have to save the return
- * address in a register and restore it for the parent before returning.
+ * stack, we have to save the return address and the parameter in registers and
+ * restore them for the parent before returning.
  */
 
-.global linux_vfork_raw
-linux_vfork_raw:
-	pop edi /* save the return address in a scratch register */
+.global linux_vfork
+linux_vfork:
+	mov ecx, [esp+0] /* Save the return address in a scratch register. */
+	mov edx, [esp+4] /* Save parameter in a scratch register. */
+
 	mov eax, 190
 	int 0x80
-	push edi /* restore the return address */
+
+	test eax, eax
+	jz .child
+
+	/* Now we are inside the parent. */
+
+	mov [esp+4], edx /* Restore the parameter. */
+	mov [esp+0], ecx /* Restore the return address. */
+
+	/* Test if an error occurred. */
+	mov edx, eax
+	neg edx
+	xor ecx, ecx
+	cmp eax, 0xfffff000
+	cmova ecx, edx
+	test cx, cx /* Check if no error. */
+	jnz .out
+	mov edx, [esp+4]
+	test edx, edx /* Check if parameter was null. */
+	jz .out
+	mov [edx], eax
+.out:
+	mov eax, ecx
+	ret
+
+.child:
+	mov [edx], eax
 	ret

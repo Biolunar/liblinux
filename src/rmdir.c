@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error linux_rmdir(char const* pathname);
+extern inline linux_error_t linux_rmdir(char const* pathname);

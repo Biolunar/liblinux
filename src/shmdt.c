@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error linux_shmdt(char* shmaddr);
+extern inline linux_error_t linux_shmdt(char* shmaddr);

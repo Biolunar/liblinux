@@ -2,7 +2,7 @@
 
 static enum TestResult test_available(void)
 {
-	if (linux_landlock_add_rule(0, 0, 0, 0) == linux_ENOSYS)
+	if (linux_landlock_add_rule(0, linux_LANDLOCK_RULE_PATH_BENEATH, 0, 0) == linux_ENOSYS)
 		return TEST_NOT_SUPPORTED;
 
 	return TEST_SUCCESS;

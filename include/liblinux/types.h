@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-.intel_syntax noprefix
+#ifndef HEADER_LIBLINUX_TYPES_H_INCLUDED
+#define HEADER_LIBLINUX_TYPES_H_INCLUDED
 
-.global linux_vsyscall3
-linux_vsyscall3:
-	xchg ebx, [esp+4] # arg1 -> arg1
-	mov ecx, [esp+8] # arg2 -> arg2
-	mov edx, [esp+12] # arg3 -> arg3
-	mov eax, [esp+16] # arg4 -> #
-	call [linux_vsyscall_ptr]
-	mov ebx, [esp+4]
-	ret
+#include "version.h"
+#include "endian.h"
+#include "arch.h"
+
+#include <stdint.h>
+
+//=============================================================================
+// Generic types
+
+typedef int32_t  linux_fd_t;
+typedef int32_t  linux_pid_t;
+typedef uint32_t linux_poll_t;
+typedef int32_t  linux_rwf_t;
+
+#endif // !HEADER_LIBLINUX_TYPES_H_INCLUDED

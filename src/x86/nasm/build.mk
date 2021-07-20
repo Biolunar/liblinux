@@ -13,13 +13,13 @@ asmsrc = \
          src/$(ARCH)/$(TOOL)/syscall5.asm\
          src/$(ARCH)/$(TOOL)/syscall6.asm\
          src/$(ARCH)/$(TOOL)/vfork.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall0.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall1.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall2.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall3.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall4.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall5.asm\
-         src/$(ARCH)/$(TOOL)/vsyscall6.asm\
+         src/$(ARCH)/$(TOOL)/syscall0_v.asm\
+         src/$(ARCH)/$(TOOL)/syscall1_v.asm\
+         src/$(ARCH)/$(TOOL)/syscall2_v.asm\
+         src/$(ARCH)/$(TOOL)/syscall3_v.asm\
+         src/$(ARCH)/$(TOOL)/syscall4_v.asm\
+         src/$(ARCH)/$(TOOL)/syscall5_v.asm\
+         src/$(ARCH)/$(TOOL)/syscall6_v.asm\
          src/$(ARCH)/$(TOOL)/vsyscall_ptr.asm
 
 asmflags = -f elf32

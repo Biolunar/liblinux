@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error linux_sethostname(char* name, int len);
+extern inline linux_error_t linux_sethostname(char* name, int len);

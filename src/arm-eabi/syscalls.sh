@@ -216,7 +216,7 @@ SYSCALLS="fork\
           fstatfs64\
           tgkill\
           utimes_time32\
-          arm_fadvise64_64\
+          fadvise64_64\
           pciconfig_iobase\
           pciconfig_read\
           pciconfig_write\

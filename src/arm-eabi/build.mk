@@ -218,7 +218,7 @@ csrc = \
        src/fstatfs64.c\
        src/tgkill.c\
        src/utimes_time32.c\
-       src/arm_fadvise64_64.c\
+       src/fadvise64_64.c\
        src/pciconfig_iobase.c\
        src/pciconfig_read.c\
        src/pciconfig_write.c\
@@ -617,7 +617,7 @@ tests = \
         tests/syscalls/fstatfs64\
         tests/syscalls/tgkill\
         tests/syscalls/utimes_time32\
-        tests/syscalls/arm_fadvise64_64\
+        tests/syscalls/fadvise64_64\
         tests/syscalls/pciconfig_iobase\
         tests/syscalls/pciconfig_read\
         tests/syscalls/pciconfig_write\

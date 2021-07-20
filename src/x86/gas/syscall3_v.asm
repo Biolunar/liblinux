@@ -16,14 +16,12 @@
 
 .intel_syntax noprefix
 
-.global linux_vsyscall4
-linux_vsyscall4:
+.global linux_syscall3_v
+linux_syscall3_v:
 	xchg ebx, [esp+4] # arg1 -> arg1
 	mov ecx, [esp+8] # arg2 -> arg2
 	mov edx, [esp+12] # arg3 -> arg3
-	xchg esi, [esp+16] # arg4 -> arg4
-	mov eax, [esp+20] # arg5 -> #
+	mov eax, [esp+16] # arg4 -> #
 	call [linux_vsyscall_ptr]
-	mov esi, [esp+16]
 	mov ebx, [esp+4]
 	ret

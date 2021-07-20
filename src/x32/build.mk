@@ -57,7 +57,6 @@ csrc = \
        src/getsockopt.c\
        src/clone.c\
        src/fork.c\
-       src/vfork.c\
        src/execve.c\
        src/wait4.c\
        src/kill.c\

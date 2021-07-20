@@ -18,8 +18,8 @@
 #define HEADER_LIBLINUX_CONSTANTS_H_INCLUDED
 
 #include "version.h"
-#include "arch.h"
 #include "endian.h"
+#include "arch.h"
 
 #include <stddef.h>
 #include <stdint.h>

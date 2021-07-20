@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_NAMES_H_INCLUDED
-#define HEADER_LIBLINUX_NAMES_H_INCLUDED
+#ifndef HEADER_LIBLINUX_UNISTD_H_INCLUDED
+#define HEADER_LIBLINUX_UNISTD_H_INCLUDED
 
 #include "version.h"
+#include "endian.h"
 #include "arch.h"
 
 #if defined(LINUX_ARCH_ARM_EABI)
-#include "arm-eabi/names.h"
+#include "arm-eabi/unistd.h"
 #elif defined(LINUX_ARCH_ARM64)
-#include "arm64/names.h"
+#include "arm64/unistd.h"
 #elif defined(LINUX_ARCH_RISCV32)
-#include "riscv32/names.h"
+#include "riscv32/unistd.h"
 #elif defined(LINUX_ARCH_RISCV64)
-#include "riscv64/names.h"
+#include "riscv64/unistd.h"
 #elif defined(LINUX_ARCH_X86)
-#include "x86/names.h"
+#include "x86/unistd.h"
 #elif defined(LINUX_ARCH_X32)
-#include "x32/names.h"
+#include "x32/unistd.h"
 #elif defined(LINUX_ARCH_X86_64)
-#include "x86_64/names.h"
+#include "x86_64/unistd.h"
+#elif
+#error "Unknown architecture."
 #endif
 
-#endif // !HEADER_LIBLINUX_NAMES_H_INCLUDED
+#endif // !HEADER_LIBLINUX_UNISTD_H_INCLUDED

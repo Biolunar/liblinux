@@ -1,9 +1,9 @@
 #include "test.h"
 
-static enum linux_error fork(linux_pid_t* pid)
+static linux_error_t fork(linux_pid_t* pid)
 {
 	linux_word_t result;
-	enum linux_error const err = linux_clone(linux_SIGCHLD, 0, 0, 0, 0, &result);
+	linux_error_t const err = linux_clone(linux_SIGCHLD, 0, 0, 0, 0, &result);
 	*pid = (linux_pid_t)result;
 	return err;
 }

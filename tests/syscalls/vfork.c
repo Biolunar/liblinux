@@ -2,7 +2,7 @@
 
 static enum TestResult test_correct_usage(void)
 {
-	linux_word_t pid = 0;
+	linux_pid_t pid = 0;
 	if (linux_vfork(&pid))
 		return TEST_FAILURE;
 

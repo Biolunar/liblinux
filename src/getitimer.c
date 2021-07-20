@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error linux_getitimer(int which, struct linux_old_itimerval* value);
+extern inline linux_error_t linux_getitimer(int which, struct linux_old_itimerval* value);

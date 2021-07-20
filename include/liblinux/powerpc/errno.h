@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-#ifndef HEADER_LIBLINUX_START_H_INCLUDED
-#define HEADER_LIBLINUX_START_H_INCLUDED
+#ifndef HEADER_LIBLINUX_POWERPC_ERRNO_H_INCLUDED
+#define HEADER_LIBLINUX_POWERPC_ERRNO_H_INCLUDED
 
-#include "version.h"
+#include "../generic/errno.h"
 
-#include <stdint.h>
-#include <stdnoreturn.h>
+#undef  linux_EDEADLOCK
+#define linux_EDEADLOCK UINT16_C(58) ///< File locking deadlock error
 
-/*
- * If you are not using the libc you can implement this function as your entry
- * point.
- */
-noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[]);
-
-#endif // !HEADER_LIBLINUX_START_H_INCLUDED
+#endif // !HEADER_LIBLINUX_POWERPC_ERRNO_H_INCLUDED

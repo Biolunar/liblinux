@@ -1,7 +1,6 @@
 #ifndef HEADER_LIBLINUX_TESTS_SYSCALLS_TEST_H_INCLUDED
 #define HEADER_LIBLINUX_TESTS_SYSCALLS_TEST_H_INCLUDED
 
-#include <liblinux/start.h>
 #include <liblinux/linux.h>
 
 #include <stddef.h>

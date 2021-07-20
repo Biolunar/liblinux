@@ -184,7 +184,6 @@ csrc = \
        src/sigaltstack.c\
        src/sigaltstack_v.c\
        src/sendfile.c\
-       src/vfork.c\
        src/getrlimit.c\
        src/mmap_pgoff.c\
        src/truncate64.c\

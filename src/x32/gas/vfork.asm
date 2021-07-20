@@ -23,10 +23,26 @@
  * address in a register and restore it for the parent before returning.
  */
 
-.global linux_vfork_raw
-linux_vfork_raw:
-	pop rdi /* save the return address in a scratch register */
+.global linux_vfork
+linux_vfork:
+	pop rsi /* Save the return address in a scratch register. */
+
 	mov rax, 58
 	syscall
-	push rdi /* restore the return address */
+
+	/* Test if an error occurred. */
+	mov edx, eax
+	neg edx
+	xor ecx, ecx
+	cmp rax, 0xfffffffffffff000
+	cmova ecx, edx
+	test cx, cx
+	jnz .out
+	test rdi, rdi
+	jz .out
+	mov [rdi], eax
+.out:
+	mov eax, ecx
+
+	push rsi /* Restore the return address. */
 	ret

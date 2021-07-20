@@ -1,3 +1,3 @@
 #include <liblinux/linux.h>
 
-extern inline enum linux_error linux_close(linux_fd_t fd);
+extern inline linux_error_t linux_close(linux_fd_t fd);

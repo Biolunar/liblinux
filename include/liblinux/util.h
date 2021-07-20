@@ -18,6 +18,7 @@
 #define HEADER_LIBLINUX_UTIL_H_INCLUDED
 
 #include "version.h"
+#include "endian.h"
 #include "arch.h"
 
 #include <stdint.h>

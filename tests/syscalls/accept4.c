@@ -1,9 +1,9 @@
 #include "test.h"
 
-static enum linux_error fork(linux_pid_t* pid)
+static linux_error_t fork(linux_pid_t* pid)
 {
 	linux_word_t result = 0;
-	enum linux_error const err = linux_clone(linux_SIGCHLD, 0, 0, 0, 0, &result);
+	linux_error_t const err = linux_clone(linux_SIGCHLD, 0, 0, 0, 0, &result);
 	*pid = (linux_pid_t)result;
 	return err;
 }
@@ -84,7 +84,7 @@ static enum TestResult test_segfault(void)
 	}
 
 	linux_fd_t client;
-	enum linux_error const err = linux_accept4(server, (struct linux_sockaddr*)1, 0, linux_SOCK_CLOEXEC, &client);
+	linux_error_t const err = linux_accept4(server, (struct linux_sockaddr*)1, 0, linux_SOCK_CLOEXEC, &client);
 	if (err != linux_EFAULT)
 	{
 		if (!err)
@@ -117,7 +117,7 @@ static enum TestResult test_non_listening(void)
 	}
 
 	linux_fd_t client = 0;
-	enum linux_error const err = linux_accept4(server, 0, 0, linux_SOCK_CLOEXEC, &client);
+	linux_error_t const err = linux_accept4(server, 0, 0, linux_SOCK_CLOEXEC, &client);
 	if (err != linux_EINVAL)
 	{
 		if (!err)
