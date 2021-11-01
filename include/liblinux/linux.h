@@ -3528,7 +3528,7 @@ inline linux_error_t linux_readlinkat(linux_fd_t const dfd, char const* const pa
 }
 
 //-----------------------------------------------------------------------------
-// real files
+// regular files
 
 inline linux_error_t linux_fallocate(linux_fd_t const fd, int const mode, linux_loff_t const offset, linux_loff_t const len)
 {
@@ -3616,7 +3616,7 @@ inline linux_error_t linux_statx(linux_fd_t const dfd, char const* const filenam
 //-----------------------------------------------------------------------------
 // read/write
 
-inline linux_error_t linux_read(linux_fd_t const fd, char* const buf, linux_size_t const count, linux_ssize_t* const result)
+inline linux_error_t linux_read(linux_fd_t const fd, void* const buf, linux_size_t const count, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)buf, count, linux_syscall_name_read);
 	linux_error_t const err = linux_get_error(ret);
@@ -3624,7 +3624,7 @@ inline linux_error_t linux_read(linux_fd_t const fd, char* const buf, linux_size
 		*result = (linux_ssize_t)ret;
 	return err;
 }
-inline linux_error_t linux_write(linux_fd_t const fd, char const* const buf, linux_size_t const count, linux_ssize_t* const result)
+inline linux_error_t linux_write(linux_fd_t const fd, void const* const buf, linux_size_t const count, linux_ssize_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((uint32_t)fd, (uintptr_t)buf, count, linux_syscall_name_write);
 	linux_error_t const err = linux_get_error(ret);
