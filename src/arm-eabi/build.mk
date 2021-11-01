@@ -388,9 +388,11 @@ csrc = \
        src/process_madvise.c\
        src/epoll_pwait2.c\
        src/mount_setattr.c\
+       src/quotactl_fd.c\
        src/landlock_create_ruleset.c\
        src/landlock_add_rule.c\
        src/landlock_restrict_self.c\
+       src/process_mrelease.c\
        src/breakpoint.c\
        src/cacheflush.c\
        src/usr26.c\
@@ -787,9 +789,11 @@ tests = \
         tests/syscalls/process_madvise\
         tests/syscalls/epoll_pwait2\
         tests/syscalls/mount_setattr\
+        tests/syscalls/quotactl_fd\
         tests/syscalls/landlock_create_ruleset\
         tests/syscalls/landlock_add_rule\
         tests/syscalls/landlock_restrict_self\
+        tests/syscalls/process_mrelease\
         tests/syscalls/breakpoint\
         tests/syscalls/cacheflush\
         tests/syscalls/usr26\

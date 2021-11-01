@@ -559,10 +559,12 @@
 #define linux_syscall_name_process_madvise              440 ///< process_madvise
 #define linux_syscall_name_epoll_pwait2                 441 ///< epoll_pwait2
 #define linux_syscall_name_mount_setattr                442 ///< mount_setattr
-//#define linux_syscall_name_quotactl_path              443 // reserved
+#define linux_syscall_name_quotactl_fd                  443 ///< quotactl_fd
 #define linux_syscall_name_landlock_create_ruleset      444 ///< landlock_create_ruleset
 #define linux_syscall_name_landlock_add_rule            445 ///< landlock_add_rule
 #define linux_syscall_name_landlock_restrict_self       446 ///< landlock_restrict_self
+//#define linux_syscall_name_memfd_secret               447 // reserved
+#define linux_syscall_name_process_mrelease             448 ///< process_mrelease
 
 #define linux_syscall_name_breakpoint                   (0x0f0000 + 1) ///< breakpoint
 #define linux_syscall_name_cacheflush                   (0x0f0000 + 2) ///< cacheflush

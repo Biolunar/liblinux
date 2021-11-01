@@ -406,6 +406,9 @@ SYSCALLS="fork\
           process_madvise\
           epoll_pwait2\
           mount_setattr\
+          quotactl_fd\
           landlock_create_ruleset\
           landlock_add_rule\
-          landlock_restrict_self"
+          landlock_restrict_self\
+          memfd_secret\
+          process_mrelease"

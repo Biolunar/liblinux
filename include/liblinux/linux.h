@@ -4871,6 +4871,12 @@ inline linux_error_t linux_process_madvise(int const pidfd, struct linux_iovec c
 		*result = (linux_size_t)ret;
 	return err;
 }
+inline linux_error_t linux_process_mrelease(linux_fd_t const pidfd, unsigned int const flags)
+{
+	linux_word_t const ret = linux_syscall2((uint32_t)pidfd, flags, linux_syscall_name_process_mrelease);
+	linux_error_t const err = linux_get_error(ret);
+	return err;
+}
 inline linux_error_t linux_remap_file_pages(linux_uword_t const start, linux_uword_t const size, linux_uword_t const prot, linux_uword_t const pgoff, linux_uword_t const flags)
 {
 	linux_word_t const ret = linux_syscall5(start, size, prot, pgoff, flags, linux_syscall_name_remap_file_pages);
@@ -5220,6 +5226,12 @@ inline linux_error_t linux_pipe2(linux_fd_t* const fildes, int const flags)
 inline linux_error_t linux_quotactl(unsigned int const cmd, char const* const special, linux_qid_t const id, void* const addr)
 {
 	linux_word_t const ret = linux_syscall4(cmd, (uintptr_t)special, id, (uintptr_t)addr, linux_syscall_name_quotactl);
+	linux_error_t const err = linux_get_error(ret);
+	return err;
+}
+inline linux_error_t linux_quotactl_fd(linux_fd_t const fd, unsigned int const cmd, linux_qid_t const id, void* const addr)
+{
+	linux_word_t const ret = linux_syscall4((uint32_t)fd, cmd, id, (uintptr_t)addr, linux_syscall_name_quotactl_fd);
 	linux_error_t const err = linux_get_error(ret);
 	return err;
 }
@@ -6268,6 +6280,14 @@ inline linux_error_t linux_get_tls(linux_uword_t* const result)
 #endif
 
 #if defined(LINUX_ARCH_ARM64) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_RISCV64) || defined(LINUX_ARCH_X86) || defined(LINUX_ARCH_X32) || defined(LINUX_ARCH_X86_64)
+inline linux_error_t linux_memfd_secret(unsigned int const flags, linux_fd_t* const result)
+{
+	linux_word_t const ret = linux_syscall1(flags, linux_syscall_name_memfd_secret);
+	linux_error_t const err = linux_get_error(ret);
+	if (!err && result)
+		*result = (linux_fd_t)ret;
+	return err;
+}
 inline linux_error_t linux_msgctl(int const msqid, int const cmd, struct linux_msqid64_ds* const buf, linux_word_t* const result)
 {
 	linux_word_t const ret = linux_syscall3((unsigned int)msqid, (unsigned int)cmd, (uintptr_t)buf, linux_syscall_name_msgctl);

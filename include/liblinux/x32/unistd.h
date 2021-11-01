@@ -385,10 +385,12 @@
 #define linux_syscall_name_process_madvise         (LINUX_X32_SYSCALL_BIT + 440) ///< process_madvise
 #define linux_syscall_name_epoll_pwait2            (LINUX_X32_SYSCALL_BIT + 441) ///< epoll_pwait2
 #define linux_syscall_name_mount_setattr           (LINUX_X32_SYSCALL_BIT + 442) ///< mount_setattr
-#define linux_syscall_name_quotactl_path           (LINUX_X32_SYSCALL_BIT + 443) ///< quotactl_path
+#define linux_syscall_name_quotactl_fd             (LINUX_X32_SYSCALL_BIT + 443) ///< quotactl_fd
 #define linux_syscall_name_landlock_create_ruleset (LINUX_X32_SYSCALL_BIT + 444) ///< landlock_create_ruleset
 #define linux_syscall_name_landlock_add_rule       (LINUX_X32_SYSCALL_BIT + 445) ///< landlock_add_rule
 #define linux_syscall_name_landlock_restrict_self  (LINUX_X32_SYSCALL_BIT + 446) ///< landlock_restrict_self
+#define linux_syscall_name_memfd_secret            (LINUX_X32_SYSCALL_BIT + 447) ///< memfd_secret
+#define linux_syscall_name_process_mrelease        (LINUX_X32_SYSCALL_BIT + 448) ///< process_mrelease
 
 #define linux_syscall_name_rt_sigaction            (LINUX_X32_SYSCALL_BIT + 512) ///< rt_sigaction
 #define linux_syscall_name_rt_sigreturn            (LINUX_X32_SYSCALL_BIT + 513) ///< rt_sigreturn

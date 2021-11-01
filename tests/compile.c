@@ -391,9 +391,11 @@ static void test_arm_eabi(void)
 	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_epoll_pwait2(0, 0, 0, 0, 0, 0, 0);
 	linux_mount_setattr(0, 0, 0, 0, 0);
+	linux_quotactl_fd(0, 0, 0, 0);
 	linux_landlock_create_ruleset(0, 0, 0, 0);
 	linux_landlock_add_rule(0, linux_LANDLOCK_RULE_PATH_BENEATH, 0, 0);
 	linux_landlock_restrict_self(0, 0);
+	linux_process_mrelease(0, 0);
 	linux_breakpoint();
 	linux_cacheflush(0, 0, 0);
 	linux_usr26();
@@ -699,9 +701,12 @@ static void test_arm64(void)
 	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_epoll_pwait2(0, 0, 0, 0, 0, 0, 0);
 	linux_mount_setattr(0, 0, 0, 0, 0);
+	linux_quotactl_fd(0, 0, 0, 0);
 	linux_landlock_create_ruleset(0, 0, 0, 0);
 	linux_landlock_add_rule(0, linux_LANDLOCK_RULE_PATH_BENEATH, 0, 0);
 	linux_landlock_restrict_self(0, 0);
+	linux_memfd_secret(0, 0);
+	linux_process_mrelease(0, 0);
 }
 #endif
 
@@ -994,9 +999,12 @@ static void test_riscv32(void)
 	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_epoll_pwait2(0, 0, 0, 0, 0, 0, 0);
 	linux_mount_setattr(0, 0, 0, 0, 0);
+	linux_quotactl_fd(0, 0, 0, 0);
 	linux_landlock_create_ruleset(0, 0, 0, 0);
 	linux_landlock_add_rule(0, linux_LANDLOCK_RULE_PATH_BENEATH, 0, 0);
 	linux_landlock_restrict_self(0, 0);
+	linux_memfd_secret(0, 0);
+	linux_process_mrelease(0, 0);
 	linux_riscv_flush_icache(0, 0, 0);
 }
 #endif
@@ -1296,9 +1304,12 @@ static void test_riscv64(void)
 	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_epoll_pwait2(0, 0, 0, 0, 0, 0, 0);
 	linux_mount_setattr(0, 0, 0, 0, 0);
+	linux_quotactl_fd(0, 0, 0, 0);
 	linux_landlock_create_ruleset(0, 0, 0, 0);
 	linux_landlock_add_rule(0, linux_LANDLOCK_RULE_PATH_BENEATH, 0, 0);
 	linux_landlock_restrict_self(0, 0);
+	linux_memfd_secret(0, 0);
+	linux_process_mrelease(0, 0);
 	linux_riscv_flush_icache(0, 0, 0);
 }
 #endif
@@ -1714,9 +1725,12 @@ static void test_x86(void)
 	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_epoll_pwait2(0, 0, 0, 0, 0, 0, 0);
 	linux_mount_setattr(0, 0, 0, 0, 0);
+	linux_quotactl_fd(0, 0, 0, 0);
 	linux_landlock_create_ruleset(0, 0, 0, 0);
 	linux_landlock_add_rule(0, linux_LANDLOCK_RULE_PATH_BENEATH, 0, 0);
 	linux_landlock_restrict_self(0, 0);
+	linux_memfd_secret(0, 0);
+	linux_process_mrelease(0, 0);
 }
 #endif
 
@@ -2057,9 +2071,12 @@ static void test_x32_and_x86_64(void)
 	linux_process_madvise(0, 0, 0, 0, 0, 0);
 	linux_epoll_pwait2(0, 0, 0, 0, 0, 0, 0);
 	linux_mount_setattr(0, 0, 0, 0, 0);
+	linux_quotactl_fd(0, 0, 0, 0);
 	linux_landlock_create_ruleset(0, 0, 0, 0);
 	linux_landlock_add_rule(0, linux_LANDLOCK_RULE_PATH_BENEATH, 0, 0);
 	linux_landlock_restrict_self(0, 0);
+	linux_memfd_secret(0, 0);
+	linux_process_mrelease(0, 0);
 }
 #endif
 
