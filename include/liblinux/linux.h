@@ -3552,7 +3552,7 @@ inline linux_error_t linux_faccessat2(linux_fd_t const dfd, char const* const fi
 	linux_error_t const err = linux_get_error(ret);
 	return err;
 }
-inline linux_error_t linux_fchmod(linux_fd_t const fd, linux_umode_t const mode) // DEPRECATED: use linux_fchmodat
+inline linux_error_t linux_fchmod(linux_fd_t const fd, linux_umode_t const mode)
 {
 	linux_word_t const ret = linux_syscall2((uint32_t)fd, mode, linux_syscall_name_fchmod);
 	linux_error_t const err = linux_get_error(ret);
