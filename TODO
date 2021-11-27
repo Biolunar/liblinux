@@ -1,3 +1,4 @@
 - Support ARM Thumb mode
 - Clean up the types in linux.h (i.e. use stdint.h types instead of int/long/etc)
 - Are the specific tests in endian.h for arm and arm64 necessary?
+- Seperate old and deprecated stuff (constants, types, syscalls, ...) from the modern stuff
