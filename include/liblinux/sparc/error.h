@@ -17,7 +17,7 @@
 #ifndef HEADER_LIBLINUX_SPARC_ERROR_H_INCLUDED
 #define HEADER_LIBLINUX_SPARC_ERROR_H_INCLUDED
 
-#include "../generic/errno-base.h"
+#include "../generic/error-base.h"
 
 #include <stdint.h>
 

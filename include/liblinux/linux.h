@@ -147,7 +147,7 @@ struct linux_pollfd
 
 typedef struct
 {
-	unsigned long sig[linux_NSIG / LINUX_BITS_PER_LONG];
+	linux_uword_t sig[linux_NSIG / (sizeof(linux_uword_t) * 8)]; // 8 == CHAR_BIT
 } linux_sigset_t;
 
 typedef union linux_sigval
@@ -621,7 +621,7 @@ struct linux_rseq
 	union
 	{
 		uint64_t ptr64;
-#if (LINUX_BITS_PER_LONG == 64)
+#if (LINUX_PTR_BITS == 64)
 		uint64_t ptr;
 #else
 		struct

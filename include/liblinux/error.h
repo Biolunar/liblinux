@@ -21,6 +21,8 @@
 #include "endian.h"
 #include "arch.h"
 
+#include <stdint.h>
+
 /**
  * Error type.
  * The value 0 means no error.

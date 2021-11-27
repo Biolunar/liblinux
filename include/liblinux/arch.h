@@ -62,31 +62,31 @@
 
 // Set some architecture specific stuff and test if the autodetect has failed.
 #if defined(LINUX_ARCH_ARM_EABI)
-#define LINUX_BITS_PER_LONG 32
+#define LINUX_PTR_BITS 32
 typedef int32_t  linux_word_t;
 typedef uint32_t linux_uword_t;
 #elif defined(LINUX_ARCH_ARM64)
-#define LINUX_BITS_PER_LONG 64
+#define LINUX_PTR_BITS 64
 typedef int64_t  linux_word_t;
 typedef uint64_t linux_uword_t;
 #elif defined(LINUX_ARCH_RISCV32)
-#define LINUX_BITS_PER_LONG 32
+#define LINUX_PTR_BITS 32
 typedef int32_t  linux_word_t;
 typedef uint32_t linux_uword_t;
 #elif defined(LINUX_ARCH_RISCV64)
-#define LINUX_BITS_PER_LONG 64
+#define LINUX_PTR_BITS 64
 typedef int64_t  linux_word_t;
 typedef uint64_t linux_uword_t;
 #elif defined(LINUX_ARCH_X86)
-#define LINUX_BITS_PER_LONG 32
+#define LINUX_PTR_BITS 32
 typedef int32_t  linux_word_t;
 typedef uint32_t linux_uword_t;
 #elif defined(LINUX_ARCH_X32)
-#define LINUX_BITS_PER_LONG 32
+#define LINUX_PTR_BITS 32
 typedef int64_t  linux_word_t;
 typedef uint64_t linux_uword_t;
 #elif defined(LINUX_ARCH_X86_64)
-#define LINUX_BITS_PER_LONG 64
+#define LINUX_PTR_BITS 64
 typedef int64_t  linux_word_t;
 typedef uint64_t linux_uword_t;
 #else

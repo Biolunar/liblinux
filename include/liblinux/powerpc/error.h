@@ -17,7 +17,7 @@
 #ifndef HEADER_LIBLINUX_POWERPC_ERRNO_H_INCLUDED
 #define HEADER_LIBLINUX_POWERPC_ERRNO_H_INCLUDED
 
-#include "../generic/errno.h"
+#include "../generic/error.h"
 
 #undef  linux_EDEADLOCK
 #define linux_EDEADLOCK UINT16_C(58) ///< File locking deadlock error

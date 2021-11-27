@@ -21,22 +21,28 @@
 #include "endian.h"
 #include "arch.h"
 #include "error.h"
-#include "types.h"
+#include "types.h" // linux_pid_t
 
 #include <stdint.h>
 #include <stdnoreturn.h>
+
+//==============================================================================
+// Parameter expansion
 
 /*
  * Architectures with 32 bit word sizes require you to split 64 bit arguments
  * into two 32 bit arguments.
  */
+
 #if defined(LINUX_ARCH_ARM_EABI) || defined(LINUX_ARCH_RISCV32) || defined(LINUX_ARCH_X86)
+
 #if defined(LINUX_ENDIAN_LITTLE)
 #define LINUX_EXPAND(x) ((uint64_t)(x) & UINT32_MAX), ((uint64_t)(x) >> 32)
 #else
 #define LINUX_EXPAND(x) ((uint64_t)(x) >> 32), ((uint64_t)(x) & UINT32_MAX)
 #endif
-#endif
+
+#endif // 32 bit architectures
 
 //==============================================================================
 // Syscalls
@@ -128,6 +134,8 @@ noreturn void linux_sigreturn(void);
 linux_error_t linux_vfork(linux_pid_t* result);
 #endif // LINUX_ARCH_X86 || LINUX_ARCH_X32 || LINUX_ARCH_X86_64
 
+// TODO: Find a similar solution for clone.
+
 //==============================================================================
 // Entry point
 
@@ -136,5 +144,17 @@ linux_error_t linux_vfork(linux_pid_t* result);
  * point for your application.
  */
 noreturn void linux_start(uintptr_t argc, char* argv[], char* envp[]);
+
+//==============================================================================
+// Util
+
+#if defined(LINUX_ARCH_X86)
+/*
+ * linux_set_gs is used to set the gs register. Useful after the
+ * linux_set_thread_area syscall. You can easily do that by yourself but you
+ * have to use assembly, so here's a convenience function.
+ */
+void linux_set_gs(uintptr_t value);
+#endif
 
 #endif // !HEADER_LIBLINUX_ASM_H_INCLUDED

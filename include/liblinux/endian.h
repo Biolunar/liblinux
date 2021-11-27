@@ -19,6 +19,9 @@
 
 #include "version.h"
 
+//==============================================================================
+// Autodetect
+
 // If no endianness was selected, autodetect it.
 #if !defined(LINUX_ENDIAN_LITTLE) && \
     !defined(LINUX_ENDIAN_BIG)
@@ -34,7 +37,7 @@
 #define LINUX_ENDIAN_BIG
 #endif
 
-#endif // End GCC macros
+#endif // GCC macros
 
 // ARM macros
 #if defined(__ARMEL__)   || \
@@ -53,6 +56,9 @@
 #endif
 
 #endif // End autodetect
+
+//==============================================================================
+// Check
 
 #if !defined(LINUX_ENDIAN_LITTLE) && \
     !defined(LINUX_ENDIAN_BIG)
