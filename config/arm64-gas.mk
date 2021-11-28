@@ -21,4 +21,4 @@ ASMFLAGS = -EL -mabi=lp64
 AR       = aarch64-linux-gnu-ar
 ARFLAGS  = -rcU
 CC       = aarch64-linux-gnu-gcc
-CFLAGS   = -std=c17 -pedantic-errors -fno-asm -fno-builtin -fno-stack-protector -O3 -DNDEBUG -fdata-sections -ffunction-sections -flto -Wall -Wextra
+CFLAGS   = -std=c17 -pedantic-errors -fno-asm -fno-builtin -fno-stack-protector -O3 -DNDEBUG -fdata-sections -ffunction-sections -Wall -Wextra

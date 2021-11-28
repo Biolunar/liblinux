@@ -21,4 +21,4 @@ ASMFLAGS =
 AR       = ar
 ARFLAGS  = -rcU
 CC       = gcc
-CFLAGS   = -std=c17 -pedantic-errors -fno-asm -fno-builtin -fno-stack-protector -m32 -O3 -DNDEBUG -fdata-sections -ffunction-sections -flto -Wall -Wextra
+CFLAGS   = -std=c17 -pedantic-errors -fno-asm -fno-builtin -fno-stack-protector -m32 -O3 -DNDEBUG -fdata-sections -ffunction-sections -Wall -Wextra

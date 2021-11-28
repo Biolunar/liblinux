@@ -21,4 +21,4 @@ ASMFLAGS = -march=rv64imfd -mabi=lp64d
 AR       = riscv64-elf-ar
 ARFLAGS  = -rcU
 CC       = riscv64-elf-gcc
-CFLAGS   = -std=c17 -pedantic-errors -fno-asm -fno-builtin -fno-stack-protector -O3 -DNDEBUG -fdata-sections -ffunction-sections -flto -Wall -Wextra
+CFLAGS   = -std=c17 -pedantic-errors -fno-asm -fno-builtin -fno-stack-protector -O3 -DNDEBUG -fdata-sections -ffunction-sections -Wall -Wextra
